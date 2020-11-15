@@ -52,7 +52,7 @@ public class CommandLibrary {
 				return CommandResult.NO_PARAMETER;
 
 			switch (parameter) {
-				case "trades": ClientUtility.displayNewScreen(new ImageScreen("trades_screen", 1403, 300, 256, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
+				case "trades": mc.displayGuiScreen(new ImageScreen("trades_screen", 1403, 300, 256, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
 				default: return CommandResult.INVALID_PARAMETER;
 			}
 

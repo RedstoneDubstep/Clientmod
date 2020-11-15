@@ -3,8 +3,6 @@ package net.redstonedubstep.clientmod.misc;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 
@@ -20,13 +18,6 @@ public class ClientUtility {
 		}
 
 		return map;
-	}
-
-	public static void displayNewScreen(Screen screen) {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.currentScreen != null)
-			mc.currentScreen.closeScreen();
-		mc.displayGuiScreen(screen);
 	}
 
 	public static String formatBlockPos(BlockPos pos) {

@@ -14,7 +14,6 @@ public class MainScreen extends Screen {
 
 	TextFieldWidget inputField;
 	String helpMessage = "";
-	Minecraft mc = Minecraft.getInstance();
 
 	public MainScreen() {
 		super(new StringTextComponent("main_screen"));
@@ -50,7 +49,7 @@ public class MainScreen extends Screen {
 					return false;
 			}
 
-			if(keyCode == mc.gameSettings.keyBindInventory.getKey().getKeyCode())
+			if(keyCode == minecraft.gameSettings.keyBindInventory.getKey().getKeyCode())
 				return false;
 			else if(keyCode == GLFW.GLFW_KEY_ESCAPE)
 				return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
@@ -90,7 +89,7 @@ public class MainScreen extends Screen {
 			helpMessage = result.getMessage();
 			inputField.setText("");
 		}
-		else
+		else if (minecraft.currentScreen.equals(this))
 			this.closeScreen();
 	}
 

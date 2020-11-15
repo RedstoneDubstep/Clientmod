@@ -1,7 +1,5 @@
 package net.redstonedubstep.clientmod.command;
 
-import net.minecraft.util.text.StringTextComponent;
-
 public enum CommandResult {
 	EXECUTED(null),
 	EMPTY("Make sure to enter a prefix!"),

@@ -33,16 +33,16 @@ public class ImageScreen extends Screen {
 	}
 
 	@Override
-	public void init(){
+	public void init() {
 		addButton(new ExtendedButton((width+ screenWidth)/2-10, (height- imageHeight)/2, 10, 10, new StringTextComponent("X"), this::closeScreen));
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		minecraft.getTextureManager().bindTexture(background);
 		RenderSystem.enableAlphaTest();
-		blit(matrix, (width - screenWidth) / 2, (height - imageHeight)/2, offset, 0, screenWidth, imageHeight, imageWidth, imageHeight);
+		blit(matrix, (width - screenWidth) / 2, (height - imageHeight) / 2, offset, 0, screenWidth, imageHeight, imageWidth, imageHeight);
 		RenderSystem.disableAlphaTest();
 
 		super.render(matrix, mouseX, mouseY, partialTicks);

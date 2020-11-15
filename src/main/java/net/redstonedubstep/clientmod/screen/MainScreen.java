@@ -2,7 +2,6 @@ package net.redstonedubstep.clientmod.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.StringTextComponent;
@@ -20,7 +19,7 @@ public class MainScreen extends Screen {
 	}
 
 	@Override
-	public void init(){
+	public void init() {
 		super.init();
 
 		minecraft.keyboardListener.enableRepeatEvents(true);
@@ -33,7 +32,7 @@ public class MainScreen extends Screen {
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(matrix);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		inputField.render(matrix, mouseX, mouseY, partialTicks);
@@ -43,17 +42,17 @@ public class MainScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
-		if(inputField.isFocused()) {
+		if (inputField.isFocused()) {
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 				if (inputField.getText().isEmpty())
 					return false;
 			}
 
-			if(keyCode == minecraft.gameSettings.keyBindInventory.getKey().getKeyCode())
+			if (keyCode == minecraft.gameSettings.keyBindInventory.getKey().getKeyCode())
 				return false;
-			else if(keyCode == GLFW.GLFW_KEY_ESCAPE)
+			else if (keyCode == GLFW.GLFW_KEY_ESCAPE)
 				return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
-			else if(keyCode == GLFW.GLFW_KEY_ENTER)
+			else if (keyCode == GLFW.GLFW_KEY_ENTER)
 				return submitText(inputField.getText());
 			else
 				return inputField.keyPressed(keyCode, scanCode, p_keyPressed_3_);
@@ -63,7 +62,7 @@ public class MainScreen extends Screen {
 
 	@Override
 	public boolean charTyped(char typedChar, int keyCode) {
-		if(inputField.isFocused()) {
+		if (inputField.isFocused()) {
 			inputField.charTyped(typedChar, keyCode);
 			return true;
 		}

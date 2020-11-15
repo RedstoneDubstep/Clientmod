@@ -19,7 +19,7 @@ import net.redstonedubstep.clientmod.screen.ImageScreen;
 public class CommandLibrary {
 	public static ArrayList<Command> commandList = new ArrayList<Command>();
 	public static final Command wikiCommand = new Command("wiki", 1, CommandLibrary.Actions::wiki);
-	public static final Command imageCommand = new Command("image", 1 , CommandLibrary.Actions::image);
+	public static final Command imageCommand = new Command("image", 1, CommandLibrary.Actions::image);
 	public static final Command msgCommand = new Command("msg", 1, CommandLibrary.Actions::msg);
 	public static final Command radarCommand = new Command("radar", 2, CommandLibrary.Actions::radar);
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -80,14 +80,14 @@ public class CommandLibrary {
 				distanceIn = parameters[0];
 				try {
 					distance = Math.min(Integer.parseInt(distanceIn), 100000);
-				} catch (NumberFormatException e) {
+				}catch (NumberFormatException e) {
 					return CommandResult.INVALID_PARAMETER;
 				}
 			}
 
 			if (parameters.length >= 2) {
 				entityIn = parameters[1];
-				Optional<EntityType<?>> optional = EntityType.byKey(entityIn);
+				Optional<EntityType<?>> optional = EntityType.byKey(entityIn.replace(" ", "_"));
 				if (!optional.isPresent())
 					return CommandResult.INVALID_PARAMETER;
 				entityType = optional.get();

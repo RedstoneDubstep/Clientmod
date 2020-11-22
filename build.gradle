@@ -35,7 +35,7 @@ minecraft {
             workingDirectory project.file('run/client')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', ''
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'

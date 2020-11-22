@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 public class Clientmod {
 
 	public static final String MODID = "clientmod";
-	public static final Logger LOGGER = LogManager.getLogger();
 
 	public Clientmod() {
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());

@@ -3,6 +3,7 @@ package net.redstonedubstep.clientmod.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -75,9 +76,16 @@ public class CommandLibrary {
 		private static CommandResult radar(AbstractParameter<?> [] params) {
 			ClientPlayerEntity player = mc.player;
 			int range = ((IntParameter)params[0]).getValue();
-			String entityName = ((StringParameter)params[1]).getValue();
-			EntityType<?> entity = EntityType.byKey(entityName.replace(" ", "_")).orElse(null);
+			String entityName = ((StringParameter)params[1]).getValue().replace(" ", "_");
+			Optional<EntityType<?>> optional = EntityType.byKey(entityName);
+			EntityType<?> entity;
 			AxisAlignedBB boundingBox = player.getBoundingBox().grow(range);
+
+			if (!entityName.isEmpty() && !optional.isPresent()) {
+				return CommandResult.INVALID_PARAMETER;
+			} else {
+				entity = optional.orElse(null);
+			}
 
 			if (entity == null) {
 				List<Entity> list = mc.world.getEntitiesInAABBexcluding(player, boundingBox, null);

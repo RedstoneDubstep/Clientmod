@@ -32,7 +32,7 @@ public class Command {
 		String[] stringParams = parameterIn.split(" ", params.length);
 
 		for (int i=0;i<params.length;i++) {
-			if (stringParams.length<i+1 || stringParams[i] == null || stringParams[i].isEmpty()) {
+			if (stringParams.length < i+1 || stringParams[i] == null || stringParams[i].isEmpty()) {
 				if (params[i].isRequired())
 					return CommandResult.NO_PARAMETER;
 				else {

@@ -85,15 +85,24 @@ public class CommandLibrary {
 				List<Entity> list = mc.world.getEntitiesInAABBexcluding(player, boundingBox, null);
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
-				player.sendMessage(new StringTextComponent("These are all the mobs in " + range + " blocks range:"), Util.DUMMY_UUID);
-				map.forEach((key, value) -> {
-					player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.DUMMY_UUID);
-				});
+				if (list.size() == 0)
+					player.sendMessage(new StringTextComponent("There are no mobs in " + range + " blocks range"), Util.DUMMY_UUID);
+				else {
+					player.sendMessage(new StringTextComponent("These are all the mobs in " + range + " blocks range:"), Util.DUMMY_UUID);
+					map.forEach((key, value) -> {
+						player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.DUMMY_UUID);
+					});
+				}
 			} else {
 				List<? extends Entity> list = mc.world.getEntitiesWithinAABB(entity, boundingBox, (s) -> true);
 
-				player.sendMessage(new StringTextComponent("These are all the mobs of type "+new TranslationTextComponent(entity.toString()).getString()+" in " + range + " blocks range:"), Util.DUMMY_UUID);
-				list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " ("+ClientUtility.formatBlockPos(entry.getPosition())+")"), Util.DUMMY_UUID));
+				if (list.size() == 0) {
+					player.sendMessage(new StringTextComponent("There are no mobs of type "+new TranslationTextComponent(entity.toString()).getString()+" in " + range + " blocks range"), Util.DUMMY_UUID);
+				}
+				else {
+					player.sendMessage(new StringTextComponent("There are " + list.size() + " mobs of type " + new TranslationTextComponent(entity.toString()).getString() + " in " + range + " blocks range:"), Util.DUMMY_UUID);
+					list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " (" + ClientUtility.formatBlockPos(entry.getPosition()) + ")"), Util.DUMMY_UUID));
+				}
 			}
 
 			return CommandResult.EXECUTED;

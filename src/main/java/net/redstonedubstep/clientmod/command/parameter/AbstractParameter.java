@@ -1,9 +1,11 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
+import net.redstonedubstep.clientmod.command.CommandResult;
+
 public abstract class AbstractParameter<T> {
 	public abstract T getValue();
 
-	public abstract void setValue(T value);
+	public abstract CommandResult setValue(String value);
 
 	public abstract void setToDefault();
 

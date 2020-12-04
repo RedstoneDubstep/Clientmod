@@ -30,6 +30,7 @@ public class Command {
 
 	private CommandResult formatParameters(String parameterIn) {
 		String[] stringParams = parameterIn.split(" ", params.length);
+		CommandResult result = null;
 
 		for (int i=0;i<params.length;i++) {
 			if (stringParams.length < i+1 || stringParams[i] == null || stringParams[i].isEmpty()) {
@@ -42,30 +43,11 @@ public class Command {
 			}
 			if (params[i].isRequired() && (stringParams[i] == null || stringParams[i].isEmpty()))
 				return CommandResult.NO_PARAMETER;
-			else if (params[i] instanceof StringParameter) {
-				StringParameter stringParam = (StringParameter)params[i];
 
-				stringParam.setValue(stringParams[i]);
-			}
-			if (params[i] instanceof IntParameter) {
-				IntParameter intParam = (IntParameter)params[i];
-				int value;
-
-				try{
-					value = Integer.parseInt(stringParams[i]);
-				} catch (NumberFormatException e) {
-					return CommandResult.INVALID_PARAMETER;
-				}
-
-				if (!intParam.isValueAllowed(value))
-					return CommandResult.INVALID_PARAMETER;
-
-				intParam.setValue(value);
-			}
+			result = params[i].setValue(stringParams[i]);
 		}
 
-
-		return null;
+		return result;
 	}
 
 }

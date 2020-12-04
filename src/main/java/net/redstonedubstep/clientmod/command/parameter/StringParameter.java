@@ -1,5 +1,7 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
+import net.redstonedubstep.clientmod.command.CommandResult;
+
 public class StringParameter extends AbstractParameter<String> {
 	private String value;
 	private String defaultValue;
@@ -24,8 +26,9 @@ public class StringParameter extends AbstractParameter<String> {
 	}
 
 	@Override
-	public void setValue(String value) {
+	public CommandResult setValue(String value) {
 		this.value = value;
+		return null;
 	}
 
 	@Override

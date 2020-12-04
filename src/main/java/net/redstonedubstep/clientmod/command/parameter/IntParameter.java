@@ -1,5 +1,7 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
+import net.redstonedubstep.clientmod.command.CommandResult;
+
 public class IntParameter extends AbstractParameter<Integer> {
 	private int value;
 	private final int defaultValue;
@@ -30,8 +32,17 @@ public class IntParameter extends AbstractParameter<Integer> {
 	}
 
 	@Override
-	public void setValue(Integer value) {
-		this.value = value;
+	public CommandResult setValue(String value) {
+		try{
+			this.value = Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return CommandResult.INVALID_PARAMETER;
+		}
+
+		if (!isValueAllowed(this.value))
+			return CommandResult.INVALID_PARAMETER;
+
+		return null;
 	}
 
 	@Override

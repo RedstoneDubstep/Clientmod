@@ -14,6 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
+import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
 import net.redstonedubstep.clientmod.command.parameter.IntParameter;
 import net.redstonedubstep.clientmod.command.parameter.StringParameter;
 import net.redstonedubstep.clientmod.misc.ClientUtility;
@@ -24,7 +25,7 @@ public class CommandLibrary {
 	public static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
 	public static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter());
 	public static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
-	public static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new StringParameter(false));
+	public static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new EntityTypeParameter(false));
 	public static String lastInputText;
 	private static final Minecraft mc = Minecraft.getInstance();
 
@@ -77,16 +78,8 @@ public class CommandLibrary {
 		private static CommandResult radar(AbstractParameter<?> [] params) {
 			ClientPlayerEntity player = mc.player;
 			int range = ((IntParameter)params[0]).getValue();
-			String entityName = ((StringParameter)params[1]).getValue().replace(" ", "_");
-			Optional<EntityType<?>> optional = EntityType.byKey(entityName);
-			EntityType<?> entity;
+			EntityType<?> entity = ((EntityTypeParameter)params[1]).getValue();
 			AxisAlignedBB boundingBox = player.getBoundingBox().grow(range);
-
-			if (!entityName.isEmpty() && !optional.isPresent()) {
-				return CommandResult.INVALID_PARAMETER;
-			} else {
-				entity = optional.orElse(null);
-			}
 
 			if (entity == null) {
 				List<Entity> list = mc.world.getEntitiesInAABBexcluding(player, boundingBox, null);

@@ -54,10 +54,13 @@ public class MainScreen extends Screen {
 				return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
 			else if (keyCode == GLFW.GLFW_KEY_ENTER)
 				return submitText(inputField.getText());
+			else if (keyCode == GLFW.GLFW_KEY_UP)
+				inputField.setText(CommandLibrary.lastInputText);
 			else
 				return inputField.keyPressed(keyCode, scanCode, p_keyPressed_3_);
 		}
-		else return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
+		
+		return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
 	}
 
 	@Override
@@ -89,6 +92,7 @@ public class MainScreen extends Screen {
 			inputField.setText("");
 		}
 		else if (minecraft.currentScreen.equals(this))
+			CommandLibrary.lastInputText = inputField.getText();
 			this.closeScreen();
 	}
 

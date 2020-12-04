@@ -25,6 +25,7 @@ public class CommandLibrary {
 	public static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter());
 	public static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	public static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new StringParameter(false));
+	public static String lastInputText;
 	private static final Minecraft mc = Minecraft.getInstance();
 
 	public static void addCommandsToList() {

@@ -91,9 +91,10 @@ public class MainScreen extends Screen {
 			helpMessage = result.getMessage();
 			inputField.setText("");
 		}
-		else if (minecraft.currentScreen.equals(this))
+		else if (minecraft.currentScreen.equals(this)) {
 			CommandLibrary.lastInputText = inputField.getText();
 			this.closeScreen();
+		}
 	}
 
 	@Override

@@ -3,8 +3,6 @@ package net.redstonedubstep.clientmod.command;
 import java.util.function.Function;
 
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
-import net.redstonedubstep.clientmod.command.parameter.IntParameter;
-import net.redstonedubstep.clientmod.command.parameter.StringParameter;
 
 public class Command {
 	public final String prefix;

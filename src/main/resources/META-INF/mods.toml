@@ -18,12 +18,10 @@ displayName = "Clientmod" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="clientmod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Redstone_Dubstep" #optional
-# A text field displayed in the mod UI
 authors = "Redstone_Dubstep" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description = '''
-A mod created by Redstone_Dubstep that should make playing Minecraft easier.
+A mod created by Redstone_Dubstep that adds some neat features to the game.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 #[[dependencies.clientmod]] #optional

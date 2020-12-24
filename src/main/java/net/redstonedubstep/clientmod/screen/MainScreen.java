@@ -87,12 +87,13 @@ public class MainScreen extends Screen {
 	}
 
 	public void setHelpMessage(CommandResult result) {
+		CommandLibrary.lastInputText = inputField.getText();
+
 		if (result != CommandResult.EXECUTED) {
 			helpMessage = result.getMessage();
 			inputField.setText("");
 		}
 		else if (minecraft.currentScreen.equals(this)) {
-			CommandLibrary.lastInputText = inputField.getText();
 			this.closeScreen();
 		}
 	}

@@ -1,8 +1,5 @@
 package net.redstonedubstep.clientmod;
 
-import java.lang.reflect.Field;
-
-import cpw.mods.modlauncher.api.INameMappingService.Domain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.MainMenuScreen;

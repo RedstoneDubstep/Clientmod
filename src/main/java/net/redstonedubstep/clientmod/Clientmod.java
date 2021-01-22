@@ -1,5 +1,7 @@
 package net.redstonedubstep.clientmod;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -10,7 +12,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
-import org.apache.commons.lang3.tuple.Pair;
 
 @Mod(Clientmod.MODID)
 @EventBusSubscriber(modid=Clientmod.MODID, bus=Bus.MOD)

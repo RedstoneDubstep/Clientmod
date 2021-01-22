@@ -1,13 +1,15 @@
 package net.redstonedubstep.clientmod.screen;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.StringTextComponent;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 import net.redstonedubstep.clientmod.command.CommandResult;
-import org.lwjgl.glfw.GLFW;
 
 public class MainScreen extends Screen {
 

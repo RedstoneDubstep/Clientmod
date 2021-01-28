@@ -24,6 +24,7 @@ public class CommandLibrary {
 	public static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
 	public static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter());
 	public static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
+	public static final Command FOLDER_COMMAND = new Command("folder", CommandLibrary.Actions::folder, new StringParameter(Lists.newArrayList("resources", "mods", "mc")));
 	public static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new EntityTypeParameter(false));
 	public static String lastInputText;
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -32,6 +33,7 @@ public class CommandLibrary {
 		commandList.add(WIKI_COMMAND);
 		commandList.add(IMAGE_COMMAND);
 		commandList.add(MSG_COMMAND);
+		commandList.add(FOLDER_COMMAND);
 		commandList.add(RADAR_COMMAND);
 	}
 
@@ -83,6 +85,19 @@ public class CommandLibrary {
 				mc.player.sendChatMessage("Redstone has left the server.");
 			else
 				return CommandResult.INVALID_PARAMETER;
+
+			return CommandResult.EXECUTED;
+		}
+
+		private static CommandResult folder(AbstractParameter<?>[] params) {
+			String text = ((StringParameter)params[0]).getValue();
+
+			switch (text) {
+				case "resources": Util.getOSType().openFile(mc.getFileResourcePacks()); break;
+				case "mods": Util.getOSType().openFile(FMLPaths.MODSDIR.get().toFile()); break;
+				case "mc": Util.getOSType().openFile(FMLPaths.MODSDIR.get().getParent().toFile()); break;
+				default: return CommandResult.INVALID_PARAMETER;
+			}
 
 			return CommandResult.EXECUTED;
 		}

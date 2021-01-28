@@ -30,8 +30,8 @@ public class Command {
 		String[] stringParams = parameterIn.split(" ", params.length);
 		CommandResult result = null;
 
-		for (int i=0;i<params.length;i++) {
-			if (stringParams.length < i+1 || stringParams[i] == null || stringParams[i].isEmpty()) {
+		for (int i = 0; i < params.length; i++) {
+			if (stringParams.length < i + 1 || stringParams[i] == null || stringParams[i].isEmpty()) {
 				if (params[i].isRequired())
 					return CommandResult.NO_PARAMETER;
 				else {
@@ -39,8 +39,6 @@ public class Command {
 					continue;
 				}
 			}
-			if (params[i].isRequired() && (stringParams[i] == null || stringParams[i].isEmpty()))
-				return CommandResult.NO_PARAMETER;
 
 			result = params[i].setValue(stringParams[i]);
 		}

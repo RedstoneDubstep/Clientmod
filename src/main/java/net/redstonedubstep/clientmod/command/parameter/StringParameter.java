@@ -1,23 +1,28 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.redstonedubstep.clientmod.command.CommandResult;
 
 public class StringParameter extends AbstractParameter<String> {
 	private String value;
-	private String defaultValue;
+	private final String defaultValue;
+	private final List<String> allowedValues;
 	private boolean required;
 
 	public StringParameter() {
-		this(true, "");
+		this(new ArrayList<>());
 	}
 
-	public StringParameter(boolean required) {
-		this(required, "");
+	public StringParameter(List<String> allowedValues) {
+		this(allowedValues, true, "");
 	}
 
-	public StringParameter(boolean required, String defaultValue) {
+	public StringParameter(List<String> allowedValues, boolean required, String defaultValue) {
 		this.required = required;
 		this.defaultValue = defaultValue;
+		this.allowedValues = allowedValues;
 	}
 
 	@Override
@@ -27,6 +32,9 @@ public class StringParameter extends AbstractParameter<String> {
 
 	@Override
 	public CommandResult setValue(String value) {
+		if (!allowedValues.isEmpty() && allowedValues.contains(value))
+			return CommandResult.INVALID_PARAMETER;
+
 		this.value = value;
 		return null;
 	}
@@ -34,6 +42,10 @@ public class StringParameter extends AbstractParameter<String> {
 	@Override
 	public void setToDefault() {
 		this.value = defaultValue;
+	}
+
+	public List<String> getAllowedValues() {
+		return allowedValues;
 	}
 
 	@Override

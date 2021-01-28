@@ -43,6 +43,18 @@ public class CommandLibrary {
 		return CommandResult.PREFIX_NOT_FOUND;
 	}
 
+	public static String getCompleteCommand(String commandStart) {
+		if (commandStart.isEmpty())
+			return "";
+
+		for (Command command : commandList) {
+			if (command.prefix.startsWith(commandStart))
+				return command.prefix;
+		}
+
+		return commandStart;
+	}
+
 	public static class Actions {
 		private static CommandResult wiki(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");

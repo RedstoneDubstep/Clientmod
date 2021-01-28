@@ -43,7 +43,7 @@ public class MainScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_) {
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (inputField.isFocused()) {
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 				if (inputField.getText().isEmpty())
@@ -53,16 +53,18 @@ public class MainScreen extends Screen {
 			if (keyCode == minecraft.gameSettings.keyBindInventory.getKey().getKeyCode())
 				return false;
 			else if (keyCode == GLFW.GLFW_KEY_ESCAPE)
-				return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
+				return super.keyPressed(keyCode, scanCode, modifiers);
 			else if (keyCode == GLFW.GLFW_KEY_ENTER)
 				return submitText(inputField.getText());
 			else if (keyCode == GLFW.GLFW_KEY_UP)
 				inputField.setText(CommandLibrary.lastInputText);
+			else if (keyCode == GLFW.GLFW_KEY_TAB)
+				inputField.setText(CommandLibrary.getCompleteCommand(inputField.getText()));
 			else
-				return inputField.keyPressed(keyCode, scanCode, p_keyPressed_3_);
+				return inputField.keyPressed(keyCode, scanCode, modifiers);
 		}
 		
-		return super.keyPressed(keyCode, scanCode, p_keyPressed_3_);
+		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override

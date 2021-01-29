@@ -68,6 +68,8 @@ public class MainScreen extends Screen {
 				return submitText(inputField.getText());
 			else if (keyCode == GLFW.GLFW_KEY_UP)
 				inputField.setText(CommandLibrary.lastInputText);
+			else if (keyCode == GLFW.GLFW_KEY_DOWN)
+				inputField.setText("");
 			else if (keyCode == GLFW.GLFW_KEY_TAB)
 				inputField.setText(CommandLibrary.getCompleteCommand(inputField.getText()));
 			else

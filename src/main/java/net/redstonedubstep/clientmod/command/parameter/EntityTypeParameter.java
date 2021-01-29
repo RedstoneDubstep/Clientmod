@@ -3,7 +3,7 @@ package net.redstonedubstep.clientmod.command.parameter;
 import java.util.Optional;
 
 import net.minecraft.entity.EntityType;
-import net.redstonedubstep.clientmod.command.CommandResult;
+import net.redstonedubstep.clientmod.command.CommandException;
 
 public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	private EntityType<?> value;
@@ -29,12 +29,12 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	}
 
 	@Override
-	public CommandResult setValue(String value) {
+	public CommandException setValue(String value, int pos) {
 		String entityName = value.replace(" ", "_");
 		Optional<EntityType<?>> optional = EntityType.byKey(entityName);
 
 		if (!optional.isPresent()) {
-			return CommandResult.INVALID_PARAMETER;
+			return CommandException.invalidParameter(this, pos);
 		} else {
 			this.value = optional.orElse(null);
 		}
@@ -55,5 +55,10 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	@Override
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	@Override
+	public String toDescription() {
+		return "Allowed type: the name of an EntityType";
 	}
 }

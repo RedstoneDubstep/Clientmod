@@ -3,7 +3,7 @@ package net.redstonedubstep.clientmod.command.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.redstonedubstep.clientmod.command.CommandResult;
+import net.redstonedubstep.clientmod.command.CommandException;
 
 public class StringParameter extends AbstractParameter<String> {
 	private String value;
@@ -31,9 +31,9 @@ public class StringParameter extends AbstractParameter<String> {
 	}
 
 	@Override
-	public CommandResult setValue(String value) {
-		if (!allowedValues.isEmpty() && allowedValues.contains(value))
-			return CommandResult.INVALID_PARAMETER;
+	public CommandException setValue(String value, int pos) {
+		if (!allowedValues.isEmpty() && !allowedValues.contains(value))
+			return CommandException.invalidParameter(this, pos);
 
 		this.value = value;
 		return null;
@@ -44,10 +44,6 @@ public class StringParameter extends AbstractParameter<String> {
 		this.value = defaultValue;
 	}
 
-	public List<String> getAllowedValues() {
-		return allowedValues;
-	}
-
 	@Override
 	public boolean isRequired() {
 		return required;
@@ -56,5 +52,17 @@ public class StringParameter extends AbstractParameter<String> {
 	@Override
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	@Override
+	public String toDescription() {
+		StringBuilder sb = new StringBuilder("Allowed input: String");
+
+		if (!allowedValues.isEmpty()) {
+			sb.append(", allowed values: ");
+			allowedValues.forEach(s -> sb.append(s + ", "));
+		}
+
+		return sb.toString();
 	}
 }

@@ -1,6 +1,6 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
-import net.redstonedubstep.clientmod.command.CommandResult;
+import net.redstonedubstep.clientmod.command.CommandException;
 
 public class IntParameter extends AbstractParameter<Integer> {
 	private int value;
@@ -32,15 +32,15 @@ public class IntParameter extends AbstractParameter<Integer> {
 	}
 
 	@Override
-	public CommandResult setValue(String value) {
+	public CommandException setValue(String value, int pos) {
 		try{
 			this.value = Integer.parseInt(value);
 		} catch (NumberFormatException e) {
-			return CommandResult.INVALID_PARAMETER;
+			return CommandException.invalidParameter(this, pos);
 		}
 
 		if (!isValueAllowed(this.value))
-			return CommandResult.INVALID_PARAMETER;
+			return CommandException.invalidParameter(this, pos);
 
 		return null;
 	}
@@ -58,5 +58,10 @@ public class IntParameter extends AbstractParameter<Integer> {
 	@Override
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	@Override
+	public String toDescription() {
+		return "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: "+maxValue) : "");
 	}
 }

@@ -7,40 +7,40 @@ import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 public class Command {
 	public final String prefix;
 	private final AbstractParameter<?>[] params;
-	private final Function<AbstractParameter<?>[], CommandResult> action;
+	private final Function<AbstractParameter<?>[], CommandException> action;
 
-	public Command(String prefix, Function<AbstractParameter<?>[], CommandResult> action, AbstractParameter<?> param) {
+	public Command(String prefix, Function<AbstractParameter<?>[], CommandException> action, AbstractParameter<?> param) {
 		this(prefix, action, new AbstractParameter[]{param});
 	}
-	public Command(String prefix, Function<AbstractParameter<?>[], CommandResult> action, AbstractParameter<?>... params) {
+	public Command(String prefix, Function<AbstractParameter<?>[], CommandException> action, AbstractParameter<?>... params) {
 		this.prefix = prefix;
 		this.action = action;
 		this.params = params;
 	}
 	
-	public CommandResult execute(String parameter) {
-		CommandResult result = formatParameters(parameter);
+	public CommandException execute(String parameter) {
+		CommandException result = formatParameters(parameter);
 		if (result != null) //when something went wrong while formatting parameters
 			return result;
 		else
 			return action.apply(params);
 	}
 
-	private CommandResult formatParameters(String parameterIn) {
+	private CommandException formatParameters(String parameterIn) {
 		String[] stringParams = parameterIn.split(" ", params.length);
-		CommandResult result = null;
+		CommandException result = null;
 
 		for (int i = 0; i < params.length; i++) {
 			if (stringParams.length < i + 1 || stringParams[i] == null || stringParams[i].isEmpty()) {
 				if (params[i].isRequired())
-					return CommandResult.NO_PARAMETER;
+					return CommandException.noParameter(params[i], i);
 				else {
 					params[i].setToDefault();
 					continue;
 				}
 			}
 
-			result = params[i].setValue(stringParams[i]);
+			result = params[i].setValue(stringParams[i], i);
 		}
 
 		return result;

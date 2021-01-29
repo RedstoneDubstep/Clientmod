@@ -1,5 +1,8 @@
 package net.redstonedubstep.clientmod.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -8,13 +11,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.StringTextComponent;
+import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
-import net.redstonedubstep.clientmod.command.CommandResult;
 
 public class MainScreen extends Screen {
 
 	TextFieldWidget inputField;
 	String helpMessage = "";
+	List<String> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
 		super(new StringTextComponent("main_screen"));
@@ -38,13 +42,19 @@ public class MainScreen extends Screen {
 		renderBackground(matrix);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		inputField.render(matrix, mouseX, mouseY, partialTicks);
-		font.func_243248_b(matrix, new StringTextComponent(helpMessage), (width - font.getStringWidth(helpMessage)) / 2, (height+30)/2, 16711680);
+		font.func_243248_b(matrix, new StringTextComponent(helpMessage), (width - font.getStringWidth(helpMessage)) / 2, (height + 30) / 2, 16711680);
+		for (int i = 0; i < helpDescription.size(); i++) {
+			font.func_243248_b(matrix, new StringTextComponent(helpDescription.get(i)), (width - font.getStringWidth(helpMessage)) / 2, (height + 50 + 20*i) / 2, 16711680);
+		}
+
 		super.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (inputField.isFocused()) {
+			resetHelpMessages();
+
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 				if (inputField.getText().isEmpty())
 					return false;
@@ -71,6 +81,7 @@ public class MainScreen extends Screen {
 	public boolean charTyped(char typedChar, int keyCode) {
 		if (inputField.isFocused()) {
 			inputField.charTyped(typedChar, keyCode);
+			resetHelpMessages();
 			return true;
 		}
 		else
@@ -79,27 +90,35 @@ public class MainScreen extends Screen {
 
 	private boolean submitText(String input) {
 		if (input.isEmpty())
-			setHelpMessage(CommandResult.EMPTY);
+			setHelpMessages(CommandException.empty());
+		else {
 
-		String prefix = input.split(" ")[0];
-		String parameter = input.contains(" ") ? input.split(" ", 2)[1] : "";
+			String prefix = input.split(" ")[0];
+			String parameter = input.contains(" ") ? input.split(" ", 2)[1] : "";
 
-		CommandResult result = CommandLibrary.findAndExecuteCommand(prefix, parameter);
-		setHelpMessage(result);
+			CommandException result = CommandLibrary.findAndExecuteCommand(prefix, parameter);
+			setHelpMessages(result);
+		}
 
 		return true;
 	}
 
-	public void setHelpMessage(CommandResult result) {
+	private void setHelpMessages(CommandException result) {
 		CommandLibrary.lastInputText = inputField.getText();
 
-		if (result != CommandResult.EXECUTED) {
-			helpMessage = result.getMessage();
+		if (result != null) {
+			helpMessage = result.getTitle();
+			helpDescription = result.getDescription();
 			inputField.setText("");
 		}
 		else if (minecraft.currentScreen.equals(this)) {
 			this.closeScreen();
 		}
+	}
+
+	private void resetHelpMessages() {
+		helpMessage = "";
+		helpDescription = new ArrayList<>();
 	}
 
 	@Override

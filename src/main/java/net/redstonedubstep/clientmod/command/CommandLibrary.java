@@ -40,12 +40,12 @@ public class CommandLibrary {
 		commandList.add(RADAR_COMMAND);
 	}
 
-	public static CommandResult findAndExecuteCommand(String prefix, String parameter) {
+	public static CommandException findAndExecuteCommand(String prefix, String parameter) {
 		for (Command command : commandList) {
 			if (command.prefix.equals(prefix))
 				return command.execute(parameter);
 		}
-		return CommandResult.PREFIX_NOT_FOUND;
+		return CommandException.prefixNotFound();
 	}
 
 	public static String getCompleteCommand(String commandStart) {
@@ -61,51 +61,50 @@ public class CommandLibrary {
 	}
 
 	public static class Actions {
-		private static CommandResult wiki(AbstractParameter<?>[] params) {
+		private static CommandException wiki(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
 			String wiki_link = "https://minecraft.gamepedia.com/"+text;
 
 			Util.getOSType().openURI(wiki_link);
-			return CommandResult.EXECUTED;
+
+			return null;
 		}
 
-		private static CommandResult image(AbstractParameter<?>[] params) {
+		private static CommandException image(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
 				case "trades": mc.displayGuiScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
 				case "brewing": mc.displayGuiScreen(new ImageScreen("brewing_guide", 350, 600, 350, 256, "clientmod:textures/gui/brewing_guide.png")); break;
-				default: return CommandResult.INVALID_PARAMETER;
 			}
 
-			return CommandResult.EXECUTED;
+			return null;
 		}
 
-		private static CommandResult msg(AbstractParameter<?>[] params) {
+		private static CommandException msg(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue();
 
 			if (text.equals("leave"))
 				mc.player.sendChatMessage("Redstone has left the server.");
 			else
-				return CommandResult.INVALID_PARAMETER;
+				return CommandException.invalidParameter(params[0], 0);
 
-			return CommandResult.EXECUTED;
+			return null;
 		}
 
-		private static CommandResult folder(AbstractParameter<?>[] params) {
+		private static CommandException folder(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
 				case "resources": Util.getOSType().openFile(mc.getFileResourcePacks()); break;
 				case "mods": Util.getOSType().openFile(FMLPaths.MODSDIR.get().toFile()); break;
 				case "mc": Util.getOSType().openFile(FMLPaths.MODSDIR.get().getParent().toFile()); break;
-				default: return CommandResult.INVALID_PARAMETER;
 			}
 
-			return CommandResult.EXECUTED;
+			return null;
 		}
 
-		private static CommandResult radar(AbstractParameter<?> [] params) {
+		private static CommandException radar(AbstractParameter<?> [] params) {
 			ClientPlayerEntity player = mc.player;
 			int range = ((IntParameter)params[0]).getValue();
 			EntityType<?> entity = ((EntityTypeParameter)params[1]).getValue();
@@ -135,7 +134,7 @@ public class CommandLibrary {
 				}
 			}
 
-			return CommandResult.EXECUTED;
+			return null;
 		}
 	}
 }

@@ -36,7 +36,7 @@ public class CommandLibrary {
 	public static void addCommandsToList() {
 		commandList.add(FOLDER_COMMAND);
 		commandList.add(IMAGE_COMMAND);
-		commandList.add(MSG_COMMAND);
+		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
 		commandList.add(WIKI_COMMAND);

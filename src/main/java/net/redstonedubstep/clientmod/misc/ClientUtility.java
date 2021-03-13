@@ -24,6 +24,6 @@ public class ClientUtility {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		return "x"+x+", y"+y+", z"+z;
+		return "x" + x + ", y" + y + ", z" + z;
 	}
 }

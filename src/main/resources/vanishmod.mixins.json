@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "net.redstonedubstep.clientmod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "vanishmod.refmap.json",
+  "mixins": [
+    "MixinResourceLoadProgressGui"
+  ],
+  "minVersion": "0.8"
+}

@@ -3,6 +3,8 @@ package net.redstonedubstep.clientmod.command.parameter;
 import java.util.Optional;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
@@ -58,7 +60,7 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	}
 
 	@Override
-	public String toDescription() {
-		return "Allowed type: the name of an EntityType";
+	public ITextComponent toDescription() {
+		return new TranslationTextComponent("screen.clientmod:mainScreen.exception.allowedInputs", "the registry name of an Entity");
 	}
 }

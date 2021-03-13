@@ -4,55 +4,58 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 
 public class CommandException {
 
-	private String title;
-	private List<String> description;
+	private final ITextComponent title;
+	private final List<ITextComponent> description;
 
-	private CommandException(String title, List<String> description) {
+	private CommandException(ITextComponent title, List<ITextComponent> description) {
 		this.title = title;
 		this.description = description;
 	}
 
 	public static CommandException empty() {
-		List<String> description = Lists.newArrayList("The following commands are currently supported: ");
+		List<ITextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.supportedCommands"));
 
-		CommandLibrary.commandList.forEach(c -> description.add(c.prefix));
+		CommandLibrary.commandList.forEach(c -> description.add(new StringTextComponent(c.prefix)));
 
-		return new CommandException("Make sure to enter a prefix!", description);
+		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.missingPrefix"), description);
 	}
 
 	public static CommandException prefixNotFound() {
-		List<String> description = Lists.newArrayList("The following commands are currently supported: ");
+		List<ITextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.supportedCommands"));
 
-		CommandLibrary.commandList.forEach(c -> description.add(c.prefix));
+		CommandLibrary.commandList.forEach(c -> description.add(new StringTextComponent(c.prefix)));
 
-		return new CommandException("No command with this prefix has been found!", description);
+		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.prefixNotFound"), description);
 	}
 
 	public static CommandException noParameter(AbstractParameter<?> parameter, int pos) {
-		List<String> description = Lists.newArrayList("Position: "+(pos + 1), parameter.toDescription());
+		List<ITextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.exception.position", pos + 1), parameter.toDescription());
 
-		return new CommandException("This command needs at least one more parameter!", description);
+		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.missingParameter"), description);
 	}
 	public static CommandException invalidParameter(AbstractParameter<?> parameter, int pos) {
-		List<String> description = Lists.newArrayList("Position: "+(pos + 1), parameter.toDescription());
+		List<ITextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.exception.position", pos + 1), parameter.toDescription());
 
-		return new CommandException("This is not a valid parameter!", description);
+		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.invalidParameter"), description);
 	}
 
-	public String getTitle() {
+	public ITextComponent getTitle() {
 		return title;
 	}
 
-	public List<String> getDescription() {
+	public List<ITextComponent> getDescription() {
 		return description;
 	}
 
 	@Override
 	public String toString() {
-		return getTitle()+getDescription();
+		return getTitle().getString() + getDescription();
 	}
 }

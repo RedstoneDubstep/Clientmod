@@ -47,6 +47,7 @@ public class CommandLibrary {
 			if (command.prefix.equals(prefix))
 				return command.execute(parameter);
 		}
+
 		return CommandException.prefixNotFound();
 	}
 
@@ -102,7 +103,6 @@ public class CommandLibrary {
 			String link = "https://de.namemc.com/profile/"+text;
 
 			Util.getOSType().openURI(link);
-
 			return null;
 		}
 
@@ -117,21 +117,19 @@ public class CommandLibrary {
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
-					player.sendMessage(new StringTextComponent("There are no mobs in " + range + " blocks range"), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntitiesInRange", range), Util.DUMMY_UUID);
 				else {
-					player.sendMessage(new StringTextComponent("These are all the mobs in " + range + " blocks range:"), Util.DUMMY_UUID);
-					map.forEach((key, value) -> {
-						player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.DUMMY_UUID);
-					});
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entitiesInRange", range), Util.DUMMY_UUID);
+					map.forEach((key, value) -> player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.DUMMY_UUID));
 				}
 			} else {
 				List<? extends Entity> list = mc.world.getEntitiesWithinAABB(entity, boundingBox, (s) -> true);
 
 				if (list.size() == 0) {
-					player.sendMessage(new StringTextComponent("There are no mobs of type "+new TranslationTextComponent(entity.toString()).getString()+" in " + range + " blocks range"), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntityTypeInRange", new TranslationTextComponent(entity.toString()), range), Util.DUMMY_UUID);
 				}
 				else {
-					player.sendMessage(new StringTextComponent("There are " + list.size() + " mobs of type " + new TranslationTextComponent(entity.toString()).getString() + " in " + range + " blocks range:"), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entityTypeInRange", list.size(), new TranslationTextComponent(entity.toString()), range), Util.DUMMY_UUID);
 					list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " (" + ClientUtility.formatBlockPos(entry.getPosition()) + ")"), Util.DUMMY_UUID));
 				}
 			}
@@ -144,7 +142,6 @@ public class CommandLibrary {
 			String wiki_link = "https://minecraft.gamepedia.com/"+text;
 
 			Util.getOSType().openURI(wiki_link);
-
 			return null;
 		}
 

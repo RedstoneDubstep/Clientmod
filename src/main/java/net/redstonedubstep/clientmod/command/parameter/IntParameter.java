@@ -1,5 +1,7 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class IntParameter extends AbstractParameter<Integer> {
@@ -61,7 +63,7 @@ public class IntParameter extends AbstractParameter<Integer> {
 	}
 
 	@Override
-	public String toDescription() {
-		return "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: "+maxValue) : "");
+	public ITextComponent toDescription() {
+		return new TranslationTextComponent( "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: "+maxValue) : ""));
 	}
 }

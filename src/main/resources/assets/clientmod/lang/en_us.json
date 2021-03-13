@@ -1,0 +1,17 @@
+{
+  "key.clientmod:category": "Clientmod",
+  "key.clientmod:openTextbox.name": "Open Textbox",
+
+  "messages.clientmod:radar.noEntitiesInRange": "There are no entities in %s blocks range",
+  "messages.clientmod:radar.entitiesInRange": "These are all the mobs in %s blocks range:",
+  "messages.clientmod:radar.noEntityTypeInRange": "There are no mobs of type %s in %s blocks range",
+  "messages.clientmod:radar.entityTypeInRange": "There are %s mobs of type %s in %s blocks range:",
+
+  "screen.clientmod:mainScreen.supportedCommands": "The following commands are currently supported: ",
+  "screen.clientmod:mainScreen.exception.missingPrefix": "Make sure to enter a prefix!",
+  "screen.clientmod:mainScreen.exception.prefixNotFound": "No command with this prefix has been found!",
+  "screen.clientmod:mainScreen.exception.missingParameter": "This command needs at least one more parameter!",
+  "screen.clientmod:mainScreen.exception.invalidParameter": "This is not a valid parameter!",
+  "screen.clientmod:mainScreen.exception.position": "Position: %s",
+  "screen.clientmod:mainScreen.exception.allowedInputs": "Allowed inputs: %s"
+}

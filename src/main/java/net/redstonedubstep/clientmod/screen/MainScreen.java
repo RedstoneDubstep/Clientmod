@@ -10,15 +10,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 public class MainScreen extends Screen {
 
 	TextFieldWidget inputField;
-	String helpMessage = "";
-	List<String> helpDescription = new ArrayList<>();
+	ITextComponent helpMessage = new TranslationTextComponent("");
+	List<ITextComponent> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
 		super(new StringTextComponent("main_screen"));
@@ -42,9 +44,9 @@ public class MainScreen extends Screen {
 		renderBackground(matrix);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		inputField.render(matrix, mouseX, mouseY, partialTicks);
-		font.func_243248_b(matrix, new StringTextComponent(helpMessage), (width - font.getStringWidth(helpMessage)) / 2, (height + 30) / 2, 16711680);
+		font.drawText(matrix, helpMessage, (width - font.getStringWidth(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
 		for (int i = 0; i < helpDescription.size(); i++) {
-			font.func_243248_b(matrix, new StringTextComponent(helpDescription.get(i)), (width - font.getStringWidth(helpMessage)) / 2, (height + 50 + 20*i) / 2, 16711680);
+			font.drawText(matrix, helpDescription.get(i), (width - font.getStringWidth(helpMessage.getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
 		}
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
@@ -119,7 +121,7 @@ public class MainScreen extends Screen {
 	}
 
 	private void resetHelpMessages() {
-		helpMessage = "";
+		helpMessage = new TranslationTextComponent("");
 		helpDescription = new ArrayList<>();
 	}
 

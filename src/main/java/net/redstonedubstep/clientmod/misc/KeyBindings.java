@@ -9,7 +9,7 @@ public class KeyBindings {
 	public static KeyBinding openTextbox;
 
 	public static void init() {
-		openTextbox = new KeyBinding("key.clientmod.openTextbox", GLFW.GLFW_KEY_WORLD_2, "key.categories.clientmod");
+		openTextbox = new KeyBinding("key.clientmod:openTextbox.name", GLFW.GLFW_KEY_WORLD_2, "key.clientmod:category");
 
 		ClientRegistry.registerKeyBinding(openTextbox);
 	}

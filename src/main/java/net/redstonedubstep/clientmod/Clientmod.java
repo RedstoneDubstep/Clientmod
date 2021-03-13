@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
 
@@ -19,7 +20,7 @@ public class Clientmod {
 	public static final String MODID = "clientmod";
 
 	public Clientmod() {
-		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, ()->Pair.of(()->"Placeholder string", (remoteversionstring,networkbool)->networkbool));
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 	}
 

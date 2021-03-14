@@ -21,7 +21,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ResourceLoadProgressGui.class)
-public class MixinResourceLoadProgressGui {
+public abstract class MixinResourceLoadProgressGui {
 	@Shadow @Final private IAsyncReloader asyncReloader;
 	@Shadow @Final private boolean reloading;
 

@@ -39,7 +39,7 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', ''
-            arg "-mixin.config=vanishmod.mixins.json"
+            arg "-mixin.config=clientmod.mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -56,7 +56,7 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            arg "-mixin.config=vanishmod.mixins.json"
+            arg "-mixin.config=clientmod.mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -113,8 +113,23 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "clientmod",
+                "Specification-Vendor": "Redstone_Dubstep",
+                "Specification-Version": "v1.0",
+                "Implementation-Title": "clientmod",
+                "Implementation-Version": "v1.0",
+                "Implementation-Vendor": "Redstone_Dubstep",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "clientmod.mixins.json"
+        ])
+    }
+}
+
 mixin {
-    add sourceSets.main, "modid.refmap.json"
+    add sourceSets.main, "clientmod.refmap.json"
 }
 
 jar.finalizedBy('reobfJar')

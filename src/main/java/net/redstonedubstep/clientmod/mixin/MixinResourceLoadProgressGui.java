@@ -1,7 +1,7 @@
 package net.redstonedubstep.clientmod.mixin;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,38 +18,41 @@ import net.minecraft.resources.AsyncReloader;
 import net.minecraft.resources.IAsyncReloader;
 import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.util.text.StringTextComponent;
-import net.redstonedubstep.clientmod.misc.MixinFieldStorage;
+import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ResourceLoadProgressGui.class)
 public class MixinResourceLoadProgressGui {
-	@Final
-	@Shadow
-	private IAsyncReloader asyncReloader;
+	@Shadow @Final private IAsyncReloader asyncReloader;
+	@Shadow @Final private boolean reloading;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/client/ClientModLoader;renderProgressText()V"))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;estimateExecutionSpeed()F"))
 	private void injectRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (asyncReloader instanceof AsyncReloader) {
-			Set<IFutureReloadListener> taskSet = ((AsyncReloader) asyncReloader).taskSet;
+		if (reloading && asyncReloader instanceof AsyncReloader) {
+			List<IFutureReloadListener> taskSet = new ArrayList<IFutureReloadListener>(((AsyncReloader) asyncReloader).taskSet);
 
-			if (MixinFieldStorage.oldTaskSet == null) {
-				MixinFieldStorage.oldTaskSet = new ArrayList<>(taskSet);
+			if (FieldHolder.oldTaskSet == null) {
+				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
 			}
 
-			if (!taskSet.equals(MixinFieldStorage.oldTaskSet)) { //update the current task
+			if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task
 				for (IFutureReloadListener task : taskSet) {
-					MixinFieldStorage.oldTaskSet.remove(task);
+					FieldHolder.oldTaskSet.remove(task);
 				}
 
-				if (MixinFieldStorage.oldTaskSet.size() > 0) {
-					MixinFieldStorage.currentTask = new ArrayList<>(MixinFieldStorage.oldTaskSet).get(0);
+				if (FieldHolder.oldTaskSet.size() > 0) {
+					FieldHolder.currentTask = new ArrayList<>(FieldHolder.oldTaskSet).get(0);
 				}
 
-				MixinFieldStorage.oldTaskSet = new ArrayList<>(taskSet);
+				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
 			}
 
-			if (MixinFieldStorage.currentTask != null)
-				Minecraft.getInstance().fontRenderer.drawText(matrixStack, new StringTextComponent("Current Task: " + MixinFieldStorage.currentTask.getSimpleName()), 10, 20, 0);
+			if (FieldHolder.currentTask != null)
+				Minecraft.getInstance().fontRenderer.drawText(matrixStack, new StringTextComponent("Current task: " + FieldHolder.currentTask.getSimpleName()), 10, 20, 0);
+		}
+
+		if (asyncReloader.fullyDone()) {
+			FieldHolder.currentTask = null;
 		}
 	}
 

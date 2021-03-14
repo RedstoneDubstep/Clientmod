@@ -21,6 +21,8 @@ public class SettingsScreen extends Screen {
 	public void init() {
 		addPositionedSettingsButton(0, 1, 1, ClientConfig.CLIENT.shouldReloadSounds, "config.clientmod:shouldReloadSounds.name", this::actionPerformed, new TranslationTextComponent("config.clientmod:shouldReloadSounds.description"));
 		addPositionedSettingsButton(1, 1, 2, ClientConfig.CLIENT.drawReloadingBackground, "config.clientmod:disableReloadingBackground.name", this::actionPerformed, new TranslationTextComponent("config.clientmod:disableReloadingBackground.description"));
+
+		addPositionedSettingsButton(1, 2, 1, ClientConfig.CLIENT.notifyWhenMinceraftScreen, "config.clientmod:notifyWhenMinceraftScreen.name", this::actionPerformed, new TranslationTextComponent("config.clientmod:notifyWhenMinceraftScreen.description"));
 	}
 
 	@Override

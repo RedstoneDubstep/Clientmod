@@ -18,12 +18,16 @@ public class ClientConfig {
 
 	public static class Client
 	{
+		public BooleanValue notifyWhenMinceraftScreen;
 		public BooleanValue shouldReloadSounds;
 		public BooleanValue drawReloadingBackground;
 
 		Client(ForgeConfigSpec.Builder builder)
 		{
 			//for some reason we can't use language files in here, so comments are in english
+			notifyWhenMinceraftScreen = builder
+					.comment("Should Minecraft play a (loud) sound when the Minceraft logo is shown?")
+					.define("notifyWhenMinceraftScreen", true);
 			shouldReloadSounds = builder
 					.comment("Should F3+T also reload sounds? (Turning this off will make resource reloading a bit faster)")
 					.define("shouldReloadSounds", true);

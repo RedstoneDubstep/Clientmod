@@ -19,6 +19,8 @@
   "screen.clientmod:settingsScreen.off": "Off",
   "screen.clientmod:settingsScreen.on": "On",
 
+  "config.clientmod:notifyWhenMinceraftScreen.name": "Notify at Minceraft Logo: %s",
+  "config.clientmod:notifyWhenMinceraftScreen.description": "Should Minecraft play a (loud) sound when the Minceraft logo is shown?",
   "config.clientmod:shouldReloadSounds.name": "Reload Sounds: %s",
   "config.clientmod:shouldReloadSounds.description": "Should F3+T also reload sounds? (Turning this off will make resource reloading a bit faster)",
   "config.clientmod:disableReloadingBackground.name": "Reloading Background: %s",

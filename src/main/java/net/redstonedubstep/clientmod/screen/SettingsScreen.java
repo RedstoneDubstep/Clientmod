@@ -1,12 +1,15 @@
 package net.redstonedubstep.clientmod.screen;
 
+import java.util.function.Consumer;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.redstonedubstep.clientmod.ClientConfig;
-import net.redstonedubstep.clientmod.screen.button.IdButton;
+import net.redstonedubstep.clientmod.screen.button.ConfigButton;
 
 public class SettingsScreen extends Screen {
 
@@ -16,7 +19,8 @@ public class SettingsScreen extends Screen {
 
 	@Override
 	public void init() {
-		addButton(new IdButton(0, 100, 40, 120, 22, new TranslationTextComponent("screen.clientmod:settingsScreen.reloadSounds", onOrOff(ClientConfig.CLIENT.shouldReloadSounds)), this::actionPerformed, new TranslationTextComponent("config.clientmod:shouldReloadSounds.description")));
+		addPositionedSettingsButton(0, 1, 1, ClientConfig.CLIENT.shouldReloadSounds, "config.clientmod:shouldReloadSounds.name", this::actionPerformed, new TranslationTextComponent("config.clientmod:shouldReloadSounds.description"));
+		addPositionedSettingsButton(1, 1, 2, ClientConfig.CLIENT.drawReloadingBackground, "config.clientmod:disableReloadingBackground.name", this::actionPerformed, new TranslationTextComponent("config.clientmod:disableReloadingBackground.description"));
 	}
 
 	@Override
@@ -26,17 +30,22 @@ public class SettingsScreen extends Screen {
 		super.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
-	private void actionPerformed(IdButton button) {
-		int id = button.getId();
+	private void actionPerformed(ConfigButton button) {
+		BooleanValue config = button.getConfig();
 
-		if (id == 0) { //reload sounds button
-			ClientConfig.CLIENT.shouldReloadSounds.set(!ClientConfig.CLIENT.shouldReloadSounds.get());
-			buttons.get(0).setMessage(new TranslationTextComponent("screen.clientmod:settingsScreen.reloadSounds", onOrOff(ClientConfig.CLIENT.shouldReloadSounds)));
-		}
+		config.set(!config.get());
+		button.updateText();
 	}
 
 	public TranslationTextComponent onOrOff(BooleanValue value) {
 		return new TranslationTextComponent("screen.clientmod:settingsScreen." + (value.get() ? "on" : "off"));
+	}
+
+	private void addPositionedSettingsButton(int id, int row, int column, BooleanValue config, String translationKey, Consumer<ConfigButton> onClick, ITextComponent tooltip) {
+		TranslationTextComponent buttonText = new TranslationTextComponent(translationKey, onOrOff(config));
+		int buttonWidth = font.getStringWidth(buttonText.getString()) + 10;
+
+		addButton(new ConfigButton(id, (width + (column - 2) * 300) / 2, 20 + row * 30, buttonWidth, 22, config, buttonText, onClick, tooltip));
 	}
 
 }

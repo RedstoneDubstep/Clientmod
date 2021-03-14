@@ -16,9 +16,11 @@
   "screen.clientmod:mainScreen.exception.position": "Position: %s",
   "screen.clientmod:mainScreen.exception.allowedInputs": "Allowed inputs: %s",
   "screen.clientmod:settingsScreen.name": "Clientmod Settings",
-  "screen.clientmod:settingsScreen.reloadSounds": "Reload Sounds: %s",
   "screen.clientmod:settingsScreen.off": "Off",
   "screen.clientmod:settingsScreen.on": "On",
 
-  "config.clientmod:shouldReloadSounds.description": "Should F3+T also reload sounds? (Turning this off will make resource reloading a bit faster)"
+  "config.clientmod:shouldReloadSounds.name": "Reload Sounds: %s",
+  "config.clientmod:shouldReloadSounds.description": "Should F3+T also reload sounds? (Turning this off will make resource reloading a bit faster)",
+  "config.clientmod:disableReloadingBackground.name": "Reloading Background: %s",
+  "config.clientmod:disableReloadingBackground.description": "Should there be a red background when reloading resources with F3+T?"
 }

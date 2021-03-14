@@ -9,10 +9,12 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.redstonedubstep.clientmod.misc.FieldHolder;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
 import net.redstonedubstep.clientmod.screen.MainScreen;
 
-@EventBusSubscriber(modid=Clientmod.MODID)
+@EventBusSubscriber(modid = Clientmod.MODID)
 public class ClientEventHandler {
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
@@ -31,5 +33,10 @@ public class ClientEventHandler {
 				Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.ENTITY_WITHER_DEATH,1, 5));
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onFMLLoadComplete(FMLLoadCompleteEvent event) {
+		FieldHolder.isMinecraftStarting = false;
 	}
 }

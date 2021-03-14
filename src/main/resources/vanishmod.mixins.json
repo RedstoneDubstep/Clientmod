@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "vanishmod.refmap.json",
   "mixins": [
-    "MixinResourceLoadProgressGui"
+    "MixinResourceLoadProgressGui",
+    "MixinSimpleReloadableResourceManager"
   ],
   "minVersion": "0.8"
 }

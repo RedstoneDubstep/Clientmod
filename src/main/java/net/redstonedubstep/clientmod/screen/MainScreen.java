@@ -23,7 +23,7 @@ public class MainScreen extends Screen {
 	List<ITextComponent> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
-		super(new StringTextComponent("main_screen"));
+		super(new StringTextComponent("screen.clientmod:mainScreen.name"));
 	}
 
 	@Override
@@ -36,7 +36,6 @@ public class MainScreen extends Screen {
 		inputField.setDisabledTextColour(-1);
 		inputField.setEnableBackgroundDrawing(true);
 		inputField.setFocused2(true);
-
 	}
 
 	@Override

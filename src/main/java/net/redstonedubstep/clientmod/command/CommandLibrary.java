@@ -21,6 +21,7 @@ import net.redstonedubstep.clientmod.command.parameter.IntParameter;
 import net.redstonedubstep.clientmod.command.parameter.StringParameter;
 import net.redstonedubstep.clientmod.misc.ClientUtility;
 import net.redstonedubstep.clientmod.screen.ImageScreen;
+import net.redstonedubstep.clientmod.screen.SettingsScreen;
 
 public class CommandLibrary {
 	public static ArrayList<Command> commandList = new ArrayList<>();
@@ -29,6 +30,7 @@ public class CommandLibrary {
 	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new EntityTypeParameter(false));
+	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
 	private static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
 	public static String lastInputText;
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -39,6 +41,7 @@ public class CommandLibrary {
 		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
+		commandList.add(SETTINGS_COMMAND);
 		commandList.add(WIKI_COMMAND);
 	}
 
@@ -134,6 +137,11 @@ public class CommandLibrary {
 				}
 			}
 
+			return null;
+		}
+
+		private static CommandException settings(AbstractParameter<?>[] params) {
+			mc.displayGuiScreen(new SettingsScreen());
 			return null;
 		}
 

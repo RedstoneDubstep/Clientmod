@@ -9,7 +9,9 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
@@ -21,6 +23,8 @@ public class Clientmod {
 
 	public Clientmod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_SPEC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onFMLLoadComplete);
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 	}
 

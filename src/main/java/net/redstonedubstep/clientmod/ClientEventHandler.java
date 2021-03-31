@@ -26,7 +26,7 @@ public class ClientEventHandler {
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code
 	@SubscribeEvent
 	public static void onInitGuiPost(InitGuiEvent.Post event) {
-		if(event.getGui() instanceof MainMenuScreen) {
+		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getGui() instanceof MainMenuScreen) {
 			boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen)event.getGui(), "field_213101_e");
 
 			if (isTitleWronglySpelled) {

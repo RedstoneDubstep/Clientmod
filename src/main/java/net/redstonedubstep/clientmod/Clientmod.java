@@ -23,7 +23,7 @@ public class Clientmod {
 
 	public Clientmod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_SPEC);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientSettings.CLIENT_SPEC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onFMLLoadComplete);
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 	}

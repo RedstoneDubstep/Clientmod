@@ -20,7 +20,7 @@ import net.minecraft.resources.AsyncReloader;
 import net.minecraft.resources.IAsyncReloader;
 import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.util.text.StringTextComponent;
-import net.redstonedubstep.clientmod.ClientConfig;
+import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ResourceLoadProgressGui.class)
@@ -29,10 +29,11 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	@Shadow @Final private boolean reloading;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
+	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;estimateExecutionSpeed()F"))
 	private void injectRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (reloading && asyncReloader instanceof AsyncReloader) {
-			List<IFutureReloadListener> taskSet = new ArrayList<IFutureReloadListener>(((AsyncReloader) asyncReloader).taskSet);
+			List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)asyncReloader).taskSet);
 
 			if (FieldHolder.oldTaskSet == null) {
 				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
@@ -62,6 +63,6 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	//Toggle the Gui's background
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ResourceLoadProgressGui;fill(Lcom/mojang/blaze3d/matrix/MatrixStack;IIIII)V"))
 	public void redirectFill(MatrixStack matrix, int minX, int minY, int maxX, int maxY, int color) {
-		fill(matrix, minX, minY, maxX, maxY, reloading && !ClientConfig.CLIENT.drawReloadingBackground.get() ? 16777215 : color);
+		fill(matrix, minX, minY, maxX, maxY, reloading && !ClientSettings.CONFIG.drawReloadingBackground.get() ? 16777215 : color);
 	}
 }

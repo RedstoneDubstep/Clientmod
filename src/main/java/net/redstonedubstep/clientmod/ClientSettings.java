@@ -5,24 +5,27 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
-public class ClientConfig {
+public class ClientSettings {
 
+	public static boolean sendMessagesWithTeammsg = false;
+
+	//config-related stuff
 	public static final ForgeConfigSpec CLIENT_SPEC;
-	public static final Client CLIENT;
+	public static final Config CONFIG;
 
 	static {
-		final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
+		final Pair<Config, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Config::new);
 		CLIENT_SPEC = specPair.getRight();
-		CLIENT = specPair.getLeft();
+		CONFIG = specPair.getLeft();
 	}
 
-	public static class Client
+	public static class Config
 	{
 		public BooleanValue notifyWhenMinceraftScreen;
 		public BooleanValue shouldReloadSounds;
 		public BooleanValue drawReloadingBackground;
 
-		Client(ForgeConfigSpec.Builder builder)
+		Config(ForgeConfigSpec.Builder builder)
 		{
 			//for some reason we can't use language files in here, so comments are in english
 			notifyWhenMinceraftScreen = builder

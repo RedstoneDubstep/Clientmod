@@ -43,10 +43,6 @@ public class SettingsScreen extends Screen {
 		config.set(!config.get());
 	}
 
-	public TranslationTextComponent onOrOff(BooleanValue value) {
-		return new TranslationTextComponent("screen.clientmod:settingsScreen." + (value.get() ? "on" : "off"));
-	}
-
 	private void addPositionedSettingButton(int row, int column, String translationKey, Consumer<SettingButton> onClick, Supplier<Boolean> isOn) {
 		TranslationTextComponent buttonText = new TranslationTextComponent(translationKey + ".name");
 		TranslationTextComponent tooltip = new TranslationTextComponent(translationKey + ".description");

@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.util.SoundEvents;
+import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +32,15 @@ public class ClientEventHandler {
 
 			if (isTitleWronglySpelled) {
 				Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.ENTITY_WITHER_DEATH,1, 5));
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onChatMessageSent(ClientChatEvent event) {
+		if (ClientSettings.sendMessagesWithTeammsg) {
+			if (!event.getMessage().startsWith("/")) {
+				event.setMessage("/teammsg " + event.getMessage());
 			}
 		}
 	}

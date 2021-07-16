@@ -20,6 +20,7 @@ import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
 import net.redstonedubstep.clientmod.command.parameter.IntParameter;
 import net.redstonedubstep.clientmod.command.parameter.StringParameter;
 import net.redstonedubstep.clientmod.misc.ClientUtility;
+import net.redstonedubstep.clientmod.misc.FieldHolder;
 import net.redstonedubstep.clientmod.screen.ImageScreen;
 import net.redstonedubstep.clientmod.screen.SettingsScreen;
 
@@ -27,6 +28,7 @@ public class CommandLibrary {
 	public static ArrayList<Command> commandList = new ArrayList<>();
 	private static final Command FOLDER_COMMAND = new Command("folder", CommandLibrary.Actions::folder, new StringParameter(Lists.newArrayList("resources", "mods", "mc")));
 	private static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter(Lists.newArrayList("trades", "brewing")));
+	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("lastDeath")));
 	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new EntityTypeParameter(false));
@@ -38,6 +40,7 @@ public class CommandLibrary {
 	public static void addCommandsToList() {
 		commandList.add(FOLDER_COMMAND);
 		commandList.add(IMAGE_COMMAND);
+		commandList.add(LOG_COMMAND);
 		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);

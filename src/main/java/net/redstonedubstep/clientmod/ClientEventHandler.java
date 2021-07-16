@@ -7,6 +7,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -43,6 +44,13 @@ public class ClientEventHandler {
 				event.setMessage("/teammsg " + event.getMessage());
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingDeath(LivingDeathEvent event) {
+		if (event.getEntity() instanceof PlayerEntity) {
+			FieldHolder.lastDeathPosition = event.getEntity().getPosition();
+	}
 	}
 
 	@SubscribeEvent

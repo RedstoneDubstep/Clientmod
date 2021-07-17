@@ -8,7 +8,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class StringParameter extends AbstractParameter<String> {
-	private String value;
+	private String value = "";
 	private final String defaultValue;
 	private final List<String> allowedValues;
 	private boolean required;

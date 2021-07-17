@@ -109,7 +109,7 @@ public class CommandLibrary {
 					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.noLastDeathPosition"), Util.DUMMY_UUID);
 				}
 				else {
-					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyBlockPos(FieldHolder.lastDeathPosition, mc.player.getPosition())), Util.DUMMY_UUID);
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.getPosition())), Util.DUMMY_UUID);
 				}
 			}
 
@@ -159,7 +159,7 @@ public class CommandLibrary {
 				}
 				else {
 					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entityTypeInRange", list.size(), new TranslationTextComponent(entity.toString()), range), Util.DUMMY_UUID);
-					list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " (" + ClientUtility.formatBlockPos(entry.getPosition()) + ")"), Util.DUMMY_UUID));
+					list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " (").appendSibling(ClientUtility.fancyWaypointBlockPos(entry.getPosition(), mc.player.getPosition())).appendString(")"), Util.DUMMY_UUID));
 				}
 			}
 

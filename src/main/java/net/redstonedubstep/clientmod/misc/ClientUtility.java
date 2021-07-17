@@ -5,8 +5,10 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 
@@ -31,7 +33,7 @@ public class ClientUtility {
 		return "x" + x + ", y" + y + ", z" + z;
 	}
 
-	public static ITextComponent fancyBlockPos(BlockPos pos, BlockPos originalPos) {
+	public static IFormattableTextComponent fancyBlockPos(BlockPos pos, BlockPos originalPos) {
 		StringTextComponent position = new StringTextComponent(formatBlockPos(pos));
 		int diffX = pos.getX() - originalPos.getX();
 		int diffZ = pos.getZ() - originalPos.getZ();
@@ -46,5 +48,13 @@ public class ClientUtility {
 
 		position.modifyStyle((s) -> s.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent(direction))));
 		return position;
+	}
+
+	public static ITextComponent fancyWaypointBlockPos(BlockPos pos, BlockPos originalPos) {
+		IFormattableTextComponent fancyBlockPos = fancyBlockPos(pos, originalPos);
+		String clickCommand = "/clientmod waypoint set " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
+
+		fancyBlockPos.modifyStyle(s -> s.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
+		return fancyBlockPos;
 	}
 }

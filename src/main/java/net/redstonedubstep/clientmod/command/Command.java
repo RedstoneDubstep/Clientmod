@@ -41,6 +41,8 @@ public class Command {
 			}
 
 			result = params[i].setValue(stringParams[i], i);
+			if (result != null)
+				return result;
 		}
 
 		return result;

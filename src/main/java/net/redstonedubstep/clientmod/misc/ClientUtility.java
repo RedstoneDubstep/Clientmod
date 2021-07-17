@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -56,5 +57,9 @@ public class ClientUtility {
 
 		fancyBlockPos.modifyStyle(s -> s.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
 		return fancyBlockPos;
+	}
+
+	public static double distanceBetween(BlockPos pos1, BlockPos pos2) {
+		return Vector3d.copy(pos1.subtract(pos2)).length();
 	}
 }

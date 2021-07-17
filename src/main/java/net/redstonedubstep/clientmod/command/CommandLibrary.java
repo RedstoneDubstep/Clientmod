@@ -1,6 +1,7 @@
 package net.redstonedubstep.clientmod.command;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -153,6 +154,7 @@ public class CommandLibrary {
 				}
 			} else {
 				List<? extends Entity> list = mc.world.getEntitiesWithinAABB(entity, boundingBox, (s) -> true);
+				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.getPosition(), mc.player.getPosition())));
 
 				if (list.size() == 0) {
 					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntityTypeInRange", new TranslationTextComponent(entity.toString()), range), Util.DUMMY_UUID);

@@ -40,8 +40,9 @@ public class CommandException {
 
 		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.missingParameter"), description);
 	}
-	public static CommandException invalidParameter(AbstractParameter<?> parameter, int pos) {
-		List<ITextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.exception.position", pos + 1), parameter.toDescription());
+
+	public static CommandException invalidParameter(AbstractParameter<?> parameter, int pos, String wrongValue) {
+		List<ITextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.exception.position", pos + 1), new TranslationTextComponent("screen.clientmod:mainScreen.exception.wrongValue", wrongValue), parameter.toDescription());
 
 		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.invalidParameter"), description);
 	}

@@ -5,27 +5,29 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class IntParameter extends AbstractParameter<Integer> {
-	private int value;
-	private final int defaultValue;
-	private final int maxValue;
+	private Integer value;
+	private final Integer defaultValue;
+	private final Integer maxValue;
+	private final Integer minValue;
 	private boolean required;
 
 	public IntParameter() {
-		this(true, 0);
+		this(true, null);
 	}
 
-	public IntParameter(boolean required, int defaultValue) {
-		this(required, defaultValue, Integer.MAX_VALUE);
+	public IntParameter(boolean required, Integer defaultValue) {
+		this(required, defaultValue, Integer.MAX_VALUE, Integer.MIN_VALUE);
 	}
 
-	public IntParameter(boolean required, int defaultValue, int maxValue) {
+	public IntParameter(boolean required, Integer defaultValue, Integer maxValue, Integer minValue) {
 		this.required = required;
 		this.defaultValue = defaultValue;
 		this.maxValue = maxValue;
+		this.minValue = minValue;
 	}
 
-	public boolean isValueAllowed(int value) {
-		return value <= maxValue && value > 0;
+	public boolean isValueAllowed(Integer value) {
+		return value <= maxValue && value >= minValue;
 	}
 
 	@Override
@@ -38,11 +40,11 @@ public class IntParameter extends AbstractParameter<Integer> {
 		try{
 			this.value = Integer.parseInt(value);
 		} catch (NumberFormatException e) {
-			return CommandException.invalidParameter(this, pos);
+			return CommandException.invalidParameter(this, pos, value);
 		}
 
 		if (!isValueAllowed(this.value))
-			return CommandException.invalidParameter(this, pos);
+			return CommandException.invalidParameter(this, pos, value);
 
 		return null;
 	}
@@ -64,6 +66,6 @@ public class IntParameter extends AbstractParameter<Integer> {
 
 	@Override
 	public ITextComponent toDescription() {
-		return new TranslationTextComponent( "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: "+maxValue) : ""));
+		return new TranslationTextComponent( "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: " + maxValue) : "") + (minValue > Integer.MIN_VALUE ? (", lowest allowed value: " + minValue) : ""));
 	}
 }

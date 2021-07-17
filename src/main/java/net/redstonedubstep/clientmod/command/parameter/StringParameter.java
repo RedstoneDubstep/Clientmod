@@ -36,7 +36,7 @@ public class StringParameter extends AbstractParameter<String> {
 	@Override
 	public CommandException setValue(String value, int pos) {
 		if (!allowedValues.isEmpty() && !allowedValues.contains(value))
-			return CommandException.invalidParameter(this, pos);
+			return CommandException.invalidParameter(this, pos, value);
 
 		this.value = value;
 		return null;

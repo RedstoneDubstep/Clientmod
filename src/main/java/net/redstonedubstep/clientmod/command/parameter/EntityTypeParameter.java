@@ -36,7 +36,7 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 		Optional<EntityType<?>> optional = EntityType.byKey(entityName);
 
 		if (!optional.isPresent()) {
-			return CommandException.invalidParameter(this, pos);
+			return CommandException.invalidParameter(this, pos, value);
 		} else {
 			this.value = optional.orElse(null);
 		}

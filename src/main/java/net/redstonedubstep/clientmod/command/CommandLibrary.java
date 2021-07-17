@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -21,6 +22,7 @@ import net.redstonedubstep.clientmod.command.parameter.IntParameter;
 import net.redstonedubstep.clientmod.command.parameter.StringParameter;
 import net.redstonedubstep.clientmod.misc.ClientUtility;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
+import net.redstonedubstep.clientmod.misc.WaypointManager;
 import net.redstonedubstep.clientmod.screen.ImageScreen;
 import net.redstonedubstep.clientmod.screen.SettingsScreen;
 
@@ -31,8 +33,9 @@ public class CommandLibrary {
 	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("lastDeath")));
 	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
-	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000), new EntityTypeParameter(false));
+	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
+	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
 	private static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
 	public static String lastInputText;
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -45,6 +48,7 @@ public class CommandLibrary {
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
 		commandList.add(SETTINGS_COMMAND);
+		commandList.add(WAYPOINT_COMMAND);
 		commandList.add(WIKI_COMMAND);
 	}
 
@@ -93,13 +97,28 @@ public class CommandLibrary {
 			return null;
 		}
 
+		private static CommandException log(AbstractParameter<?>[] params) {
+			String text = ((StringParameter)params[0]).getValue();
+
+			if (text.equals("lastDeath")) {
+				if (FieldHolder.lastDeathPosition == null) {
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.noLastDeathPosition"), Util.DUMMY_UUID);
+				}
+				else {
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyBlockPos(FieldHolder.lastDeathPosition, mc.player.getPosition())), Util.DUMMY_UUID);
+				}
+			}
+
+			return null;
+		}
+
 		private static CommandException msg(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue();
 
 			if (text.equals("leave"))
 				mc.player.sendChatMessage("Redstone has left the server.");
 			else
-				return CommandException.invalidParameter(params[0], 0);
+				return CommandException.invalidParameter(params[0], 0, text);
 
 			return null;
 		}
@@ -147,6 +166,48 @@ public class CommandLibrary {
 			mc.displayGuiScreen(new SettingsScreen());
 			return null;
 		}
+		
+		private static CommandException waypoint(AbstractParameter<?>[] params) {
+			String text = ((StringParameter)params[0]).getValue();
+			Integer x = ((IntParameter)params[1]).getValue();
+			Integer y = ((IntParameter)params[2]).getValue();
+			Integer z = ((IntParameter)params[3]).getValue();
+			WaypointManager waypointManager = WaypointManager.getInstance();
+
+			if (text.isEmpty()) {
+				waypointManager.setWaypoint(mc.player.getPosition());
+				return null;
+			}
+			else if (text.equals("remove")) {
+				waypointManager.resetWaypoint();
+				return null;
+			}
+			else if (text.equals("get")) {
+				if (waypointManager.hasWaypoint())
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), Util.DUMMY_UUID);
+				else
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.noWaypoint"), Util.DUMMY_UUID);
+
+				return null;
+
+			}
+			else if (text.equals("set")) {
+				if (x != null && y != null && z != null) {
+					BlockPos pos = new BlockPos(x, y, z);
+
+					waypointManager.setWaypoint(pos);
+					return null;
+				}
+
+				//if one of the numbers is not given, return an exception
+				for (int i = 1; i < 4; i++) {
+					if (params[i].getValue() == null)
+						return CommandException.noParameter(params[i], i);
+				}
+			}
+
+			return null;
+		}
 
 		private static CommandException wiki(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
@@ -155,6 +216,5 @@ public class CommandLibrary {
 			Util.getOSType().openURI(wiki_link);
 			return null;
 		}
-
 	}
 }

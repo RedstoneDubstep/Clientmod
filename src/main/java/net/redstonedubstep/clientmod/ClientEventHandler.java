@@ -100,7 +100,7 @@ public class ClientEventHandler {
 				int startX = Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - squareSize / 2;
 				int startY = Minecraft.getInstance().getMainWindow().getScaledHeight() / 2 - squareSize / 2 + yOffset;
 				int alpha = Math.round(0x11 * dotProduct * 36) << 24;
-				int color = alpha + 0xFF0000; //default red
+				int color = alpha + (dotProduct > 0.299 ? 0xFFA500 : 0xFF0000); //default red, orange when the direction is correct
 
 				if (dotProductRaw == 0) {
 					color = 0x6600FF00; //green marker when position is reached

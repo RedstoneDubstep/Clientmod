@@ -29,12 +29,12 @@ public class CommandException {
 		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.missingPrefix"), description);
 	}
 
-	public static CommandException prefixNotFound() {
+	public static CommandException prefixNotFound(String wrongPrefix) {
 		List<IFormattableTextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.supportedCommands"));
 
 		CommandLibrary.commandList.forEach(c -> description.add(new StringTextComponent(c.prefix)));
 
-		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.prefixNotFound"), description);
+		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.prefixNotFound", wrongPrefix), description);
 	}
 
 	public static CommandException noParameter(AbstractParameter<?> parameter, int pos) {

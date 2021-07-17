@@ -62,7 +62,7 @@ public class CommandLibrary {
 				return command.execute(parameter);
 		}
 
-		return CommandException.prefixNotFound();
+		return CommandException.prefixNotFound(prefix);
 	}
 
 	public static String getCompleteCommand(String commandStart) {

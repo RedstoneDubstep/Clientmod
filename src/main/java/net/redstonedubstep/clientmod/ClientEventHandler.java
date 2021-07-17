@@ -12,6 +12,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -29,7 +30,7 @@ import net.redstonedubstep.clientmod.misc.KeyBindings;
 import net.redstonedubstep.clientmod.misc.WaypointManager;
 import net.redstonedubstep.clientmod.screen.MainScreen;
 
-@EventBusSubscriber(modid = Clientmod.MODID)
+@EventBusSubscriber(modid = Clientmod.MODID, value = Dist.CLIENT)
 public class ClientEventHandler {
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {

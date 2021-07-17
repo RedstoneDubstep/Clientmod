@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
@@ -58,7 +57,7 @@ public class StringParameter extends AbstractParameter<String> {
 	}
 
 	@Override
-	public ITextComponent toDescription() {
+	public IFormattableTextComponent toDescription() {
 		IFormattableTextComponent component = new TranslationTextComponent("screen.clientmod:mainScreen.exception.allowedInputs", "String");
 
 		if (!allowedValues.isEmpty()) {

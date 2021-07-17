@@ -3,7 +3,7 @@ package net.redstonedubstep.clientmod.command.parameter;
 import java.util.Optional;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
@@ -60,7 +60,7 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	}
 
 	@Override
-	public ITextComponent toDescription() {
+	public IFormattableTextComponent toDescription() {
 		return new TranslationTextComponent("screen.clientmod:mainScreen.exception.allowedInputs", "the registry name of an Entity");
 	}
 }

@@ -6,7 +6,12 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.util.text.event.HoverEvent.Action;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -17,6 +22,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.redstonedubstep.clientmod.command.CommandException;
+import net.redstonedubstep.clientmod.command.CommandLibrary;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
 import net.redstonedubstep.clientmod.misc.WaypointManager;
@@ -49,6 +56,19 @@ public class ClientEventHandler {
 			if (!event.getMessage().startsWith("/")) {
 				event.setMessage("/teammsg " + event.getMessage());
 			}
+		}
+		else if (event.getMessage().startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen
+			String command = event.getMessage().replace("/clientmod ", "");
+			CommandException result = CommandLibrary.parseAndExecuteCommand(command);
+
+			if (result != null) {
+				TranslationTextComponent errorMessage = new TranslationTextComponent("command.failed");
+
+				errorMessage.modifyStyle(s -> s.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).mergeStyle(TextFormatting.RED);
+				Minecraft.getInstance().player.sendMessage(errorMessage, Util.DUMMY_UUID);
+			}
+
+			event.setCanceled(true);
 		}
 	}
 

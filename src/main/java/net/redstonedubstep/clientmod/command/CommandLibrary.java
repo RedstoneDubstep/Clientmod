@@ -52,7 +52,11 @@ public class CommandLibrary {
 		commandList.add(WIKI_COMMAND);
 	}
 
-	public static CommandException findAndExecuteCommand(String prefix, String parameter) {
+	public static CommandException parseAndExecuteCommand(String unparsedCommand) {
+		String[] splitCommand = unparsedCommand.split(" ", 2);
+		String prefix = splitCommand[0];
+		String parameter = splitCommand.length > 1 ? splitCommand[1] : "";
+
 		for (Command command : commandList) {
 			if (command.prefix.equals(prefix))
 				return command.execute(parameter);

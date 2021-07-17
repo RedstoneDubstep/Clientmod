@@ -10,7 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
@@ -19,8 +19,8 @@ import net.redstonedubstep.clientmod.command.CommandLibrary;
 public class MainScreen extends Screen {
 
 	TextFieldWidget inputField;
-	ITextComponent helpMessage = new TranslationTextComponent("");
-	List<ITextComponent> helpDescription = new ArrayList<>();
+	IFormattableTextComponent helpMessage = new TranslationTextComponent("");
+	List<IFormattableTextComponent> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
 		super(new StringTextComponent("screen.clientmod:mainScreen.name"));
@@ -95,11 +95,7 @@ public class MainScreen extends Screen {
 		if (input.isEmpty())
 			setHelpMessages(CommandException.empty());
 		else {
-
-			String prefix = input.split(" ")[0];
-			String parameter = input.contains(" ") ? input.split(" ", 2)[1] : "";
-
-			CommandException result = CommandLibrary.findAndExecuteCommand(prefix, parameter);
+			CommandException result = CommandLibrary.parseAndExecuteCommand(input);
 			setHelpMessages(result);
 		}
 

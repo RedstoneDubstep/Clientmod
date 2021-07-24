@@ -31,6 +31,7 @@ public class SettingButton extends Button {
 
 		this.isOn = isOn;
 		this.updateText();
+		this.validateHeight(width, getMessage());
 	}
 
 	//copied from ExtendedButton because we can't extend that class (oh the irony) due to the tooltip code missing there
@@ -43,15 +44,15 @@ public class SettingButton extends Button {
 			ITextComponent buttonText = this.getMessage();
 			List<IReorderingProcessor> buttonLines = mc.fontRenderer.trimStringToWidth(buttonText, width - 6);
 
-			this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height + (buttonLines.size() - 1) * 12;
+			this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			int k = this.getYImage(this.isHovered());
-			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, this.x, this.y, 0, 46 + k * 20, this.width, this.height + (buttonLines.size() - 1) * 12, 200, 20, 2, 3, 2, 2, this.getBlitOffset());
+			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, this.x, this.y, 0, 46 + k * 20, this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset());
 			this.renderBg(stack, mc, mouseX, mouseY);
 
 			for (int i = 0; i < buttonLines.size(); i++) {
 				IReorderingProcessor line = buttonLines.get(i);
 
-				mc.fontRenderer.drawTextWithShadow(stack, line, this.x + this.width / 2 - mc.fontRenderer.func_243245_a(line) / 2, this.y + (this.height - 8) / 2 + i * 12, getFGColor());
+				mc.fontRenderer.drawTextWithShadow(stack, line, this.x + this.width / 2 - mc.fontRenderer.func_243245_a(line) / 2, this.y + 6 + i * 12, getFGColor());
 			}
 
 			if (this.isHovered()) {
@@ -61,9 +62,16 @@ public class SettingButton extends Button {
 	}
 
 	public void updateText() {
-		if (isOn != null && getMessage() instanceof TranslationTextComponent && ((TranslationTextComponent)getMessage()).getFormatArgs().length == 0) {
+		if (isOn != null && getMessage() instanceof TranslationTextComponent) {
 			setMessage(new TranslationTextComponent(((TranslationTextComponent)getMessage()).getKey(), new TranslationTextComponent("screen.clientmod:settingsScreen." + (isOn.get() ? "on" : "off"))));
 		}
+	}
+
+	private void validateHeight(int width, ITextComponent name) {
+		List<IReorderingProcessor> nameLines = Minecraft.getInstance().fontRenderer.trimStringToWidth(name, width - 6);
+
+		this.height += (nameLines.size() - 1) * 12;
+		System.out.println(height);
 	}
 
 	@Override

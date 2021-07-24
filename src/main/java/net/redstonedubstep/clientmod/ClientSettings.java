@@ -35,6 +35,7 @@ public class ClientSettings {
 		public BooleanValue notifyWhenMinceraftScreen;
 		public BooleanValue shouldReloadSounds;
 		public BooleanValue drawReloadingBackground;
+		public BooleanValue enhancedReloadingInfo;
 
 		Config(ForgeConfigSpec.Builder builder)
 		{
@@ -48,6 +49,9 @@ public class ClientSettings {
 			drawReloadingBackground = builder
 					.comment("Should there be a red background when reloading resources with F3+T?")
 					.define("drawReloadingBackground", true);
+			enhancedReloadingInfo = builder
+					.comment("Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?")
+					.define("enhancedReloadingInfo", false);
 		}
 	}
 

@@ -27,8 +27,11 @@ public abstract class MixinSimpleReloadableResourceManager {
 			listeners = listeners.stream().filter(l -> !(l instanceof SoundHandler)).collect(Collectors.toList());
 		}
 
-		FieldHolder.maxTaskAmount = listeners.size();
-		FieldHolder.oldTaskSet = listeners;
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
+			FieldHolder.maxTaskAmount = listeners.size();
+			FieldHolder.oldTaskSet = listeners;
+		}
+		
 		return simpleReloadableResourceManager.initializeAsyncReloader(backgroundExecutor, gameExecutor, listeners, waitingFor);
 	}
 }

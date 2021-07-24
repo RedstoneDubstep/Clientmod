@@ -14,7 +14,7 @@ import net.redstonedubstep.clientmod.screen.button.SettingButton;
 public class SettingsScreen extends Screen {
 
 	private OptionsRowList settingsList;
-	private final AbstractOption[] configs = {new BetterBooleanOption(ClientSettings.CONFIG.notifyWhenMinceraftScreen), new BetterBooleanOption(ClientSettings.CONFIG.shouldReloadSounds), new BetterBooleanOption(ClientSettings.CONFIG.drawReloadingBackground)};
+	private final AbstractOption[] configs = {new BetterBooleanOption(ClientSettings.CONFIG.notifyWhenMinceraftScreen), new BetterBooleanOption(ClientSettings.CONFIG.shouldReloadSounds), new BetterBooleanOption(ClientSettings.CONFIG.drawReloadingBackground), new BetterBooleanOption(ClientSettings.CONFIG.enhancedReloadingInfo)};
 	private final AbstractOption[] settings = {ClientSettings.SEND_MESSAGES_WITH_TEAMMSG};
 
 	public SettingsScreen() {

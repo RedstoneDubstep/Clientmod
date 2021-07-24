@@ -35,7 +35,7 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;estimateExecutionSpeed()F"))
 	private void injectRender(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (reloading && asyncReloader instanceof AsyncReloader && !asyncReloader.fullyDone()) {
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && reloading && asyncReloader instanceof AsyncReloader && !asyncReloader.fullyDone()) {
 			List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)asyncReloader).taskSet);
 
 			//setup reloading-related fields
@@ -78,18 +78,20 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	//At this point, reloading is fully done, so we can do some post-stuff
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setLoadingGui(Lnet/minecraft/client/gui/LoadingGui;)V"))
 	public void onCloseLoadingGui(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		FieldHolder.currentTask = null;
-		FieldHolder.maxTaskAmount = -1;
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
+			FieldHolder.currentTask = null;
+			FieldHolder.maxTaskAmount = -1;
 
-		if (Minecraft.getInstance().player != null) {
-			long duration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
+			if (Minecraft.getInstance().player != null) {
+				long duration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
 
-			if (duration >= 0) {
-				Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.DUMMY_UUID);
+				if (duration >= 0) {
+					Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.DUMMY_UUID);
+				}
 			}
-		}
 
-		FieldHolder.reloadingStartTime = -1;
-		FieldHolder.reloadingFinishTime = -1;
+			FieldHolder.reloadingStartTime = -1;
+			FieldHolder.reloadingFinishTime = -1;
+		}
 	}
 }

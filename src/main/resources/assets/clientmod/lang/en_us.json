@@ -33,6 +33,8 @@
   "config.clientmod:shouldReloadSounds.description": "Should F3+T also reload sounds? (Turning this off will make resource reloading a bit faster)",
   "config.clientmod:drawReloadingBackground.name": "Reloading Background: %s",
   "config.clientmod:drawReloadingBackground.description": "Should there be a red background when reloading resources with F3+T?",
+  "config.clientmod:enhancedReloadingInfo.name": "Enhanced Reloading Info: %s",
+  "config.clientmod:enhancedReloadingInfo.description": "Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg: %s",
   "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"

@@ -13,4 +13,6 @@ public class FieldHolder {
 	public static IFutureReloadListener currentTask;
 	public static List<IFutureReloadListener> oldTaskSet;
 	public static int maxTaskAmount = -1;
+	public static long reloadingStartTime = -1;
+	public static long reloadingFinishTime = -1;
 }

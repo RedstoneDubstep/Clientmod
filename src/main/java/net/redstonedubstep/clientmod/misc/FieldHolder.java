@@ -12,4 +12,5 @@ public class FieldHolder {
 	//mixin related fields that can't be put in mixin classes
 	public static IFutureReloadListener currentTask;
 	public static List<IFutureReloadListener> oldTaskSet;
+	public static int maxTaskAmount = -1;
 }

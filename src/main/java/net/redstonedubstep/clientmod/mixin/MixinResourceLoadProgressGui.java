@@ -31,15 +31,19 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;estimateExecutionSpeed()F"))
-	private void injectRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (reloading && asyncReloader instanceof AsyncReloader) {
+	private void injectRender(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+		if (reloading && asyncReloader instanceof AsyncReloader && !asyncReloader.fullyDone()) {
 			List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)asyncReloader).taskSet);
 
-			if (FieldHolder.oldTaskSet == null) {
+			//setup reloading-related fields
+			if (FieldHolder.maxTaskAmount <= -1)
+				FieldHolder.maxTaskAmount = taskSet.size();
+
+			if (FieldHolder.oldTaskSet == null || FieldHolder.oldTaskSet.isEmpty()) {
 				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
 			}
 
-			if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task
+			if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task by comparing the new and the old task set
 				for (IFutureReloadListener task : taskSet) {
 					FieldHolder.oldTaskSet.remove(task);
 				}
@@ -52,7 +56,7 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 			}
 
 			if (FieldHolder.currentTask != null)
-				Minecraft.getInstance().fontRenderer.drawText(matrixStack, new StringTextComponent("Current task: " + FieldHolder.currentTask.getSimpleName()), 10, 20, 0);
+				Minecraft.getInstance().fontRenderer.drawText(stack, new StringTextComponent("Current task: " + FieldHolder.currentTask.getSimpleName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
 		}
 
 		if (asyncReloader.fullyDone()) {

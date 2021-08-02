@@ -100,7 +100,7 @@ public class ClientEventHandler {
 				int squareSize = relativePos.length() < 150 ? 20 : 10;
 				int startX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - squareSize / 2;
 				int startY = Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - squareSize / 2 + yOffset;
-				int alpha = Math.round(0x11 * dotProduct * 36) << 24;
+				int alpha = Math.round(0x11 * dotProduct * 5) << 24;
 				int color = alpha + (dotProduct > 0.299 ? 0xFFA500 : 0xFF0000); //default red, orange when the direction is correct
 
 				if (dotProductRaw == 0) {

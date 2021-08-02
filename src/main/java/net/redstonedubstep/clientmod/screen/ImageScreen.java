@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 
 public class ImageScreen extends Screen {
@@ -37,8 +36,8 @@ public class ImageScreen extends Screen {
 	}
 
 	@Override
-	public void init() {
-		addButton(new ExtendedButton((width + screenWidth) / 2 - 10, (height - imageHeight) / 2, 10, 10, new TextComponent("X"), this::closeScreen));
+	public void init() { //TODO: test if button renders
+		addRenderableWidget(new ExtendedButton((width + screenWidth) / 2 - 10, (height - imageHeight) / 2, 10, 10, new TextComponent("X"), this::closeScreen));
 	}
 
 	@Override
@@ -46,7 +45,6 @@ public class ImageScreen extends Screen {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, background);
 		blit(matrix, (width - screenWidth) / 2, (height - imageHeight) / 2, horizontalScrolling ? offset : 0, verticalScrolling ? offset : 0, screenWidth, imageHeight, imageWidth, imageHeight);
-		RenderSystem.disableAlphaTest();
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
 	}

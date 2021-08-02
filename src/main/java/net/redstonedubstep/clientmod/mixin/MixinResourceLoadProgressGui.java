@@ -1,34 +1,10 @@
 package net.redstonedubstep.clientmod.mixin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Overlay;
-import net.minecraft.client.gui.screens.LoadingOverlay;
-import net.minecraft.server.packs.resources.SimpleReloadInstance;
-import net.minecraft.server.packs.resources.ReloadInstance;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.Util;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.redstonedubstep.clientmod.ClientSettings;
-import net.redstonedubstep.clientmod.misc.FieldHolder;
 
-@Mixin(LoadingOverlay.class)
+//@Mixin(LoadingOverlay.class)
 public abstract class MixinResourceLoadProgressGui extends Overlay {
-	@Shadow @Final private ReloadInstance asyncReloader;
+	/*@Shadow @Final private ReloadInstance asyncReloader;
 	@Shadow @Final private boolean reloading;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
@@ -93,5 +69,5 @@ public abstract class MixinResourceLoadProgressGui extends Overlay {
 			FieldHolder.reloadingStartTime = -1;
 			FieldHolder.reloadingFinishTime = -1;
 		}
-	}
+	}*/
 }

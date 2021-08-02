@@ -41,7 +41,7 @@ public class MainScreen extends Screen {
 	@Override
 	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(matrix);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		inputField.render(matrix, mouseX, mouseY, partialTicks);
 		font.draw(matrix, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
 		for (int i = 0; i < helpDescription.size(); i++) {

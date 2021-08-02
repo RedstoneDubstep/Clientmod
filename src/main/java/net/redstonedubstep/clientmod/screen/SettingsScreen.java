@@ -3,9 +3,11 @@ package net.redstonedubstep.clientmod.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Option;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.ClientSettings.BetterBooleanOption;
@@ -24,7 +26,7 @@ public class SettingsScreen extends Screen {
 	@Override
 	public void init() {
 		this.settingsList = new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
-		children.add(settingsList);
+		addRenderableWidget(settingsList);
 		settingsList.addSmall(configs);
 		settingsList.addSmall(settings);
 	}
@@ -38,11 +40,11 @@ public class SettingsScreen extends Screen {
 	}
 
 	@Override
-	protected <T extends AbstractWidget> T addButton(T button) {
+	protected <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T button) {
 		if (button instanceof SettingButton) {
 			((SettingButton)button).updateText();
 		}
 
-		return super.addButton(button);
+		return super.addRenderableWidget(button);
 	}
 }

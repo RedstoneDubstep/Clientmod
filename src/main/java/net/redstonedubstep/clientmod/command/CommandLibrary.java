@@ -217,7 +217,7 @@ public class CommandLibrary {
 
 		private static CommandException wiki(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
-			String wiki_link = "https://minecraft.gamepedia.com/"+text;
+			String wiki_link = "https://minecraft.fandom.com/" + text;
 
 			Util.getPlatform().openUri(wiki_link);
 			return null;

@@ -39,7 +39,7 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', ''
-            arg "-mixin.config=clientmod.mixins.json"
+            //arg "-mixin.config=clientmod.mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -56,7 +56,7 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            arg "-mixin.config=clientmod.mixins.json"
+            //arg "-mixin.config=clientmod.mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'

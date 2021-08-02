@@ -17,6 +17,7 @@ import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class SettingButton extends Button {
 	private final Supplier<Boolean> isOn;
+	private final int baseHeight;
 
 	public SettingButton(int xPos, int yPos, int width, int height, String translationKey, Consumer<SettingButton> onClick, Supplier<Boolean> isOn) {
 		this(xPos, yPos, width, height, new TranslatableComponent(translationKey), onClick, isOn, null);
@@ -32,6 +33,7 @@ public class SettingButton extends Button {
 		});
 
 		this.isOn = isOn;
+		this.baseHeight = height;
 		this.updateText();
 		this.validateHeight(width, getMessage());
 	}
@@ -67,13 +69,14 @@ public class SettingButton extends Button {
 	public void updateText() {
 		if (isOn != null && getMessage() instanceof TranslatableComponent) {
 			setMessage(new TranslatableComponent(((TranslatableComponent)getMessage()).getKey(), new TranslatableComponent("screen.clientmod:settingsScreen." + (isOn.get() ? "on" : "off"))));
+			validateHeight(width, getMessage());
 		}
 	}
 
 	private void validateHeight(int width, Component name) {
 		List<FormattedCharSequence> nameLines = Minecraft.getInstance().font.split(name, width - 6);
 
-		this.height += (nameLines.size() - 1) * 12;
+		this.height = baseHeight + (nameLines.size() - 1) * 12;
 		System.out.println(height);
 	}
 

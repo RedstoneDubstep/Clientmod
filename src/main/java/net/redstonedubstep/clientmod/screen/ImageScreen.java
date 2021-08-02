@@ -1,13 +1,14 @@
 package net.redstonedubstep.clientmod.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+import net.minecraftforge.fmlclient.gui.widget.ExtendedButton;
 
 public class ImageScreen extends Screen {
 	private final ResourceLocation background;
@@ -24,7 +25,7 @@ public class ImageScreen extends Screen {
 	}
 
 	public ImageScreen(String name, int width, int height, int screenWidth, int screenHeight, String backgroundPath) {
-		super(new TranslationTextComponent(name));
+		super(new TranslatableComponent(name));
 
 		background = new ResourceLocation(backgroundPath);
 		this.imageWidth = width;
@@ -37,14 +38,13 @@ public class ImageScreen extends Screen {
 
 	@Override
 	public void init() {
-		addButton(new ExtendedButton((width + screenWidth) / 2 - 10, (height - imageHeight) / 2, 10, 10, new StringTextComponent("X"), this::closeScreen));
+		addButton(new ExtendedButton((width + screenWidth) / 2 - 10, (height - imageHeight) / 2, 10, 10, new TextComponent("X"), this::closeScreen));
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		minecraft.getTextureManager().bindTexture(background);
-		RenderSystem.enableAlphaTest();
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, background);
 		blit(matrix, (width - screenWidth) / 2, (height - imageHeight) / 2, horizontalScrolling ? offset : 0, verticalScrolling ? offset : 0, screenWidth, imageHeight, imageWidth, imageHeight);
 		RenderSystem.disableAlphaTest();
 
@@ -65,6 +65,6 @@ public class ImageScreen extends Screen {
 	}
 
 	public void closeScreen(Button button) {
-		this.closeScreen();
+		this.onClose();
 	}
 }

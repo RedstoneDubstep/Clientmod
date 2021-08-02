@@ -3,15 +3,15 @@ package net.redstonedubstep.clientmod.misc;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.util.text.event.HoverEvent.Action;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.HoverEvent.Action;
 
 public class ClientUtility {
 	public static HashMap<Class<? extends Entity>, Integer> countEntitiesInList(List<Entity> list) {
@@ -34,8 +34,8 @@ public class ClientUtility {
 		return "x" + x + ", y" + y + ", z" + z;
 	}
 
-	public static IFormattableTextComponent fancyBlockPos(BlockPos pos, BlockPos originalPos) {
-		StringTextComponent position = new StringTextComponent(formatBlockPos(pos));
+	public static MutableComponent fancyBlockPos(BlockPos pos, BlockPos originalPos) {
+		TextComponent position = new TextComponent(formatBlockPos(pos));
 		int diffX = pos.getX() - originalPos.getX();
 		int diffZ = pos.getZ() - originalPos.getZ();
 		String direction;
@@ -47,19 +47,19 @@ public class ClientUtility {
 			direction = diffX > 0 ? "Northeast" : "Northwest";
 		}
 
-		position.modifyStyle((s) -> s.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent(direction))));
+		position.withStyle((s) -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, new TextComponent(direction))));
 		return position;
 	}
 
-	public static ITextComponent fancyWaypointBlockPos(BlockPos pos, BlockPos originalPos) {
-		IFormattableTextComponent fancyBlockPos = fancyBlockPos(pos, originalPos);
+	public static Component fancyWaypointBlockPos(BlockPos pos, BlockPos originalPos) {
+		MutableComponent fancyBlockPos = fancyBlockPos(pos, originalPos);
 		String clickCommand = "/clientmod waypoint set " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
 
-		fancyBlockPos.modifyStyle(s -> s.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
+		fancyBlockPos.withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
 		return fancyBlockPos;
 	}
 
 	public static double distanceBetween(BlockPos pos1, BlockPos pos2) {
-		return Vector3d.copy(pos1.subtract(pos2)).length();
+		return Vec3.atLowerCornerOf(pos1.subtract(pos2)).length();
 	}
 }

@@ -1,6 +1,6 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public abstract class AbstractParameter<T> {
@@ -14,5 +14,5 @@ public abstract class AbstractParameter<T> {
 
 	public abstract void setRequired(boolean required);
 
-	public abstract IFormattableTextComponent toDescription();
+	public abstract MutableComponent toDescription();
 }

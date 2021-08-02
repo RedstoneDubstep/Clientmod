@@ -2,9 +2,9 @@ package net.redstonedubstep.clientmod.command.parameter;
 
 import java.util.Optional;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
@@ -33,7 +33,7 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	@Override
 	public CommandException setValue(String value, int pos) {
 		String entityName = value.replace(" ", "_");
-		Optional<EntityType<?>> optional = EntityType.byKey(entityName);
+		Optional<EntityType<?>> optional = EntityType.byString(entityName);
 
 		if (!optional.isPresent()) {
 			return CommandException.invalidParameter(this, pos, value);
@@ -60,7 +60,7 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	}
 
 	@Override
-	public IFormattableTextComponent toDescription() {
-		return new TranslationTextComponent("screen.clientmod:mainScreen.exception.allowedInputs", "the registry name of an Entity");
+	public MutableComponent toDescription() {
+		return new TranslatableComponent("screen.clientmod:mainScreen.exception.allowedInputs", "the registry name of an Entity");
 	}
 }

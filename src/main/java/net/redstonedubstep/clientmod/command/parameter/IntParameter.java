@@ -1,7 +1,7 @@
 package net.redstonedubstep.clientmod.command.parameter;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class IntParameter extends AbstractParameter<Integer> {
@@ -65,7 +65,7 @@ public class IntParameter extends AbstractParameter<Integer> {
 	}
 
 	@Override
-	public IFormattableTextComponent toDescription() {
-		return new TranslationTextComponent( "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: " + maxValue) : "") + (minValue > Integer.MIN_VALUE ? (", lowest allowed value: " + minValue) : ""));
+	public MutableComponent toDescription() {
+		return new TranslatableComponent( "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: " + maxValue) : "") + (minValue > Integer.MIN_VALUE ? (", lowest allowed value: " + minValue) : ""));
 	}
 }

@@ -12,31 +12,31 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.LoadingGui;
-import net.minecraft.client.gui.ResourceLoadProgressGui;
-import net.minecraft.resources.AsyncReloader;
-import net.minecraft.resources.IAsyncReloader;
-import net.minecraft.resources.IFutureReloadListener;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Overlay;
+import net.minecraft.client.gui.screens.LoadingOverlay;
+import net.minecraft.server.packs.resources.SimpleReloadInstance;
+import net.minecraft.server.packs.resources.ReloadInstance;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.Util;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
-@Mixin(ResourceLoadProgressGui.class)
-public abstract class MixinResourceLoadProgressGui extends LoadingGui {
-	@Shadow @Final private IAsyncReloader asyncReloader;
+@Mixin(LoadingOverlay.class)
+public abstract class MixinResourceLoadProgressGui extends Overlay {
+	@Shadow @Final private ReloadInstance asyncReloader;
 	@Shadow @Final private boolean reloading;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;estimateExecutionSpeed()F"))
-	private void injectRender(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && reloading && asyncReloader instanceof AsyncReloader && !asyncReloader.fullyDone()) {
-			List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)asyncReloader).taskSet);
+	private void injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && reloading && asyncReloader instanceof SimpleReloadInstance && !asyncReloader.isDone()) {
+			List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)asyncReloader).preparingListeners);
 
 			//setup reloading-related fields
 			if (FieldHolder.maxTaskAmount <= -1)
@@ -50,7 +50,7 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 			}
 
 			if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task by comparing the new and the old task set
-				for (IFutureReloadListener task : taskSet) {
+				for (PreparableReloadListener task : taskSet) {
 					FieldHolder.oldTaskSet.remove(task);
 				}
 
@@ -62,22 +62,22 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 			}
 
 			if (FieldHolder.currentTask != null)
-				Minecraft.getInstance().fontRenderer.drawText(stack, new StringTextComponent("Current task: " + FieldHolder.currentTask.getSimpleName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
+				Minecraft.getInstance().font.draw(stack, new TextComponent("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
 		}
-		else if (asyncReloader.fullyDone() && FieldHolder.reloadingFinishTime == -1) {
+		else if (asyncReloader.isDone() && FieldHolder.reloadingFinishTime == -1) {
 			FieldHolder.reloadingFinishTime = System.currentTimeMillis();
 		}
 	}
 
 	//Toggle the Gui's background
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ResourceLoadProgressGui;fill(Lcom/mojang/blaze3d/matrix/MatrixStack;IIIII)V"))
-	public void redirectFill(MatrixStack stack, int minX, int minY, int maxX, int maxY, int color) {
+	public void redirectFill(PoseStack stack, int minX, int minY, int maxX, int maxY, int color) {
 		fill(stack, minX, minY, maxX, maxY, reloading && !ClientSettings.CONFIG.drawReloadingBackground.get() ? 16777215 : color);
 	}
 
 	//At this point, reloading is fully done, so we can do some post-stuff
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setLoadingGui(Lnet/minecraft/client/gui/LoadingGui;)V"))
-	public void onCloseLoadingGui(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+	public void onCloseLoadingGui(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
 			FieldHolder.currentTask = null;
 			FieldHolder.maxTaskAmount = -1;
@@ -86,7 +86,7 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 				long duration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
 
 				if (duration >= 0) {
-					Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.DUMMY_UUID);
+					Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.NIL_UUID);
 				}
 			}
 

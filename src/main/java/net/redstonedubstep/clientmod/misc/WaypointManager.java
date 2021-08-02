@@ -1,15 +1,15 @@
 package net.redstonedubstep.clientmod.misc;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class WaypointManager {
 	private static WaypointManager instance;
 	private BlockPos waypoint;
-	private PlayerEntity player = Minecraft.getInstance().player;
+	private Player player = Minecraft.getInstance().player;
 
 	public static WaypointManager getInstance() {
 		if (instance == null) {
@@ -25,7 +25,7 @@ public class WaypointManager {
 
 	public void setWaypoint(BlockPos waypoint) {
 		this.waypoint = waypoint;
-		player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)), Util.DUMMY_UUID);
+		player.sendMessage(new TranslatableComponent("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)), Util.NIL_UUID);
 	}
 
 	public BlockPos getWaypoint() {
@@ -34,11 +34,11 @@ public class WaypointManager {
 
 	public void resetWaypoint() {
 		if (waypoint != null) {
-			player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)), Util.DUMMY_UUID);
+			player.sendMessage(new TranslatableComponent("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)), Util.NIL_UUID);
 			waypoint = null;
 		}
 		else {
-			player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.noWaypoint"), Util.DUMMY_UUID);
+			player.sendMessage(new TranslatableComponent("messages.clientmod:waypoint.noWaypoint"), Util.NIL_UUID);
 		}
 	}
 

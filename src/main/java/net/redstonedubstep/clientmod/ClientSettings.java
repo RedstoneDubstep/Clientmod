@@ -7,11 +7,11 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.client.AbstractOption;
-import net.minecraft.client.GameSettings;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.Option;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.redstonedubstep.clientmod.screen.button.SettingButton;
@@ -55,10 +55,10 @@ public class ClientSettings {
 		}
 	}
 
-	public static class BetterBooleanOption extends AbstractOption {
+	public static class BetterBooleanOption extends Option {
 
 		public static final BetterBooleanOption EMPTY = new BetterBooleanOption("", "", null, null);
-		private final ITextComponent tooltip;
+		private final Component tooltip;
 		private final Supplier<Boolean> getter;
 		private final Consumer<Boolean> setter;
 		@Nullable
@@ -70,7 +70,7 @@ public class ClientSettings {
 		private BetterBooleanOption(String nameKey, String tooltipKey, Supplier<Boolean> getter, Consumer<Boolean> setter) {
 			super(nameKey);
 
-			this.tooltip = !tooltipKey.isEmpty() ? new TranslationTextComponent(tooltipKey) : null;
+			this.tooltip = !tooltipKey.isEmpty() ? new TranslatableComponent(tooltipKey) : null;
 			this.getter = getter;
 			this.setter = setter;
 		}
@@ -80,8 +80,8 @@ public class ClientSettings {
 		}
 
 		@Override
-		public Widget createWidget(GameSettings options, int x, int y, int width) {
-			return new SettingButton(x, y, width, 20, getBaseMessageTranslation(), (b) -> setter.accept(!getter.get()), getter, tooltip);
+		public AbstractWidget createButton(Options options, int x, int y, int width) {
+			return new SettingButton(x, y, width, 20, getCaption(), (b) -> setter.accept(!getter.get()), getter, tooltip);
 		}
 	}
 }

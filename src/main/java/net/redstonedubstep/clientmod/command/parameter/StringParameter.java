@@ -3,8 +3,8 @@ package net.redstonedubstep.clientmod.command.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class StringParameter extends AbstractParameter<String> {
@@ -57,12 +57,12 @@ public class StringParameter extends AbstractParameter<String> {
 	}
 
 	@Override
-	public IFormattableTextComponent toDescription() {
-		IFormattableTextComponent component = new TranslationTextComponent("screen.clientmod:mainScreen.exception.allowedInputs", "String");
+	public MutableComponent toDescription() {
+		MutableComponent component = new TranslatableComponent("screen.clientmod:mainScreen.exception.allowedInputs", "String");
 
 		if (!allowedValues.isEmpty()) {
-			component.appendString(", allowed values: ");
-			allowedValues.forEach(s -> component.appendString(s + ", "));
+			component.append(", allowed values: ");
+			allowedValues.forEach(s -> component.append(s + ", "));
 		}
 
 		return component;

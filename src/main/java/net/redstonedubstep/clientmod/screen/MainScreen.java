@@ -5,47 +5,47 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 public class MainScreen extends Screen {
 
-	TextFieldWidget inputField;
-	IFormattableTextComponent helpMessage = new TranslationTextComponent("");
-	List<IFormattableTextComponent> helpDescription = new ArrayList<>();
+	EditBox inputField;
+	MutableComponent helpMessage = new TranslatableComponent("");
+	List<MutableComponent> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
-		super(new StringTextComponent("screen.clientmod:mainScreen.name"));
+		super(new TextComponent("screen.clientmod:mainScreen.name"));
 	}
 
 	@Override
 	public void init() {
 		super.init();
 
-		minecraft.keyboardListener.enableRepeatEvents(true);
-		inputField = new TextFieldWidget(font, width / 2 - 70, height / 2 - 10, 140, 20, StringTextComponent.EMPTY);
+		minecraft.keyboardHandler.setSendRepeatsToGui(true);
+		inputField = new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, TextComponent.EMPTY);
 		inputField.setTextColor(-1);
-		inputField.setDisabledTextColour(-1);
-		inputField.setEnableBackgroundDrawing(true);
-		inputField.setFocused2(true);
+		inputField.setTextColorUneditable(-1);
+		inputField.setBordered(true);
+		inputField.setFocus(true);
 	}
 
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(matrix);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		inputField.render(matrix, mouseX, mouseY, partialTicks);
-		font.drawText(matrix, helpMessage, (width - font.getStringWidth(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
+		font.draw(matrix, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
 		for (int i = 0; i < helpDescription.size(); i++) {
-			font.drawText(matrix, helpDescription.get(i), (width - font.getStringWidth(helpMessage.getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
+			font.draw(matrix, helpDescription.get(i), (width - font.width(helpMessage.getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
 		}
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
@@ -57,22 +57,22 @@ public class MainScreen extends Screen {
 			resetHelpMessages();
 
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
-				if (inputField.getText().isEmpty())
+				if (inputField.getValue().isEmpty())
 					return false;
 			}
 
-			if (keyCode == minecraft.gameSettings.keyBindInventory.getKey().getKeyCode())
+			if (keyCode == minecraft.options.keyInventory.getKey().getValue())
 				return false;
 			else if (keyCode == GLFW.GLFW_KEY_ESCAPE)
 				return super.keyPressed(keyCode, scanCode, modifiers);
 			else if (keyCode == GLFW.GLFW_KEY_ENTER)
-				return submitText(inputField.getText());
+				return submitText(inputField.getValue());
 			else if (keyCode == GLFW.GLFW_KEY_UP)
-				inputField.setText(CommandLibrary.lastInputText);
+				inputField.setValue(CommandLibrary.lastInputText);
 			else if (keyCode == GLFW.GLFW_KEY_DOWN)
-				inputField.setText("");
+				inputField.setValue("");
 			else if (keyCode == GLFW.GLFW_KEY_TAB)
-				inputField.setText(CommandLibrary.getCompleteCommand(inputField.getText()));
+				inputField.setValue(CommandLibrary.getCompleteCommand(inputField.getValue()));
 			else
 				return inputField.keyPressed(keyCode, scanCode, modifiers);
 		}
@@ -103,25 +103,25 @@ public class MainScreen extends Screen {
 	}
 
 	private void setHelpMessages(CommandException result) {
-		CommandLibrary.lastInputText = inputField.getText();
+		CommandLibrary.lastInputText = inputField.getValue();
 
 		if (result != null) {
 			helpMessage = result.getTitle();
 			helpDescription = result.getDescription();
-			inputField.setText("");
+			inputField.setValue("");
 		}
-		else if (minecraft.currentScreen.equals(this)) {
-			this.closeScreen();
+		else if (minecraft.screen.equals(this)) {
+			this.onClose();
 		}
 	}
 
 	private void resetHelpMessages() {
-		helpMessage = new TranslationTextComponent("");
+		helpMessage = new TranslatableComponent("");
 		helpDescription = new ArrayList<>();
 	}
 
 	@Override
-	public void onClose() {
-		super.onClose();
+	public void removed() {
+		super.removed();
 	}
 }

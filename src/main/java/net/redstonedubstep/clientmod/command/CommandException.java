@@ -4,65 +4,65 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 
 public class CommandException {
 
-	private final IFormattableTextComponent title;
-	private final List<IFormattableTextComponent> description;
+	private final MutableComponent title;
+	private final List<MutableComponent> description;
 
-	private CommandException(IFormattableTextComponent title, List<IFormattableTextComponent> description) {
+	private CommandException(MutableComponent title, List<MutableComponent> description) {
 		this.title = title;
 		this.description = description;
 	}
 
 	public static CommandException empty() {
-		List<IFormattableTextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.supportedCommands"));
+		List<MutableComponent> description = Lists.newArrayList(new TranslatableComponent("screen.clientmod:mainScreen.supportedCommands"));
 
-		CommandLibrary.commandList.forEach(c -> description.add(new StringTextComponent(c.prefix)));
+		CommandLibrary.commandList.forEach(c -> description.add(new TextComponent(c.prefix)));
 
-		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.missingPrefix"), description);
+		return new CommandException(new TranslatableComponent("screen.clientmod:mainScreen.exception.missingPrefix"), description);
 	}
 
 	public static CommandException prefixNotFound(String wrongPrefix) {
-		List<IFormattableTextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.supportedCommands"));
+		List<MutableComponent> description = Lists.newArrayList(new TranslatableComponent("screen.clientmod:mainScreen.supportedCommands"));
 
-		CommandLibrary.commandList.forEach(c -> description.add(new StringTextComponent(c.prefix)));
+		CommandLibrary.commandList.forEach(c -> description.add(new TextComponent(c.prefix)));
 
-		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.prefixNotFound", wrongPrefix), description);
+		return new CommandException(new TranslatableComponent("screen.clientmod:mainScreen.exception.prefixNotFound", wrongPrefix), description);
 	}
 
 	public static CommandException noParameter(AbstractParameter<?> parameter, int pos) {
-		List<IFormattableTextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.exception.position", pos + 1), parameter.toDescription());
+		List<MutableComponent> description = Lists.newArrayList(new TranslatableComponent("screen.clientmod:mainScreen.exception.position", pos + 1), parameter.toDescription());
 
-		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.missingParameter"), description);
+		return new CommandException(new TranslatableComponent("screen.clientmod:mainScreen.exception.missingParameter"), description);
 	}
 
 	public static CommandException invalidParameter(AbstractParameter<?> parameter, int pos, String wrongValue) {
-		List<IFormattableTextComponent> description = Lists.newArrayList(new TranslationTextComponent("screen.clientmod:mainScreen.exception.position", pos + 1), new TranslationTextComponent("screen.clientmod:mainScreen.exception.wrongValue", wrongValue), parameter.toDescription());
+		List<MutableComponent> description = Lists.newArrayList(new TranslatableComponent("screen.clientmod:mainScreen.exception.position", pos + 1), new TranslatableComponent("screen.clientmod:mainScreen.exception.wrongValue", wrongValue), parameter.toDescription());
 
-		return new CommandException(new TranslationTextComponent("screen.clientmod:mainScreen.exception.invalidParameter"), description);
+		return new CommandException(new TranslatableComponent("screen.clientmod:mainScreen.exception.invalidParameter"), description);
 	}
 
-	public IFormattableTextComponent getTitle() {
+	public MutableComponent getTitle() {
 		return title;
 	}
 
-	public List<IFormattableTextComponent> getDescription() {
+	public List<MutableComponent> getDescription() {
 		return description;
 	}
 
-	public ITextComponent getFullDescription() {
-		IFormattableTextComponent fullDescription = title.mergeStyle(TextFormatting.GRAY);
+	public Component getFullDescription() {
+		MutableComponent fullDescription = title.withStyle(ChatFormatting.GRAY);
 
 		description.forEach(c -> {
-			fullDescription.appendString("\n");
-			fullDescription.appendSibling(c.mergeStyle(TextFormatting.WHITE));
+			fullDescription.append("\n");
+			fullDescription.append(c.withStyle(ChatFormatting.WHITE));
 		});
 		
 		return fullDescription;

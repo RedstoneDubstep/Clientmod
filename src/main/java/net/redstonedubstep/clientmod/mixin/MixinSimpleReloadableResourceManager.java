@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.resources.IAsyncReloader;
-import net.minecraft.resources.IFutureReloadListener;
-import net.minecraft.resources.SimpleReloadableResourceManager;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.server.packs.resources.ReloadInstance;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.Unit;
 import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
@@ -22,9 +22,9 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 public abstract class MixinSimpleReloadableResourceManager {
 	//stop sounds from reloading, and fill some fields with information about the start of the reload
 	@Redirect(method = "reloadResources", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/SimpleReloadableResourceManager;initializeAsyncReloader(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/List;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/resources/IAsyncReloader;"))
-	public IAsyncReloader onInitializeAsyncReloader(SimpleReloadableResourceManager simpleReloadableResourceManager, Executor backgroundExecutor, Executor gameExecutor, List<IFutureReloadListener> listeners, CompletableFuture<Unit> waitingFor) {
-		if (Minecraft.getInstance().world != null && !ClientSettings.CONFIG.shouldReloadSounds.get()) {
-			listeners = listeners.stream().filter(l -> !(l instanceof SoundHandler)).collect(Collectors.toList());
+	public ReloadInstance onInitializeAsyncReloader(SimpleReloadableResourceManager simpleReloadableResourceManager, Executor backgroundExecutor, Executor gameExecutor, List<PreparableReloadListener> listeners, CompletableFuture<Unit> waitingFor) {
+		if (Minecraft.getInstance().level != null && !ClientSettings.CONFIG.shouldReloadSounds.get()) {
+			listeners = listeners.stream().filter(l -> !(l instanceof SoundManager)).collect(Collectors.toList());
 		}
 
 		if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
@@ -32,6 +32,6 @@ public abstract class MixinSimpleReloadableResourceManager {
 			FieldHolder.oldTaskSet = listeners;
 		}
 		
-		return simpleReloadableResourceManager.initializeAsyncReloader(backgroundExecutor, gameExecutor, listeners, waitingFor);
+		return simpleReloadableResourceManager.createReload(backgroundExecutor, gameExecutor, listeners, waitingFor);
 	}
 }

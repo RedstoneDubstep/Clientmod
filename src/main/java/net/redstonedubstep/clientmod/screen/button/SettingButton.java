@@ -34,34 +34,33 @@ public class SettingButton extends Button {
 
 		this.isOn = isOn;
 		this.baseHeight = height;
-		this.updateText();
-		this.validateHeight(width, getMessage());
+		updateText();
+		validateHeight(width, getMessage());
 	}
 
 	//copied from ExtendedButton because we can't extend that class (oh the irony) due to the tooltip code missing there
 	@Override
 	public void renderButton(PoseStack stack, int mouseX, int mouseY, float partial)
 	{
-		if (this.visible && !this.getMessage().getString().isEmpty())
-		{
+		if (visible && !getMessage().getString().isEmpty()) {
 			Minecraft mc = Minecraft.getInstance();
-			Component buttonText = this.getMessage();
+			Component buttonText = getMessage();
 			List<FormattedCharSequence> buttonLines = mc.font.split(buttonText, width - 6);
 
-			this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-			int k = this.getYImage(this.isHovered());
+			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+			int k = getYImage(isHovered());
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, this.x, this.y, 0, 46 + k * 20, this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset());
-			this.renderBg(stack, mc, mouseX, mouseY);
+			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, getBlitOffset());
+			renderBg(stack, mc, mouseX, mouseY);
 
 			for (int i = 0; i < buttonLines.size(); i++) {
 				FormattedCharSequence line = buttonLines.get(i);
 
-				mc.font.drawShadow(stack, line, this.x + this.width / 2 - mc.font.width(line) / 2, this.y + 6 + i * 12, getFGColor());
+				mc.font.drawShadow(stack, line, x + width / 2 - mc.font.width(line) / 2, y + 6 + i * 12, getFGColor());
 			}
 
-			if (this.isHovered()) {
-				this.renderToolTip(stack, mouseX, mouseY);
+			if (isHovered()) {
+				renderToolTip(stack, mouseX, mouseY);
 			}
 		}
 	}
@@ -77,7 +76,6 @@ public class SettingButton extends Button {
 		List<FormattedCharSequence> nameLines = Minecraft.getInstance().font.split(name, width - 6);
 
 		this.height = baseHeight + (nameLines.size() - 1) * 12;
-		System.out.println(height);
 	}
 
 	@Override

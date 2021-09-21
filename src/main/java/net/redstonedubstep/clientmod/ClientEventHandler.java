@@ -53,7 +53,7 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onChatMessageSent(ClientChatEvent event) {
-		if (ClientSettings.sendMessagesWithTeammsg) {
+		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.getValue()) {
 			if (!event.getMessage().startsWith("/")) {
 				event.setMessage("/teammsg " + event.getMessage());
 			}

@@ -1,10 +1,10 @@
 {
   "required": true,
   "package": "net.redstonedubstep.clientmod.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "refmap": "clientmod.refmap.json",
   "client": [
-    "MixinResourceLoadProgressGui",
+    "MixinLoadingOverlay",
     "MixinSimpleReloadableResourceManager"
   ],
   "minVersion": "0.8"

@@ -55,7 +55,7 @@ public class ClientSettings {
 					.comment("Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?")
 					.define("enhancedReloadingInfo", false));
 			renderFluidEffects = register(builder
-					.comment("Should the fog perceivable when in a fluid be rendered?")
+					.comment("Should the water/lava fog and the respective FOV change be visible while being inside a fluid?")
 					.define("renderFluidEffects", true));
 		}
 

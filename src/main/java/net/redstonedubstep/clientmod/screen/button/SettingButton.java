@@ -32,33 +32,33 @@ public class SettingButton extends Button {
 
 		this.isOn = isOn;
 		this.baseHeight = height;
-		this.updateText();
-		this.validateHeight(width, getMessage());
+		updateText();
+		validateHeight(width, getMessage());
 	}
 
 	//copied from ExtendedButton because we can't extend that class (oh the irony) due to the tooltip code missing there
 	@Override
 	public void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partial)
 	{
-		if (this.visible && !this.getMessage().getString().isEmpty())
+		if (visible && !getMessage().getString().isEmpty())
 		{
 			Minecraft mc = Minecraft.getInstance();
-			ITextComponent buttonText = this.getMessage();
+			ITextComponent buttonText = getMessage();
 			List<IReorderingProcessor> buttonLines = mc.fontRenderer.trimStringToWidth(buttonText, width - 6);
 
-			this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-			int k = this.getYImage(this.isHovered());
-			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, this.x, this.y, 0, 46 + k * 20, this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset());
-			this.renderBg(stack, mc, mouseX, mouseY);
+			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+			int k = getYImage(isHovered());
+			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, getBlitOffset());
+			renderBg(stack, mc, mouseX, mouseY);
 
 			for (int i = 0; i < buttonLines.size(); i++) {
 				IReorderingProcessor line = buttonLines.get(i);
 
-				mc.fontRenderer.drawTextWithShadow(stack, line, this.x + this.width / 2 - mc.fontRenderer.func_243245_a(line) / 2, this.y + 6 + i * 12, getFGColor());
+				mc.fontRenderer.drawTextWithShadow(stack, line, x + width / 2 - mc.fontRenderer.func_243245_a(line) / 2, y + 6 + i * 12, getFGColor());
 			}
 
-			if (this.isHovered()) {
-				this.renderToolTip(stack, mouseX, mouseY);
+			if (isHovered()) {
+				renderToolTip(stack, mouseX, mouseY);
 			}
 		}
 	}

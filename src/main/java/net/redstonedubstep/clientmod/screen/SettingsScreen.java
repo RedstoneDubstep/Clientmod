@@ -2,7 +2,6 @@ package net.redstonedubstep.clientmod.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.AbstractOption;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.OptionsRowList;
@@ -14,8 +13,6 @@ import net.redstonedubstep.clientmod.screen.button.SettingButton;
 public class SettingsScreen extends Screen {
 
 	private OptionsRowList settingsList;
-	private final AbstractOption[] configs = {new BetterBooleanOption(ClientSettings.CONFIG.notifyWhenMinceraftScreen), new BetterBooleanOption(ClientSettings.CONFIG.shouldReloadSounds), new BetterBooleanOption(ClientSettings.CONFIG.drawReloadingBackground), new BetterBooleanOption(ClientSettings.CONFIG.enhancedReloadingInfo)};
-	private final AbstractOption[] settings = {ClientSettings.SEND_MESSAGES_WITH_TEAMMSG};
 
 	public SettingsScreen() {
 		super(new TranslationTextComponent("screen.clientmod:settingsScreen.name"));
@@ -23,10 +20,10 @@ public class SettingsScreen extends Screen {
 
 	@Override
 	public void init() {
-		this.settingsList = new OptionsRowList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
+		this.settingsList = new OptionsRowList(minecraft, width, height, 32, height - 32, 25);
 		children.add(settingsList);
-		settingsList.addOptions(configs);
-		settingsList.addOptions(settings);
+		settingsList.addOptions(ClientSettings.CONFIGS.toArray(new BetterBooleanOption[]{}));
+		settingsList.addOptions(ClientSettings.SETTINGS.toArray(new BetterBooleanOption[]{}));
 	}
 
 	@Override

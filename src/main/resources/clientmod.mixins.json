@@ -5,7 +5,8 @@
   "refmap": "clientmod.refmap.json",
   "client": [
     "MixinResourceLoadProgressGui",
-    "MixinSimpleReloadableResourceManager"
+    "MixinSimpleReloadableResourceManager",
+    "MixinActiveRenderInfo"
   ],
   "minVersion": "0.8"
 }

@@ -38,6 +38,7 @@ public class ClientSettings {
 		public BooleanValue shouldReloadSounds;
 		public BooleanValue drawReloadingBackground;
 		public BooleanValue enhancedReloadingInfo;
+		public BooleanValue renderFluidEffects;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -53,6 +54,9 @@ public class ClientSettings {
 			enhancedReloadingInfo = register(builder
 					.comment("Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?")
 					.define("enhancedReloadingInfo", false));
+			renderFluidEffects = register(builder
+					.comment("Should the water/lava fog and the respective FOV change be visible while being inside a fluid?")
+					.define("renderFluidEffects", true));
 		}
 
 		private static BooleanValue register(BooleanValue value) {

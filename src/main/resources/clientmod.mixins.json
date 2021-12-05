@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.redstonedubstep.clientmod.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_1/",
   "refmap": "clientmod.refmap.json",
   "client": [
     "MixinCamera",

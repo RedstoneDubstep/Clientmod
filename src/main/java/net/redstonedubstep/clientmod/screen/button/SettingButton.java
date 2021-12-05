@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
+import net.minecraftforge.client.gui.GuiUtils;
 
 public class SettingButton extends Button {
 	private final Supplier<Boolean> isOn;
@@ -48,7 +48,7 @@ public class SettingButton extends Button {
 			List<FormattedCharSequence> buttonLines = mc.font.split(buttonText, width - 6);
 
 			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-			int k = getYImage(isHovered());
+			int k = getYImage(isHoveredOrFocused());
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, getBlitOffset());
 			renderBg(stack, mc, mouseX, mouseY);
@@ -59,7 +59,7 @@ public class SettingButton extends Button {
 				mc.font.drawShadow(stack, line, x + width / 2 - mc.font.width(line) / 2, y + 6 + i * 12, getFGColor());
 			}
 
-			if (isHovered()) {
+			if (isHoveredOrFocused()) {
 				renderToolTip(stack, mouseX, mouseY);
 			}
 		}

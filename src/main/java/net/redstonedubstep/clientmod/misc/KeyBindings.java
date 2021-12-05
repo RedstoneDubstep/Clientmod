@@ -3,7 +3,7 @@ package net.redstonedubstep.clientmod.misc;
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
+import net.minecraftforge.client.ClientRegistry;
 
 public class KeyBindings {
 	public static KeyMapping openTextbox;

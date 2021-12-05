@@ -14,9 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,9 +41,9 @@ public class ClientEventHandler {
 
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code
 	@SubscribeEvent
-	public static void onInitGuiPost(InitGuiEvent.Post event) {
-		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getGui() instanceof TitleScreen) {
-			boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, (TitleScreen)event.getGui(), "minceraftEasterEgg");
+	public static void onInitGuiPost(ScreenEvent.InitScreenEvent.Post event) {
+		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getScreen() instanceof TitleScreen) {
+			boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, (TitleScreen)event.getScreen(), "minceraftEasterEgg");
 
 			if (isTitleWronglySpelled) {
 				Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.WITHER_DEATH,1, 5));

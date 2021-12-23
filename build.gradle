@@ -29,7 +29,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.18'
+    mappings channel: 'official', version: '1.18.1'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -42,7 +42,6 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', ''
-            arg "-mixin.config=clientmod.mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -59,7 +58,6 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            arg "-mixin.config=clientmod.mixins.json"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -95,7 +93,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.18-38.0.12'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.8'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
@@ -134,6 +132,10 @@ jar {
 
 mixin {
     add sourceSets.main, "clientmod.refmap.json"
+    config 'clientmod.mixins.json'
+
+    // debug.verbose = true
+    // debug.export = true
 }
 
 jar.finalizedBy('reobfJar')

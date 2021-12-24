@@ -37,6 +37,10 @@
   "config.clientmod:enhancedReloadingInfo.description": "Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?",
   "config.clientmod:renderFluidEffects.name": "Render Fluid Effects: %s",
   "config.clientmod:renderFluidEffects.description": "Should the water/lava fog and the respective FOV change be visible while being inside a fluid?",
+  "config.clientmod:renderEntitiesGlowing.name": "Render Entities glowing: %s",
+  "config.clientmod:renderEntitiesGlowing.description": "Should entities in the player's vicinity appear as glowing?",
+  "config.clientmod:nightVision.name": "Night Vision: %s",
+  "config.clientmod:nightVision.description": "Should the player be able to see as if he has Night Vision?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg: %s",
   "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"

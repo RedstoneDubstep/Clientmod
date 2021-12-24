@@ -5,11 +5,17 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.HoverEvent.Action;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,6 +23,7 @@ import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +43,25 @@ public class ClientEventHandler {
 	public void onClientTick(ClientTickEvent event) {
 		if (KeyBindings.openTextbox.consumeClick()) {
 			Minecraft.getInstance().setScreen(new MainScreen());
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+		if (event.player instanceof LocalPlayer player) {
+			if (ClientSettings.CONFIG.renderEntitesGlowing.get()) {
+				for (Entity entity : ((ClientLevel)player.level).entitiesForRendering()) {
+					if (entity instanceof LivingEntity living) {
+						living.addEffect(new MobEffectInstance(MobEffects.GLOWING));
+						living.setSharedFlag(6, true);
+					}
+				}
+			}
+
+			if (ClientSettings.CONFIG.nightVision.get())
+				player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION));
+			else if (player.hasEffect(MobEffects.NIGHT_VISION) && player.getEffect(MobEffects.NIGHT_VISION).getDuration() <= 0)
+				player.removeEffect(MobEffects.NIGHT_VISION);
 		}
 	}
 

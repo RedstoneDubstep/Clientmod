@@ -7,11 +7,14 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Option;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.redstonedubstep.clientmod.screen.button.SettingButton;
@@ -39,6 +42,8 @@ public class ClientSettings {
 		public BooleanValue drawReloadingBackground;
 		public BooleanValue enhancedReloadingInfo;
 		public BooleanValue renderFluidEffects;
+		public BooleanValue renderEntitesGlowing;
+		public BooleanValue nightVision;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -57,20 +62,49 @@ public class ClientSettings {
 			renderFluidEffects = register(builder
 					.comment("Should the water/lava fog and the respective FOV change be visible while being inside a fluid?")
 					.define("renderFluidEffects", true));
+			renderEntitesGlowing = register(builder
+					.comment("Should entities in the player's vicinity appear as glowing?")
+					.define("renderEntitiesGlowing", false), b -> {
+				if (!b)
+					Minecraft.getInstance().level.entitiesForRendering().forEach(e -> {
+						if (e instanceof LivingEntity entity && entity.hasEffect(MobEffects.GLOWING) && entity.getEffect(MobEffects.GLOWING).getDuration() <= 0) {
+							entity.removeEffect(MobEffects.GLOWING);
+							entity.setSharedFlag(6, false);
+						}
+					});
+			});
+			nightVision = register(builder
+					.comment("Should the player be able to see as if he has Night Vision?")
+					.define("nightVision", false));
 		}
 
 		private static BooleanValue register(BooleanValue value) {
 			ClientSettings.CONFIGS.add(new BetterBooleanOption(value));
 			return value;
 		}
+
+		private static BooleanValue register(BooleanValue value, Consumer<Boolean> onClick) {
+			ClientSettings.CONFIGS.add(new BetterBooleanOption(value, onClick));
+			return value;
+		}
 	}
 
 	public static class BetterBooleanOption extends Option {
-
 		public static final BetterBooleanOption EMPTY = new BetterBooleanOption("", "", null, null, false);
 		private final Component tooltip;
 		private final Supplier<Boolean> getter;
 		private final Consumer<Boolean> setter;
+
+		public BetterBooleanOption(BooleanValue config) {
+			this(config, b -> {});
+		}
+
+		public BetterBooleanOption(BooleanValue config, Consumer<Boolean> onClick) {
+			this("config.clientmod:" + config.getPath().get(0) + ".name", "config.clientmod:" + config.getPath().get(0) + ".description", config::get, b -> {
+				config.set(b);
+				onClick.accept(b);
+			}, false);
+		}
 
 		public BetterBooleanOption(String settingName, Supplier<Boolean> getter, Consumer<Boolean> setter) {
 			this("setting.clientmod:" + settingName + ".name", "setting.clientmod:" + settingName + ".description", getter, setter, true);
@@ -86,10 +120,6 @@ public class ClientSettings {
 			if (registerAsSetting) {
 				ClientSettings.SETTINGS.add(this);
 			}
-		}
-
-		public BetterBooleanOption(BooleanValue config) {
-			this("config.clientmod:" + config.getPath().get(0) + ".name", "config.clientmod:" + config.getPath().get(0) + ".description", config::get, config::set, false);
 		}
 
 		@Override

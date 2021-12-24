@@ -33,7 +33,7 @@ public class SettingsScreen extends Screen {
 		renderBackground(matrix);
 		font.draw(matrix, title, (width - font.width(title.getString())) / 2, 20, 16777215);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		settingsList.renderList(matrix, this.width / 2 - settingsList.getRowWidth() / 2 + 2, 32, mouseX, mouseY, partialTicks);
+		settingsList.renderList(matrix, width / 2 - settingsList.getRowWidth() / 2 + 2, 32, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

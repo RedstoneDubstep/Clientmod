@@ -2,9 +2,15 @@ package net.redstonedubstep.clientmod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.MainMenuScreen;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Vector3d;
@@ -17,6 +23,7 @@ import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +43,29 @@ public class ClientEventHandler {
 	public void onClientTick(ClientTickEvent event) {
 		if (KeyBindings.openTextbox.isDown()) {
 			Minecraft.getInstance().setScreen(new MainScreen());
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+		if (event.player instanceof ClientPlayerEntity) {
+			ClientPlayerEntity player = ((ClientPlayerEntity)event.player);
+
+			if (ClientSettings.CONFIG.renderEntitesGlowing.get()) {
+				for (Entity entity : ((ClientWorld)player.level).entitiesForRendering()) {
+					if (entity instanceof LivingEntity) {
+						LivingEntity living = (LivingEntity)entity;
+
+						living.addEffect(new EffectInstance(Effects.GLOWING));
+						living.setSharedFlag(6, true);
+					}
+				}
+			}
+
+			if (ClientSettings.CONFIG.nightVision.get())
+				player.addEffect(new EffectInstance(Effects.NIGHT_VISION));
+			else if (player.hasEffect(Effects.NIGHT_VISION) && player.getEffect(Effects.NIGHT_VISION).getDuration() <= 0)
+				player.removeEffect(Effects.NIGHT_VISION);
 		}
 	}
 

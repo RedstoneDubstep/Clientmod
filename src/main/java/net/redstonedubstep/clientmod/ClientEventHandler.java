@@ -25,7 +25,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -66,6 +65,9 @@ public class ClientEventHandler {
 				player.addEffect(new EffectInstance(Effects.NIGHT_VISION));
 			else if (player.hasEffect(Effects.NIGHT_VISION) && player.getEffect(Effects.NIGHT_VISION).getDuration() <= 0)
 				player.removeEffect(Effects.NIGHT_VISION);
+
+			if (player.deathTime == 1)
+				FieldHolder.lastDeathPosition = player.blockPosition();
 		}
 	}
 
@@ -100,13 +102,6 @@ public class ClientEventHandler {
 			}
 
 			event.setCanceled(true);
-		}
-	}
-
-	@SubscribeEvent
-	public static void onLivingDeath(LivingDeathEvent event) {
-		if (event.getEntity() instanceof PlayerEntity) {
-			FieldHolder.lastDeathPosition = event.getEntity().blockPosition();
 		}
 	}
 

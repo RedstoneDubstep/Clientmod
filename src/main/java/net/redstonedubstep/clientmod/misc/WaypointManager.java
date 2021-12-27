@@ -25,7 +25,7 @@ public class WaypointManager {
 
 	public void setWaypoint(BlockPos waypoint) {
 		this.waypoint = waypoint;
-		player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)), Util.DUMMY_UUID);
+		player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)), Util.NIL_UUID);
 	}
 
 	public BlockPos getWaypoint() {
@@ -34,11 +34,11 @@ public class WaypointManager {
 
 	public void resetWaypoint() {
 		if (waypoint != null) {
-			player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)), Util.DUMMY_UUID);
+			player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)), Util.NIL_UUID);
 			waypoint = null;
 		}
 		else {
-			player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.noWaypoint"), Util.DUMMY_UUID);
+			player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.noWaypoint"), Util.NIL_UUID);
 		}
 	}
 

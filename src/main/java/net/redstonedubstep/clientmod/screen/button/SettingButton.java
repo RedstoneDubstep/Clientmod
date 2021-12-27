@@ -27,7 +27,7 @@ public class SettingButton extends Button {
 				onClick.accept((SettingButton)b);
 		}, (b, matrix, x, y) -> {
 			if (tooltip != null)
-				Minecraft.getInstance().currentScreen.renderTooltip(matrix, tooltip, x, y);
+				Minecraft.getInstance().screen.renderTooltip(matrix, tooltip, x, y);
 		});
 
 		this.isOn = isOn;
@@ -38,13 +38,13 @@ public class SettingButton extends Button {
 
 	//copied from ExtendedButton because we can't extend that class (oh the irony) due to the tooltip code missing there
 	@Override
-	public void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partial)
+	public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partial)
 	{
 		if (visible && !getMessage().getString().isEmpty())
 		{
 			Minecraft mc = Minecraft.getInstance();
 			ITextComponent buttonText = getMessage();
-			List<IReorderingProcessor> buttonLines = mc.fontRenderer.trimStringToWidth(buttonText, width - 6);
+			List<IReorderingProcessor> buttonLines = mc.font.split(buttonText, width - 6);
 
 			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			int k = getYImage(isHovered());
@@ -54,7 +54,7 @@ public class SettingButton extends Button {
 			for (int i = 0; i < buttonLines.size(); i++) {
 				IReorderingProcessor line = buttonLines.get(i);
 
-				mc.fontRenderer.drawTextWithShadow(stack, line, x + width / 2 - mc.fontRenderer.func_243245_a(line) / 2, y + 6 + i * 12, getFGColor());
+				mc.font.draw(stack, line, x + width / 2 - mc.font.width(line) / 2, y + 6 + i * 12, getFGColor());
 			}
 
 			if (isHovered()) {
@@ -71,7 +71,7 @@ public class SettingButton extends Button {
 	}
 
 	private void validateHeight(int width, ITextComponent name) {
-		List<IReorderingProcessor> nameLines = Minecraft.getInstance().fontRenderer.trimStringToWidth(name, width - 6);
+		List<IReorderingProcessor> nameLines = Minecraft.getInstance().font.split(name, width - 6);
 
 		this.height = baseHeight + (nameLines.size() - 1) * 12;
 	}

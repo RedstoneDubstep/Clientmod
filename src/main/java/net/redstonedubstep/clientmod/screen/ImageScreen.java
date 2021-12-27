@@ -43,7 +43,7 @@ public class ImageScreen extends Screen {
 	@Override
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		minecraft.getTextureManager().bindTexture(background);
+		minecraft.getTextureManager().bind(background);
 		RenderSystem.enableAlphaTest();
 		blit(matrix, (width - screenWidth) / 2, (height - imageHeight) / 2, horizontalScrolling ? offset : 0, verticalScrolling ? offset : 0, screenWidth, imageHeight, imageWidth, imageHeight);
 		RenderSystem.disableAlphaTest();
@@ -65,6 +65,6 @@ public class ImageScreen extends Screen {
 	}
 
 	public void closeScreen(Button button) {
-		this.closeScreen();
+		onClose();
 	}
 }

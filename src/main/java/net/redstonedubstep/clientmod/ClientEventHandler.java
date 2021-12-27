@@ -34,8 +34,8 @@ import net.redstonedubstep.clientmod.screen.MainScreen;
 public class ClientEventHandler {
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
-		if (KeyBindings.openTextbox.isPressed()) {
-			Minecraft.getInstance().displayGuiScreen(new MainScreen());
+		if (KeyBindings.openTextbox.isDown()) {
+			Minecraft.getInstance().setScreen(new MainScreen());
 		}
 	}
 
@@ -43,10 +43,10 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onInitGuiPost(InitGuiEvent.Post event) {
 		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getGui() instanceof MainMenuScreen) {
-			boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen)event.getGui(), "field_213101_e");
+			boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen)event.getGui(), "minceraftEasterEgg");
 
 			if (isTitleWronglySpelled) {
-				Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.ENTITY_WITHER_DEATH,1, 5));
+				Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.WITHER_DEATH,1, 5));
 			}
 		}
 	}
@@ -65,8 +65,8 @@ public class ClientEventHandler {
 			if (result != null) {
 				TranslationTextComponent errorMessage = new TranslationTextComponent("command.failed");
 
-				errorMessage.modifyStyle(s -> s.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).mergeStyle(TextFormatting.RED);
-				Minecraft.getInstance().player.sendMessage(errorMessage, Util.DUMMY_UUID);
+				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).withStyle(TextFormatting.RED);
+				Minecraft.getInstance().player.sendMessage(errorMessage, Util.NIL_UUID);
 			}
 
 			event.setCanceled(true);
@@ -76,7 +76,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onLivingDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof PlayerEntity) {
-			FieldHolder.lastDeathPosition = event.getEntity().getPosition();
+			FieldHolder.lastDeathPosition = event.getEntity().blockPosition();
 		}
 	}
 
@@ -89,17 +89,17 @@ public class ClientEventHandler {
 	public static void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
 		if(event.getType() == ElementType.CROSSHAIRS) {
 			PlayerEntity player = Minecraft.getInstance().player;
-			Vector3d lookVec = player.getLookVec().mul(1, 0, 1).normalize();
+			Vector3d lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
 
 			if (WaypointManager.getInstance().hasWaypoint()) {
-				Vector3d relativePos = Vector3d.copy(WaypointManager.getInstance().getWaypoint().subtract(player.getPosition()));
-				float dotProductRaw = (float)lookVec.dotProduct(relativePos.mul(1, 0, 1).normalize());
+				Vector3d relativePos = Vector3d.atLowerCornerOf(WaypointManager.getInstance().getWaypoint().subtract(player.blockPosition()));
+				float dotProductRaw = (float)lookVec.dot(relativePos.multiply(1, 0, 1).normalize());
 				float dotProduct = Math.max(0, dotProductRaw - 0.7F);
-				int relativeHeight = Math.round((float)relativePos.getY());
+				int relativeHeight = Math.round((float)relativePos.y());
 				int yOffset = relativeHeight > 3 ? -10 : (relativeHeight < -3 ? 10 : 0);
 				int squareSize = relativePos.length() < 150 ? 20 : 10;
-				int startX = Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - squareSize / 2;
-				int startY = Minecraft.getInstance().getMainWindow().getScaledHeight() / 2 - squareSize / 2 + yOffset;
+				int startX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - squareSize / 2;
+				int startY = Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - squareSize / 2 + yOffset;
 				int alpha = Math.round(0x11 * dotProduct * 36) << 24;
 				int color = alpha + (dotProduct > 0.299 ? 0xFFA500 : 0xFF0000); //default red, orange when the direction is correct
 

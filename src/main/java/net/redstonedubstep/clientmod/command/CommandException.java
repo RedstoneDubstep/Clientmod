@@ -58,11 +58,11 @@ public class CommandException {
 	}
 
 	public ITextComponent getFullDescription() {
-		IFormattableTextComponent fullDescription = title.mergeStyle(TextFormatting.GRAY);
+		IFormattableTextComponent fullDescription = title.withStyle(TextFormatting.GRAY);
 
 		description.forEach(c -> {
-			fullDescription.appendString("\n");
-			fullDescription.appendSibling(c.mergeStyle(TextFormatting.WHITE));
+			fullDescription.append("\n");
+			fullDescription.append(c.withStyle(TextFormatting.WHITE));
 		});
 		
 		return fullDescription;

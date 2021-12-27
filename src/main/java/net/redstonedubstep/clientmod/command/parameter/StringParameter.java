@@ -61,8 +61,8 @@ public class StringParameter extends AbstractParameter<String> {
 		IFormattableTextComponent component = new TranslationTextComponent("screen.clientmod:mainScreen.exception.allowedInputs", "String");
 
 		if (!allowedValues.isEmpty()) {
-			component.appendString(", allowed values: ");
-			allowedValues.forEach(s -> component.appendString(s + ", "));
+			component.append(", allowed values: ");
+			allowedValues.forEach(s -> component.append(s + ", "));
 		}
 
 		return component;

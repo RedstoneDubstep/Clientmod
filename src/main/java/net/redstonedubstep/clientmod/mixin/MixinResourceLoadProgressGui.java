@@ -28,15 +28,15 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ResourceLoadProgressGui.class)
 public abstract class MixinResourceLoadProgressGui extends LoadingGui {
-	@Shadow @Final private IAsyncReloader asyncReloader;
-	@Shadow @Final private boolean reloading;
+	@Shadow @Final private IAsyncReloader reload;
+	@Shadow @Final private boolean fadeIn;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;estimateExecutionSpeed()F"))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;getActualProgress()F"))
 	private void injectRender(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && reloading && asyncReloader instanceof AsyncReloader && !asyncReloader.fullyDone()) {
-			List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)asyncReloader).taskSet);
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof AsyncReloader && !reload.isDone()) {
+			List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)reload).preparingListeners);
 
 			//setup reloading-related fields
 			if (FieldHolder.maxTaskAmount <= -1)
@@ -62,9 +62,9 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 			}
 
 			if (FieldHolder.currentTask != null)
-				Minecraft.getInstance().fontRenderer.drawText(stack, new StringTextComponent("Current task: " + FieldHolder.currentTask.getSimpleName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
+				Minecraft.getInstance().font.draw(stack, new StringTextComponent("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
 		}
-		else if (asyncReloader.fullyDone() && FieldHolder.reloadingFinishTime == -1) {
+		else if (reload.isDone() && FieldHolder.reloadingFinishTime == -1) {
 			FieldHolder.reloadingFinishTime = System.currentTimeMillis();
 		}
 	}
@@ -72,11 +72,11 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	//Toggle the Gui's background
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ResourceLoadProgressGui;fill(Lcom/mojang/blaze3d/matrix/MatrixStack;IIIII)V"))
 	public void redirectFill(MatrixStack stack, int minX, int minY, int maxX, int maxY, int color) {
-		fill(stack, minX, minY, maxX, maxY, reloading && !ClientSettings.CONFIG.drawReloadingBackground.get() ? 16777215 : color);
+		fill(stack, minX, minY, maxX, maxY, fadeIn && !ClientSettings.CONFIG.drawReloadingBackground.get() ? 16777215 : color);
 	}
 
 	//At this point, reloading is fully done, so we can do some post-stuff
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setLoadingGui(Lnet/minecraft/client/gui/LoadingGui;)V"))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setOverlay(Lnet/minecraft/client/gui/LoadingGui;)V"))
 	public void onCloseLoadingGui(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
 			FieldHolder.currentTask = null;
@@ -86,7 +86,7 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 				long duration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
 
 				if (duration >= 0) {
-					Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.DUMMY_UUID);
+					Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.NIL_UUID);
 				}
 			}
 

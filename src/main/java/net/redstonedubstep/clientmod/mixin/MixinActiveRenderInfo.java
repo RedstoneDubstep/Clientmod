@@ -13,10 +13,10 @@ import net.redstonedubstep.clientmod.ClientSettings;
 @Mixin(ActiveRenderInfo.class)
 public abstract class MixinActiveRenderInfo {
 	//Stop fluid fog + FOV effects from applying when inside a fluid
-	@Inject(method = "getFluidState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/IBlockReader;getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState;"), cancellable = true)
+	@Inject(method = "getFluidInCamera", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/IBlockReader;getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState;"), cancellable = true)
 	private void onGetFluidState(CallbackInfoReturnable<FluidState> callbackInfo) {
 		if (!ClientSettings.CONFIG.renderFluidEffects.get()) {
-			callbackInfo.setReturnValue(Fluids.EMPTY.getDefaultState());
+			callbackInfo.setReturnValue(Fluids.EMPTY.defaultFluidState());
 		}
 	}
 }

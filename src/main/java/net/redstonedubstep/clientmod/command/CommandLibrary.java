@@ -83,9 +83,9 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
-				case "resources": Util.getOSType().openFile(mc.getFileResourcePacks()); break;
-				case "mods": Util.getOSType().openFile(FMLPaths.MODSDIR.get().toFile()); break;
-				case "mc": Util.getOSType().openFile(FMLPaths.MODSDIR.get().getParent().toFile()); break;
+				case "resources": Util.getPlatform().openFile(mc.getResourcePackDirectory()); break;
+				case "mods": Util.getPlatform().openFile(FMLPaths.MODSDIR.get().toFile()); break;
+				case "mc": Util.getPlatform().openFile(FMLPaths.MODSDIR.get().getParent().toFile()); break;
 			}
 
 			return null;
@@ -95,8 +95,8 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
-				case "trades": mc.displayGuiScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
-				case "brewing": mc.displayGuiScreen(new ImageScreen("brewing_guide", 350, 600, 350, 256, "clientmod:textures/gui/brewing_guide.png")); break;
+				case "trades": mc.setScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
+				case "brewing": mc.setScreen(new ImageScreen("brewing_guide", 350, 600, 350, 256, "clientmod:textures/gui/brewing_guide.png")); break;
 			}
 
 			return null;
@@ -107,10 +107,10 @@ public class CommandLibrary {
 
 			if (text.equals("lastDeath")) {
 				if (FieldHolder.lastDeathPosition == null) {
-					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.noLastDeathPosition"), Util.DUMMY_UUID);
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.noLastDeathPosition"), Util.NIL_UUID);
 				}
 				else {
-					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.getPosition())), Util.DUMMY_UUID);
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())), Util.NIL_UUID);
 				}
 			}
 
@@ -121,7 +121,7 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 
 			if (text.equals("leave"))
-				mc.player.sendChatMessage("Redstone has left the server.");
+				mc.player.chat("Redstone has left the server.");
 			else
 				return CommandException.invalidParameter(params[0], 0, text);
 
@@ -132,7 +132,7 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 			String link = "https://de.namemc.com/profile/"+text;
 
-			Util.getOSType().openURI(link);
+			Util.getPlatform().openUri(link);
 			return null;
 		}
 
@@ -140,28 +140,28 @@ public class CommandLibrary {
 			ClientPlayerEntity player = mc.player;
 			int range = ((IntParameter)params[0]).getValue();
 			EntityType<?> entity = ((EntityTypeParameter)params[1]).getValue();
-			AxisAlignedBB boundingBox = player.getBoundingBox().grow(range);
+			AxisAlignedBB boundingBox = player.getBoundingBox().inflate(range);
 
 			if (entity == null) {
-				List<Entity> list = mc.world.getEntitiesInAABBexcluding(player, boundingBox, null);
+				List<Entity> list = mc.level.getEntities(player, boundingBox, null);
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
-					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntitiesInRange", range), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntitiesInRange", range), Util.NIL_UUID);
 				else {
-					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entitiesInRange", range), Util.DUMMY_UUID);
-					map.forEach((key, value) -> player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.DUMMY_UUID));
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entitiesInRange", range), Util.NIL_UUID);
+					map.forEach((key, value) -> player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.NIL_UUID));
 				}
 			} else {
-				List<? extends Entity> list = mc.world.getEntitiesWithinAABB(entity, boundingBox, (s) -> true);
-				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.getPosition(), mc.player.getPosition())));
+				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, (s) -> true);
+				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
 
 				if (list.size() == 0) {
-					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntityTypeInRange", new TranslationTextComponent(entity.toString()), range), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.noEntityTypeInRange", new TranslationTextComponent(entity.toString()), range), Util.NIL_UUID);
 				}
 				else {
-					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entityTypeInRange", list.size(), new TranslationTextComponent(entity.toString()), range), Util.DUMMY_UUID);
-					list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " (").appendSibling(ClientUtility.fancyWaypointBlockPos(entry.getPosition(), mc.player.getPosition())).appendString(")"), Util.DUMMY_UUID));
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:radar.entityTypeInRange", list.size(), new TranslationTextComponent(entity.toString()), range), Util.NIL_UUID);
+					list.forEach((entry) -> player.sendMessage(new StringTextComponent("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")"), Util.NIL_UUID));
 				}
 			}
 
@@ -169,7 +169,7 @@ public class CommandLibrary {
 		}
 
 		private static CommandException settings(AbstractParameter<?>[] params) {
-			mc.displayGuiScreen(new SettingsScreen());
+			mc.setScreen(new SettingsScreen());
 			return null;
 		}
 		
@@ -181,7 +181,7 @@ public class CommandLibrary {
 			WaypointManager waypointManager = WaypointManager.getInstance();
 
 			if (text.isEmpty()) {
-				waypointManager.setWaypoint(mc.player.getPosition());
+				waypointManager.setWaypoint(mc.player.blockPosition());
 				return null;
 			}
 			else if (text.equals("remove")) {
@@ -190,9 +190,9 @@ public class CommandLibrary {
 			}
 			else if (text.equals("get")) {
 				if (waypointManager.hasWaypoint())
-					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), Util.DUMMY_UUID);
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), Util.NIL_UUID);
 				else
-					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.noWaypoint"), Util.DUMMY_UUID);
+					mc.player.sendMessage(new TranslationTextComponent("messages.clientmod:waypoint.noWaypoint"), Util.NIL_UUID);
 
 				return null;
 
@@ -219,7 +219,7 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
 			String wiki_link = "https://minecraf.fandom.com/" + text;
 
-			Util.getOSType().openURI(wiki_link);
+			Util.getPlatform().openUri(wiki_link);
 			return null;
 		}
 	}

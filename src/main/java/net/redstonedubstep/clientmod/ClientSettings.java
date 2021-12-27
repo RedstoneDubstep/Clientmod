@@ -93,8 +93,8 @@ public class ClientSettings {
 		}
 
 		@Override
-		public Widget createWidget(GameSettings options, int x, int y, int width) {
-			return new SettingButton(x, y, width, 20, getBaseMessageTranslation(), (b) -> setter.accept(!getter.get()), getter, tooltip);
+		public Widget createButton(GameSettings options, int x, int y, int width) {
+			return new SettingButton(x, y, width, 20, getCaption(), (b) -> setter.accept(!getter.get()), getter, tooltip);
 		}
 
 		public boolean getValue() {

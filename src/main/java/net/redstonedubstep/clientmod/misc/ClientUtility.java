@@ -47,7 +47,7 @@ public class ClientUtility {
 			direction = diffX > 0 ? "Northeast" : "Northwest";
 		}
 
-		position.modifyStyle((s) -> s.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent(direction))));
+		position.withStyle((s) -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent(direction))));
 		return position;
 	}
 
@@ -55,11 +55,11 @@ public class ClientUtility {
 		IFormattableTextComponent fancyBlockPos = fancyBlockPos(pos, originalPos);
 		String clickCommand = "/clientmod waypoint set " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
 
-		fancyBlockPos.modifyStyle(s -> s.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
+		fancyBlockPos.withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
 		return fancyBlockPos;
 	}
 
 	public static double distanceBetween(BlockPos pos1, BlockPos pos2) {
-		return Vector3d.copy(pos1.subtract(pos2)).length();
+		return Vector3d.atLowerCornerOf(pos1.subtract(pos2)).length();
 	}
 }

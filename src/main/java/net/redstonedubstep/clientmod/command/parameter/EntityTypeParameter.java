@@ -33,7 +33,7 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 	@Override
 	public CommandException setValue(String value, int pos) {
 		String entityName = value.replace(" ", "_");
-		Optional<EntityType<?>> optional = EntityType.byKey(entityName);
+		Optional<EntityType<?>> optional = EntityType.byString(entityName);
 
 		if (!optional.isPresent()) {
 			return CommandException.invalidParameter(this, pos, value);

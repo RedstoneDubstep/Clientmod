@@ -41,6 +41,8 @@
   "config.clientmod:renderEntitiesGlowing.description": "Should entities in the player's vicinity appear as glowing?",
   "config.clientmod:nightVision.name": "Night Vision: %s",
   "config.clientmod:nightVision.description": "Should the player be able to see as if he has Night Vision?",
+  "config.clientmod:betterFishingHook.name": "Better Fishing Hook: %s",
+  "config.clientmod:betterFishingHook.description": "Should a Fishing Hook change its texture when it is in open water?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg: %s",
   "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"

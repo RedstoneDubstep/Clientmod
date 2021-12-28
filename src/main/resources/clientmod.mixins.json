@@ -1,12 +1,13 @@
 {
-  "required": true,
-  "package": "net.redstonedubstep.clientmod.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "clientmod.refmap.json",
-  "client": [
-    "MixinResourceLoadProgressGui",
-    "MixinSimpleReloadableResourceManager",
-    "MixinActiveRenderInfo"
-  ],
-  "minVersion": "0.8"
+	"required": true,
+	"package": "net.redstonedubstep.clientmod.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"refmap": "clientmod.refmap.json",
+	"client": [
+		"MixinFishRenderer",
+		"MixinResourceLoadProgressGui",
+		"MixinSimpleReloadableResourceManager",
+		"MixinActiveRenderInfo"
+	],
+	"minVersion": "0.8"
 }

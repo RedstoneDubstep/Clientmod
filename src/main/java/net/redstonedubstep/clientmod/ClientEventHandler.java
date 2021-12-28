@@ -108,7 +108,7 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
-		if(event.getType() == ElementType.LAYER) { //TODO: check if render
+		if(event.getType() == ElementType.LAYER) {
 			Player player = Minecraft.getInstance().player;
 			Vec3 lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
 

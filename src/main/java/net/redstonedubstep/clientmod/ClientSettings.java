@@ -44,6 +44,7 @@ public class ClientSettings {
 		public BooleanValue renderFluidEffects;
 		public BooleanValue renderEntitesGlowing;
 		public BooleanValue nightVision;
+		public BooleanValue betterFishingHook;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -76,6 +77,9 @@ public class ClientSettings {
 			nightVision = register(builder
 					.comment("Should the player be able to see as if he has Night Vision?")
 					.define("nightVision", false));
+			betterFishingHook = register(builder
+					.comment("Should a Fishing Hook change its texture when it is in open water?")
+					.define("betterFishingHook", false));
 		}
 
 		private static BooleanValue register(BooleanValue value) {

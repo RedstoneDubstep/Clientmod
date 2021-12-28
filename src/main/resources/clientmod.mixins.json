@@ -1,12 +1,13 @@
 {
-  "required": true,
-  "package": "net.redstonedubstep.clientmod.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "refmap": "clientmod.refmap.json",
-  "client": [
-    "MixinCamera",
-    "MixinLoadingOverlay",
-    "MixinSimpleReloadableResourceManager"
-  ],
-  "minVersion": "0.8"
+	"required": true,
+	"package": "net.redstonedubstep.clientmod.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"refmap": "clientmod.refmap.json",
+	"client": [
+		"MixinCamera",
+		"MixinFishingHookRenderer",
+		"MixinLoadingOverlay",
+		"MixinSimpleReloadableResourceManager"
+	],
+	"minVersion": "0.8"
 }

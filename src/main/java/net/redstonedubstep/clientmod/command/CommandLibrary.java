@@ -7,15 +7,15 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.Util;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
@@ -143,7 +143,7 @@ public class CommandLibrary {
 			AABB boundingBox = player.getBoundingBox().inflate(range);
 
 			if (entity == null) {
-				List<Entity> list = mc.level.getEntities(player, boundingBox, null);
+				List<Entity> list = mc.level.getEntities(player, boundingBox, s -> true);
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
@@ -153,7 +153,7 @@ public class CommandLibrary {
 					map.forEach((key, value) -> player.sendMessage(new TextComponent("- " + value + " " + key.getSimpleName()), Util.NIL_UUID));
 				}
 			} else {
-				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, (s) -> true);
+				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, s -> true);
 				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
 
 				if (list.size() == 0) {

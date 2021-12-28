@@ -45,6 +45,7 @@ public class ClientSettings {
 		public BooleanValue renderEntitesGlowing;
 		public BooleanValue nightVision;
 		public BooleanValue betterFishingHook;
+		public BooleanValue renderSpyglassOverlay;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -80,6 +81,9 @@ public class ClientSettings {
 			betterFishingHook = register(builder
 					.comment("Should a Fishing Hook change its texture when it is in open water?")
 					.define("betterFishingHook", false));
+			renderSpyglassOverlay = register(builder
+					.comment("Should the Spyglass overlay be rendered when scoping through a Spyglass?")
+					.define("renderSpyglassOverlay", true));
 		}
 
 		private static BooleanValue register(BooleanValue value) {

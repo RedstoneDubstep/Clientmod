@@ -23,6 +23,7 @@ import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -104,6 +105,12 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onFMLLoadComplete(FMLLoadCompleteEvent event) {
 		FieldHolder.isMinecraftStarting = false;
+	}
+
+	@SubscribeEvent
+	public static void renderGameOverlayLayer(RenderGameOverlayEvent.PreLayer event) {
+		if (!ClientSettings.CONFIG.renderSpyglassOverlay.get() && event.getOverlay() == ForgeIngameGui.SPYGLASS_ELEMENT)
+			event.setCanceled(true);
 	}
 
 	@SubscribeEvent

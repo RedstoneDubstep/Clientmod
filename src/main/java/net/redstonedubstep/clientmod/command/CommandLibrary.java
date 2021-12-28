@@ -143,7 +143,7 @@ public class CommandLibrary {
 			AxisAlignedBB boundingBox = player.getBoundingBox().inflate(range);
 
 			if (entity == null) {
-				List<Entity> list = mc.level.getEntities(player, boundingBox, null);
+				List<Entity> list = mc.level.getEntities(player, boundingBox, s -> true);
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
@@ -153,7 +153,7 @@ public class CommandLibrary {
 					map.forEach((key, value) -> player.sendMessage(new StringTextComponent("- " + value + " " + key.getSimpleName()), Util.NIL_UUID));
 				}
 			} else {
-				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, (s) -> true);
+				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, s -> true);
 				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
 
 				if (list.size() == 0) {

@@ -28,6 +28,7 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper.UnableToFindFieldException;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
@@ -75,10 +76,14 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onInitGuiPost(InitGuiEvent.Post event) {
 		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getGui() instanceof MainMenuScreen) {
-			boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen)event.getGui(), "minceraftEasterEgg");
+			try {
+				boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen)event.getGui(), "field_213101_e");
 
-			if (isTitleWronglySpelled) {
-				Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.WITHER_DEATH,1, 5));
+				if (isTitleWronglySpelled) {
+					Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.WITHER_DEATH, 1, 5));
+				}
+			} catch(UnableToFindFieldException e) {
+				e.printStackTrace();
 			}
 		}
 	}

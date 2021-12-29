@@ -120,9 +120,9 @@ jar {
         attributes([
                 "Specification-Title": "clientmod",
                 "Specification-Vendor": "Redstone_Dubstep",
-                "Specification-Version": "v1.0",
+                "Specification-Version": "${version}",
                 "Implementation-Title": "clientmod",
-                "Implementation-Version": "v1.0",
+                "Implementation-Version": "${version}",
                 "Implementation-Vendor": "Redstone_Dubstep",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs": "clientmod.mixins.json"

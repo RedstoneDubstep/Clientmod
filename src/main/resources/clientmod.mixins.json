@@ -7,6 +7,7 @@
 		"MixinCamera",
 		"MixinFishingHookRenderer",
 		"MixinLoadingOverlay",
+		"MixinSimpleReloadInstance",
 		"MixinSimpleReloadableResourceManager"
 	],
 	"minVersion": "0.8"

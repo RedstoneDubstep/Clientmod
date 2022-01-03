@@ -41,24 +41,19 @@ public abstract class MixinLoadingOverlay extends Overlay {
 			List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)reload).preparingListeners);
 
 			//setup reloading-related fields
-			if (FieldHolder.maxTaskAmount <= -1)
+			if (FieldHolder.maxTaskAmount == -1)
 				FieldHolder.maxTaskAmount = taskSet.size();
 
-			if (FieldHolder.reloadingStartTime == -1)
-				FieldHolder.reloadingStartTime = System.currentTimeMillis();
-
-			if (FieldHolder.oldTaskSet == null || FieldHolder.oldTaskSet.isEmpty()) {
+			if (FieldHolder.oldTaskSet == null || FieldHolder.oldTaskSet.isEmpty())
 				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
-			}
 
 			if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task by comparing the new and the old task set
 				for (PreparableReloadListener task : taskSet) {
 					FieldHolder.oldTaskSet.remove(task);
 				}
 
-				if (FieldHolder.oldTaskSet.size() > 0) {
+				if (FieldHolder.oldTaskSet.size() > 0)
 					FieldHolder.currentTask = new ArrayList<>(FieldHolder.oldTaskSet).get(0);
-				}
 
 				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
 			}
@@ -66,9 +61,8 @@ public abstract class MixinLoadingOverlay extends Overlay {
 			if (FieldHolder.currentTask != null)
 				Minecraft.getInstance().font.draw(stack, new TextComponent("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
 		}
-		else if (reload.isDone() && FieldHolder.reloadingFinishTime == -1) {
+		else if (reload.isDone() && FieldHolder.reloadingFinishTime == -1)
 			FieldHolder.reloadingFinishTime = System.currentTimeMillis();
-		}
 	}
 
 	//Toggle the Gui's background
@@ -88,9 +82,8 @@ public abstract class MixinLoadingOverlay extends Overlay {
 				long reloadDuration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
 				long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 
-				if (reloadDuration >= 0 && totalDuration >= 0) {
+				if (reloadDuration >= 0 && totalDuration >= 0)
 					Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")), Util.NIL_UUID);
-				}
 			}
 
 			FieldHolder.reloadingStartTime = -1;

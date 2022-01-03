@@ -6,10 +6,30 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.font.FontManager;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.FoliageColorReloadListener;
+import net.minecraft.client.resources.GrassColorReloadListener;
+import net.minecraft.client.resources.MobEffectTextureManager;
+import net.minecraft.client.resources.PaintingTextureManager;
+import net.minecraft.client.resources.SplashManager;
+import net.minecraft.client.resources.language.LanguageManager;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.searchtree.SearchRegistry;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,6 +55,7 @@ public class CommandLibrary {
 	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
+	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures"), false, "all"));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
 	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
 	private static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
@@ -48,6 +69,7 @@ public class CommandLibrary {
 		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
+		commandList.add(RELOAD_COMMAND);
 		commandList.add(SETTINGS_COMMAND);
 		commandList.add(WAYPOINT_COMMAND);
 		commandList.add(WIKI_COMMAND);
@@ -165,6 +187,22 @@ public class CommandLibrary {
 				}
 			}
 
+			return null;
+		}
+
+		private static CommandException reload(AbstractParameter<?>[] params) {
+			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
+
+			FieldHolder.reloadFilter = switch(text) {
+				default -> null;
+				case "font" -> Sets.newHashSet(LanguageManager.class, SplashManager.class, FontManager.class);
+				case "misc" -> Sets.newHashSet(GrassColorReloadListener.class, FoliageColorReloadListener.class, SearchRegistry.class);
+				case "renderers" -> Sets.newHashSet(BlockEntityRenderDispatcher.class, BlockEntityWithoutLevelRenderer.class, EntityRenderDispatcher.class, ItemInHandRenderer.class, GameRenderer.class, LevelRenderer.class);
+				case "sounds" -> Sets.newHashSet(SoundManager.class);
+				case "textures" -> Sets.newHashSet(TextureManager.class, ModelManager.class, EntityModelSet.class, BlockRenderDispatcher.class, PaintingTextureManager.class, MobEffectTextureManager.class);
+			};
+
+			mc.reloadResourcePacks();
 			return null;
 		}
 

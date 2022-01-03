@@ -38,7 +38,6 @@ public class ClientSettings {
 
 	public static class Config {
 		public BooleanValue notifyWhenMinceraftScreen;
-		public BooleanValue shouldReloadSounds;
 		public BooleanValue drawReloadingBackground;
 		public BooleanValue enhancedReloadingInfo;
 		public BooleanValue renderFluidEffects;
@@ -52,9 +51,6 @@ public class ClientSettings {
 			notifyWhenMinceraftScreen = register(builder
 					.comment("Should Minecraft play a (loud) sound when the Minceraft logo is shown?")
 					.define("notifyWhenMinceraftScreen", true));
-			shouldReloadSounds = register(builder
-					.comment("Should F3+T also reload sounds? (Turning this off will make resource reloading a bit faster)")
-					.define("shouldReloadSounds", true));
 			drawReloadingBackground = register(builder
 					.comment("Should there be a red background when reloading resources with F3+T?")
 					.define("drawReloadingBackground", true));

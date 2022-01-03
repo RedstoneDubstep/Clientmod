@@ -1,13 +1,15 @@
 package net.redstonedubstep.clientmod.misc;
 
+import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 public class FieldHolder {
 	public static boolean isMinecraftStarting = true;
 	public static BlockPos lastDeathPosition = null;
+	public static Collection<Class<?>> reloadFilter = null;
 
 	//mixin related fields that can't be put in mixin classes
 	public static PreparableReloadListener currentTask;

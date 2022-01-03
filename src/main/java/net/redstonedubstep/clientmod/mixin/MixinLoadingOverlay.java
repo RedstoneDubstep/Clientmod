@@ -85,10 +85,11 @@ public abstract class MixinLoadingOverlay extends Overlay {
 			FieldHolder.maxTaskAmount = -1;
 
 			if (Minecraft.getInstance().player != null) {
-				long duration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
+				long reloadDuration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
+				long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 
-				if (duration >= 0) {
-					Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), Util.NIL_UUID);
+				if (reloadDuration >= 0 && totalDuration >= 0) {
+					Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")), Util.NIL_UUID);
 				}
 			}
 

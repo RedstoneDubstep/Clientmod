@@ -8,7 +8,7 @@
 		"MixinFishingHookRenderer",
 		"MixinLoadingOverlay",
 		"MixinSimpleReloadInstance",
-		"MixinSimpleReloadableResourceManager"
+		"MixinReloadableResourceManager"
 	],
 	"minVersion": "0.8"
 }

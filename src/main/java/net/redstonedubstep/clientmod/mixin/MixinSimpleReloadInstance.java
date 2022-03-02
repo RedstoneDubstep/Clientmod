@@ -20,7 +20,7 @@ public class MixinSimpleReloadInstance {
 	private static CompletableFuture<Void> redirectReload(PreparableReloadListener instance, PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller secondProfileFiller, Executor backgroundExecutor, Executor gameExecutor, Executor unusedBackgroundExecutor, PreparationBarrier unusedBarrier, ResourceManager unusedResourceManager, PreparableReloadListener unusedReloadListener, Executor correctBackgroundExecutor) {
 		if (ClientSettings.CONFIG.enhancedReloadingInfo.get())
 			backgroundExecutor = correctBackgroundExecutor;
-		
+
 		return instance.reload(preparationBarrier, resourceManager, profilerFiller, secondProfileFiller, backgroundExecutor, gameExecutor);
 	}
 }

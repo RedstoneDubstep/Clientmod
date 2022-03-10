@@ -1,5 +1,7 @@
 package net.redstonedubstep.clientmod.mixin;
 
+import java.util.concurrent.CompletableFuture;
+
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -7,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.Util;
@@ -40,5 +43,15 @@ public class MixinMinecraft {
 				FieldHolder.reloadingFinishTime = -1;
 			}
 		}
+	}
+
+	@Redirect(method = "lambda$delayTextureReload$50", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;reloadResourcePacks()Ljava/util/concurrent/CompletableFuture;"))
+	private CompletableFuture<Void> onServerTextureReload(Minecraft minecraft) {
+		if (!ClientSettings.CONFIG.reloadServerResources.get() && minecraft.player != null) {
+			minecraft.player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.server_resources"), Util.NIL_UUID);
+			return new CompletableFuture<>();
+		}
+		else
+			return minecraft.reloadResourcePacks();
 	}
 }

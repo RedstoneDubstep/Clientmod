@@ -15,6 +15,7 @@
   "messages.clientmod:reloading.started": "Reloading started!",
   "messages.clientmod:reloading.finished": "Reloading finished!",
   "messages.clientmod:reloading.time": "Reloading Resources took %1$s, total time: %2$s",
+  "messages.clientmod:reloading.server_resources": "This server provides its own resource pack, make sure to reload resources to be able to see custom textures properly",
 
   "screen.clientmod:mainScreen.name": "Clientmod command input",
   "screen.clientmod:mainScreen.supportedCommands": "The following commands are currently supported: ",
@@ -37,6 +38,8 @@
   "config.clientmod:enhancedReloadingInfo.description": "Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?",
   "config.clientmod:reloadFade.name": "Reload Fade: %s",
   "config.clientmod:reloadFade.description": "Should the reload overlay fade in and out for two seconds before and after reloading is complete?",
+  "config.clientmod:reloadServerResources.name": "Reload Server Resources: %s",
+  "config.clientmod:reloadServerResources.description": "Should server resource packs get automatically loaded into the client when joining a server?",
   "config.clientmod:renderFluidEffects.name": "Render Fluid Effects: %s",
   "config.clientmod:renderFluidEffects.description": "Should the water/lava fog and the respective FOV change be visible while being inside a fluid?",
   "config.clientmod:renderEntitiesGlowing.name": "Render Entities glowing: %s",

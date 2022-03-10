@@ -9,8 +9,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -36,8 +38,10 @@ public abstract class MixinReloadableResourceManager {
 				FieldHolder.oldTaskSet = listeners;
 			}
 
-			if (FieldHolder.reloadingStartTime == -1)
+			if (FieldHolder.reloadingStartTime == -1) {
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
+				Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.started"), Util.NIL_UUID);
+			}
 		}
 		
 		return SimpleReloadInstance.create(resourceManager, listeners, backgroundExecutor, gameExecutor, waitingFor, debugEnabled);

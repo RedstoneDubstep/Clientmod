@@ -7,8 +7,9 @@
 		"MixinCamera",
 		"MixinFishingHookRenderer",
 		"MixinLoadingOverlay",
-		"MixinSimpleReloadInstance",
-		"MixinReloadableResourceManager"
+		"MixinMinecraft",
+		"MixinReloadableResourceManager",
+		"MixinSimpleReloadInstance"
 	],
 	"minVersion": "0.8"
 }

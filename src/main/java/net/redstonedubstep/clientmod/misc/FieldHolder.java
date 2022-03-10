@@ -11,7 +11,7 @@ public class FieldHolder {
 	public static BlockPos lastDeathPosition = null;
 	public static Collection<Class<?>> reloadFilter = null;
 
-	//mixin related fields that can't be put in mixin classes
+	//mixin related fields that can't be put in mixin classes TODO: put these in a mixin class with protected and @Unique
 	public static PreparableReloadListener currentTask;
 	public static List<PreparableReloadListener> oldTaskSet;
 	public static int maxTaskAmount = -1;

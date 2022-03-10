@@ -3,7 +3,7 @@ package net.redstonedubstep.clientmod.mixin;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,37 +32,42 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	@Final
 	private ReloadInstance reload;
 	@Shadow @Final private boolean fadeIn;
+	@Shadow private long fadeOutStart;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
 	private void injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof SimpleReloadInstance && !reload.isDone()) {
-			List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)reload).preparingListeners);
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof SimpleReloadInstance) {
+			if (!reload.isDone()) {
+				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)reload).preparingListeners);
 
-			//setup reloading-related fields
-			if (FieldHolder.maxTaskAmount == -1)
-				FieldHolder.maxTaskAmount = taskSet.size();
+				//setup reloading-related fields
+				if (FieldHolder.maxTaskAmount == -1)
+					FieldHolder.maxTaskAmount = taskSet.size();
 
-			if (FieldHolder.oldTaskSet == null || FieldHolder.oldTaskSet.isEmpty())
-				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
+				if (FieldHolder.oldTaskSet == null || FieldHolder.oldTaskSet.isEmpty())
+					FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
 
-			if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task by comparing the new and the old task set
-				for (PreparableReloadListener task : taskSet) {
-					FieldHolder.oldTaskSet.remove(task);
+				if (!taskSet.equals(FieldHolder.oldTaskSet)) { //update the current task by comparing the new and the old task set
+					for (PreparableReloadListener task : taskSet) {
+						FieldHolder.oldTaskSet.remove(task);
+					}
+
+					if (FieldHolder.oldTaskSet.size() > 0)
+						FieldHolder.currentTask = new ArrayList<>(FieldHolder.oldTaskSet).get(0);
+
+					FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
 				}
 
-				if (FieldHolder.oldTaskSet.size() > 0)
-					FieldHolder.currentTask = new ArrayList<>(FieldHolder.oldTaskSet).get(0);
-
-				FieldHolder.oldTaskSet = new ArrayList<>(taskSet);
+				if (FieldHolder.currentTask != null)
+					Minecraft.getInstance().font.draw(stack, new TextComponent("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
 			}
-
-			if (FieldHolder.currentTask != null)
-				Minecraft.getInstance().font.draw(stack, new TextComponent("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
+			else if (FieldHolder.reloadingFinishTime == -1) {
+				FieldHolder.reloadingFinishTime = System.currentTimeMillis();
+				Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.finished"), Util.NIL_UUID);
+			}
 		}
-		else if (reload.isDone() && FieldHolder.reloadingFinishTime == -1)
-			FieldHolder.reloadingFinishTime = System.currentTimeMillis();
 	}
 
 	//Toggle the Gui's background
@@ -71,23 +76,16 @@ public abstract class MixinLoadingOverlay extends Overlay {
 		fill(stack, minX, minY, maxX, maxY, fadeIn && !ClientSettings.CONFIG.drawReloadingBackground.get() ? 16777215 : color);
 	}
 
-	//At this point, reloading is fully done, so we can do some post-stuff
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setOverlay(Lnet/minecraft/client/gui/screens/Overlay;)V"))
-	public void onCloseLoadingGui(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
-			FieldHolder.currentTask = null;
-			FieldHolder.maxTaskAmount = -1;
+	//When reloading is finished, allows skipping to fade the overlay out and removes it instead
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/Util;getMillis()J", ordinal = 1))
+	public void onReloadFinished(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+		if (reload.isDone() && !ClientSettings.CONFIG.reloadFade.get())
+			Minecraft.getInstance().setOverlay(null);
+	}
 
-			if (Minecraft.getInstance().player != null && FieldHolder.reloadingStartTime >= 0) {
-				long reloadDuration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
-				long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
-
-				if (reloadDuration >= 0 && totalDuration >= 0)
-					Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")), Util.NIL_UUID);
-			}
-
-			FieldHolder.reloadingStartTime = -1;
-			FieldHolder.reloadingFinishTime = -1;
-		}
+	//Fixes that the overlay cannot finish reloading as long as it hasn't faded in properly
+	@Redirect(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;fadeIn:Z", opcode = Opcodes.GETFIELD, ordinal = 2))
+	public boolean shouldFadeIn(LoadingOverlay instance) {
+		return fadeIn && ClientSettings.CONFIG.reloadFade.get();
 	}
 }

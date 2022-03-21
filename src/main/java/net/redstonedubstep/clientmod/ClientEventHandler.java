@@ -63,7 +63,7 @@ public class ClientEventHandler {
 			}
 
 			if (ClientSettings.CONFIG.nightVision.get())
-				player.addEffect(new EffectInstance(Effects.NIGHT_VISION));
+				player.addEffect(new EffectInstance(Effects.NIGHT_VISION, 210));
 			else if (player.hasEffect(Effects.NIGHT_VISION) && player.getEffect(Effects.NIGHT_VISION).getDuration() <= 0)
 				player.removeEffect(Effects.NIGHT_VISION);
 

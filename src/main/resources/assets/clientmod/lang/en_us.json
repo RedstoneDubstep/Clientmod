@@ -12,7 +12,7 @@
   "messages.clientmod:waypoint.noWaypoint": "There is currently no waypoint registered.",
   "messages.clientmod:waypoint.waypointSet": "Waypoint set to position %s.",
   "messages.clientmod:waypoint.waypointRemoved": "Waypoint at position %s has been removed.",
-  "messages.clientmod:reloading.time": "Reloading Resources took %s",
+  "messages.clientmod:reloading.time": "Reloading Resources took %1$s, total time: %2$s",
 
   "screen.clientmod:mainScreen.name": "Clientmod command input",
   "screen.clientmod:mainScreen.supportedCommands": "The following commands are currently supported: ",

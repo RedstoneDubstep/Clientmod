@@ -12,6 +12,8 @@
   "messages.clientmod:waypoint.noWaypoint": "There is currently no waypoint registered.",
   "messages.clientmod:waypoint.waypointSet": "Waypoint set to position %s.",
   "messages.clientmod:waypoint.waypointRemoved": "Waypoint at position %s has been removed.",
+  "messages.clientmod:reloading.started": "Reloading started!",
+  "messages.clientmod:reloading.finished": "Reloading finished!",
   "messages.clientmod:reloading.time": "Reloading Resources took %1$s, total time: %2$s",
 
   "screen.clientmod:mainScreen.name": "Clientmod command input",
@@ -33,6 +35,8 @@
   "config.clientmod:drawReloadingBackground.description": "Should there be a red background when reloading resources with F3+T?",
   "config.clientmod:enhancedReloadingInfo.name": "Enhanced Reloading Info: %s",
   "config.clientmod:enhancedReloadingInfo.description": "Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?",
+  "config.clientmod:reloadFade.name": "Reload Fade: %s",
+  "config.clientmod:reloadFade.description": "Should the reload overlay fade in and out for two seconds before and after reloading is complete?",
   "config.clientmod:renderFluidEffects.name": "Render Fluid Effects: %s",
   "config.clientmod:renderFluidEffects.description": "Should the water/lava fog and the respective FOV change be visible while being inside a fluid?",
   "config.clientmod:renderEntitiesGlowing.name": "Render Entities glowing: %s",

@@ -16,6 +16,8 @@ import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.Unit;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
@@ -35,8 +37,10 @@ public abstract class MixinSimpleReloadableResourceManager {
 				FieldHolder.oldTaskSet = listeners;
 			}
 
-			if (FieldHolder.reloadingStartTime == -1)
+			if (FieldHolder.reloadingStartTime == -1) {
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
+				Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.started"), Util.NIL_UUID);
+			}
 		}
 		
 		return AsyncReloader.of(resourceManager, listeners, backgroundExecutor, gameExecutor, waitingFor);

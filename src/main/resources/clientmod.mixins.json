@@ -4,10 +4,12 @@
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "clientmod.refmap.json",
 	"client": [
+		"MixinActiveRenderInfo",
+		"MixinAsyncReloader",
 		"MixinFishRenderer",
+		"MixinMinecraft",
 		"MixinResourceLoadProgressGui",
-		"MixinSimpleReloadableResourceManager",
-		"MixinActiveRenderInfo"
+		"MixinSimpleReloadableResourceManager"
 	],
 	"minVersion": "0.8"
 }

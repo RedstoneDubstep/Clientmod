@@ -40,6 +40,7 @@ public class ClientSettings {
 		public BooleanValue notifyWhenMinceraftScreen;
 		public BooleanValue drawReloadingBackground;
 		public BooleanValue enhancedReloadingInfo;
+		public BooleanValue reloadFade;
 		public BooleanValue renderFluidEffects;
 		public BooleanValue renderEntitesGlowing;
 		public BooleanValue nightVision;
@@ -56,6 +57,9 @@ public class ClientSettings {
 			enhancedReloadingInfo = register(builder
 					.comment("Should there be additional information displayed (like the current task, the duration of the reload, etc.) while reloading resources?")
 					.define("enhancedReloadingInfo", false));
+			reloadFade = register(builder
+					.comment("Should the reload overlay fade in and out for two seconds before and after reloading is complete?")
+					.define("reloadFade", true));
 			renderFluidEffects = register(builder
 					.comment("Should the water/lava fog and the respective FOV change be visible while being inside a fluid?")
 					.define("renderFluidEffects", true));

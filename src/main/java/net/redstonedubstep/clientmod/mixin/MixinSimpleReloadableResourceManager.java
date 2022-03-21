@@ -34,6 +34,9 @@ public abstract class MixinSimpleReloadableResourceManager {
 				FieldHolder.maxTaskAmount = listeners.size();
 				FieldHolder.oldTaskSet = listeners;
 			}
+
+			if (FieldHolder.reloadingStartTime == -1)
+				FieldHolder.reloadingStartTime = System.currentTimeMillis();
 		}
 		
 		return AsyncReloader.of(resourceManager, listeners, backgroundExecutor, gameExecutor, waitingFor);

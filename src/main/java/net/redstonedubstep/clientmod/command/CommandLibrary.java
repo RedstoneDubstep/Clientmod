@@ -6,9 +6,26 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.fonts.FontResourceManager;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.FirstPersonRenderer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.model.ModelManager;
+import net.minecraft.client.renderer.texture.PaintingSpriteUploader;
+import net.minecraft.client.renderer.texture.PotionSpriteUploader;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.FoliageColorReloadListener;
+import net.minecraft.client.resources.GrassColorReloadListener;
+import net.minecraft.client.resources.LanguageManager;
+import net.minecraft.client.util.SearchTreeManager;
+import net.minecraft.client.util.Splashes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Util;
@@ -16,7 +33,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.resource.VanillaResourceType;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
 import net.redstonedubstep.clientmod.command.parameter.IntParameter;
@@ -35,6 +54,7 @@ public class CommandLibrary {
 	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
+	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures"), false, "all"));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
 	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
 	private static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
@@ -48,6 +68,7 @@ public class CommandLibrary {
 		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
+		commandList.add(RELOAD_COMMAND);
 		commandList.add(SETTINGS_COMMAND);
 		commandList.add(WAYPOINT_COMMAND);
 		commandList.add(WIKI_COMMAND);
@@ -165,6 +186,21 @@ public class CommandLibrary {
 				}
 			}
 
+			return null;
+		}
+
+		private static CommandException reload(AbstractParameter<?>[] params) {
+			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
+
+			switch(text) {
+				case "font": FieldHolder.reloadFilter = Sets.newHashSet(LanguageManager.class, Splashes.class, FontResourceManager.class); break;
+				case "misc": FieldHolder.reloadFilter = Sets.newHashSet(GrassColorReloadListener.class, FoliageColorReloadListener.class, SearchTreeManager.class); break;
+				case "renderers": FieldHolder.reloadFilter = Sets.newHashSet(EntityRendererManager.class, FirstPersonRenderer.class, GameRenderer.class, WorldRenderer.class); break;
+				case "sounds": FieldHolder.reloadFilter = Sets.newHashSet(SoundHandler.class); break;
+				case "textures": FieldHolder.reloadFilter = Sets.newHashSet(TextureManager.class, ModelManager.class, BlockRendererDispatcher.class, PaintingSpriteUploader.class, PotionSpriteUploader.class); break;
+			}
+
+			ForgeHooksClient.refreshResources(mc, (VanillaResourceType)null); //this should only reload vanilla stuff, not forge stuff
 			return null;
 		}
 

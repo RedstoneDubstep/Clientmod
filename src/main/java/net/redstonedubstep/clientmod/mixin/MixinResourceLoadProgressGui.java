@@ -82,7 +82,7 @@ public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 			FieldHolder.currentTask = null;
 			FieldHolder.maxTaskAmount = -1;
 
-			if (Minecraft.getInstance().player != null) {
+			if (Minecraft.getInstance().player != null && FieldHolder.reloadingStartTime >= 0) {
 				long reloadDuration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
 				long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 

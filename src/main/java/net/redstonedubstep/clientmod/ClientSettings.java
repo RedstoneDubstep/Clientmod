@@ -41,6 +41,7 @@ public class ClientSettings {
 		public BooleanValue drawReloadingBackground;
 		public BooleanValue enhancedReloadingInfo;
 		public BooleanValue reloadFade;
+		public BooleanValue reloadServerResources;
 		public BooleanValue renderFluidEffects;
 		public BooleanValue renderEntitesGlowing;
 		public BooleanValue nightVision;
@@ -60,6 +61,9 @@ public class ClientSettings {
 			reloadFade = register(builder
 					.comment("Should the reload overlay fade in and out for two seconds before and after reloading is complete?")
 					.define("reloadFade", true));
+			reloadServerResources = register(builder
+					.comment("Should server resource packs get automatically loaded into the client when joining a server?")
+					.define("reloadServerResources", true));
 			renderFluidEffects = register(builder
 					.comment("Should the water/lava fog and the respective FOV change be visible while being inside a fluid?")
 					.define("renderFluidEffects", true));

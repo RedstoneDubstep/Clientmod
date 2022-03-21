@@ -26,7 +26,7 @@ public abstract class MixinSimpleReloadableResourceManager {
 	//stop sounds from reloading, and fill some fields with information about the start of the reload
 	@Redirect(method = "createReload", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/AsyncReloader;of(Lnet/minecraft/resources/IResourceManager;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/resources/AsyncReloader;"))
 	public AsyncReloader<Void> onInitializeAsyncReloader(IResourceManager resourceManager, List<IFutureReloadListener> listeners, Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor) {
-		if (Minecraft.getInstance().level != null) { //makes sure this only applies when reloading resources ingame, and not when starting the game
+		if (Minecraft.getInstance().player != null) { //makes sure this only applies when reloading resources ingame, and not when starting the game
 			if (FieldHolder.reloadFilter != null) {
 				listeners = listeners.stream().filter(l -> FieldHolder.reloadFilter.stream().anyMatch(c -> c.isInstance(l) || (c == FontResourceManager.class && l.getName().equals("FontManager")))).collect(Collectors.toList());
 				FieldHolder.reloadFilter = null;

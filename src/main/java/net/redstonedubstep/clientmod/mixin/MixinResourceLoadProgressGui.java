@@ -30,13 +30,12 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 public abstract class MixinResourceLoadProgressGui extends LoadingGui {
 	@Shadow @Final private IAsyncReloader reload;
 	@Shadow @Final private boolean fadeIn;
-	@Shadow private long fadeOutStart;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/IAsyncReloader;getActualProgress()F"))
 	private void injectRender(MatrixStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof AsyncReloader) {
+		if (ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof AsyncReloader && Minecraft.getInstance().player != null) {
 			if (!reload.isDone()) {
 				List<IFutureReloadListener> taskSet = new ArrayList<>(((AsyncReloader<Void>)reload).preparingListeners);
 

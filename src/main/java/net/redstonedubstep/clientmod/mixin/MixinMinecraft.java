@@ -1,13 +1,19 @@
 package net.redstonedubstep.clientmod.mixin;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.LoadingGui;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -18,6 +24,10 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 public class MixinMinecraft {
 	@Shadow
 	public LoadingGui overlay;
+	@Shadow
+	public ClientPlayerEntity player;
+	@Unique
+	private static boolean reloadFromServer;
 
 	//At this point, reloading is fully done (and thus, the overlay gets removed so the player can move again), so we can do some post-stuff
 	@Inject(method = "setOverlay", at = @At("HEAD"))
@@ -39,5 +49,19 @@ public class MixinMinecraft {
 				FieldHolder.reloadingFinishTime = -1;
 			}
 		}
+	}
+
+	@Inject(method = "reloadResourcePacks", at = @At("HEAD"))
+	private void onReloadResourcePacks(CallbackInfoReturnable<CompletableFuture<Void>> callbackInfo) {
+		if (!ClientSettings.CONFIG.reloadServerResources.get() && reloadFromServer && player != null) {
+			player.sendMessage(new TranslationTextComponent("messages.clientmod:reloading.server_resources"), Util.NIL_UUID);
+			reloadFromServer = false;
+			callbackInfo.setReturnValue(new CompletableFuture<>());
+		}
+	}
+
+	@Inject(method = "lambda$delayTextureReload$37", at = @At("HEAD"))
+	private static void onServerTextureReload(CompletableFuture<Void> future, CallbackInfoReturnable<CompletionStage<?>> callbackInfo) {
+		reloadFromServer = true;
 	}
 }

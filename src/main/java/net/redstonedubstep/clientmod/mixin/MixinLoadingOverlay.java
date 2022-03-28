@@ -32,7 +32,6 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	@Final
 	private ReloadInstance reload;
 	@Shadow @Final private boolean fadeIn;
-	@Shadow private long fadeOutStart;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")

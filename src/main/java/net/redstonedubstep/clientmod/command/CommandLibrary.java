@@ -33,10 +33,12 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.redstonedubstep.clientmod.Clientmod;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
 import net.redstonedubstep.clientmod.command.parameter.IntParameter;
@@ -116,9 +118,9 @@ public class CommandLibrary {
 		private static CommandException image(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue();
 
-			switch (text) {
-				case "trades": mc.setScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
-				case "brewing": mc.setScreen(new ImageScreen("brewing_guide", 350, 600, 350, 256, "clientmod:textures/gui/brewing_guide.png")); break;
+			switch(text) {
+				case "trades" -> mc.setScreen(new ImageScreen("trades_screen", 1403, 256, new ResourceLocation(Clientmod.MODID, "textures/gui/trades_horizontal.png")));
+				case "brewing" -> mc.setScreen(new ImageScreen("brewing_guide", 350, 600, new ResourceLocation(Clientmod.MODID, "textures/gui/brewing_guide.png")));
 			}
 
 			return null;

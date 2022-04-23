@@ -19,10 +19,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -71,6 +74,12 @@ public class ClientEventHandler {
 			if (player.deathTime == 1)
 				FieldHolder.lastDeathPosition = player.blockPosition();
 		}
+	}
+
+	@SubscribeEvent
+	public static void onClickEvent(ClickInputEvent event) {
+		if (ClientSettings.CONFIG.invincibleVillagers.get() && event.isAttack() && !Minecraft.getInstance().gameMode.getPlayerMode().isCreative() && Minecraft.getInstance().hitResult instanceof EntityHitResult hitResult && hitResult.getEntity() instanceof Villager)
+			event.setCanceled(true);
 	}
 
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code

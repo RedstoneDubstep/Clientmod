@@ -47,6 +47,7 @@ public class ClientSettings {
 		public BooleanValue nightVision;
 		public BooleanValue betterFishingHook;
 		public BooleanValue renderSpyglassOverlay;
+		public BooleanValue invincibleVillagers;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -88,6 +89,9 @@ public class ClientSettings {
 			renderSpyglassOverlay = register(builder
 					.comment("Should the Spyglass overlay be rendered when scoping through a Spyglass?")
 					.define("renderSpyglassOverlay", true));
+			invincibleVillagers = register(builder
+					.comment("Should Villagers be invincible to direct player attacks?")
+					.define("invincibleVillagers", false));
 		}
 
 		private static BooleanValue register(BooleanValue value) {

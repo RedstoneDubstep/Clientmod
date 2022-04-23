@@ -53,6 +53,8 @@
   "config.clientmod:betterFishingHook.description": "Should a Fishing Hook change its texture when it is in open water?",
   "config.clientmod:renderSpyglassOverlay.name": "Spyglass Overlay: %s",
   "config.clientmod:renderSpyglassOverlay.description": "Should the Spyglass overlay be rendered when scoping through a Spyglass?",
+  "config.clientmod:invincibleVillagers.name": "Invincible Villagers: %s",
+  "config.clientmod:invincibleVillagers.description": "Should Villagers be invincible to direct player attacks?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg: %s",
   "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"

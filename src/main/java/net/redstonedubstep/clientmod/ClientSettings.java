@@ -46,6 +46,7 @@ public class ClientSettings {
 		public BooleanValue renderEntitesGlowing;
 		public BooleanValue nightVision;
 		public BooleanValue betterFishingHook;
+		public BooleanValue invincibleVillagers;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -88,6 +89,9 @@ public class ClientSettings {
 			betterFishingHook = register(builder
 					.comment("Should a Fishing Hook change its texture when it is in open water?")
 					.define("betterFishingHook", false));
+			invincibleVillagers = register(builder
+					.comment("Should Villagers be invincible to direct player attacks?")
+					.define("invincibleVillagers", false));
 		}
 
 		private static BooleanValue register(BooleanValue value) {

@@ -11,11 +11,13 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -26,6 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.TickEvent;
@@ -75,6 +78,16 @@ public class ClientEventHandler {
 
 			if (player.deathTime == 1)
 				FieldHolder.lastDeathPosition = player.blockPosition();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClickEvent(ClickInputEvent event) {
+		if (ClientSettings.CONFIG.invincibleVillagers.get() && event.isAttack() && !Minecraft.getInstance().gameMode.getPlayerMode().isCreative() && Minecraft.getInstance().hitResult instanceof EntityRayTraceResult) {
+			EntityRayTraceResult hitResult = (EntityRayTraceResult)Minecraft.getInstance().hitResult;
+
+			if (hitResult.getEntity() instanceof VillagerEntity)
+				event.setCanceled(true);
 		}
 	}
 

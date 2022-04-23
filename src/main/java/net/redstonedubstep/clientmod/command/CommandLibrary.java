@@ -118,7 +118,7 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
-				case "trades": mc.setScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, new ResourceLocation(Clientmod.MODID, "textures/gui/trades_horizontal.png"))); break;
+				case "trades": mc.setScreen(new ImageScreen("trades_screen", 1263, 595, new ResourceLocation(Clientmod.MODID, "textures/gui/trading_bartering_guide.png"))); break;
 				case "brewing": mc.setScreen(new ImageScreen("brewing_guide", 350, 600, new ResourceLocation(Clientmod.MODID, "textures/gui/brewing_guide.png"))); break;
 			}
 

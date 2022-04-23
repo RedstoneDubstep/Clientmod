@@ -28,6 +28,7 @@ import net.minecraft.client.util.SearchTreeManager;
 import net.minecraft.client.util.Splashes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -36,6 +37,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.resource.VanillaResourceType;
+import net.redstonedubstep.clientmod.Clientmod;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
 import net.redstonedubstep.clientmod.command.parameter.IntParameter;
@@ -116,8 +118,8 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
-				case "trades": mc.setScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, "clientmod:textures/gui/trades_horizontal.png")); break;
-				case "brewing": mc.setScreen(new ImageScreen("brewing_guide", 350, 600, 350, 256, "clientmod:textures/gui/brewing_guide.png")); break;
+				case "trades": mc.setScreen(new ImageScreen("trades_screen", 1403, 256, 300, 256, new ResourceLocation(Clientmod.MODID, "textures/gui/trades_horizontal.png"))); break;
+				case "brewing": mc.setScreen(new ImageScreen("brewing_guide", 350, 600, new ResourceLocation(Clientmod.MODID, "textures/gui/brewing_guide.png"))); break;
 			}
 
 			return null;

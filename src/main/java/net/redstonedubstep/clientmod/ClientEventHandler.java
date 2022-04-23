@@ -5,6 +5,9 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.MainMenuScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.MerchantScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,18 +17,21 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper.UnableToFindFieldException;
@@ -139,6 +145,17 @@ public class ClientEventHandler {
 
 				AbstractGui.fill(event.getMatrixStack(), startX, startY, startX + squareSize, startY + squareSize, color);
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event) {
+		if (event.getGui() instanceof MerchantScreen) {
+			MerchantScreen gui = ((MerchantScreen)event.getGui());
+			Minecraft minecraft = gui.getMinecraft();
+			Button closeButton = new ExtendedButton(gui.getGuiLeft() + gui.inventoryLabelX + 50, gui.getGuiTop() + gui.inventoryLabelY, 10, 10, new StringTextComponent("X"), b -> minecraft.player.closeContainer());
+			
+			event.addWidget(closeButton);
 		}
 	}
 }

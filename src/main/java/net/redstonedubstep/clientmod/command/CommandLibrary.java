@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -28,10 +30,18 @@ import net.minecraft.client.util.SearchTreeManager;
 import net.minecraft.client.util.Splashes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceContext.BlockMode;
+import net.minecraft.util.math.RayTraceContext.FluidMode;
+import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -56,6 +66,7 @@ public class CommandLibrary {
 	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
+	private static final Command RAY_COMMAND = new Command("ray", CommandLibrary.Actions::ray, new IntParameter(false, 100, 10000, 0), new StringParameter(Lists.newArrayList("all", "entity", "block"), false, "all"));
 	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures"), false, "all"));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
 	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
@@ -70,6 +81,7 @@ public class CommandLibrary {
 		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
+		commandList.add(RAY_COMMAND);
 		commandList.add(RELOAD_COMMAND);
 		commandList.add(SETTINGS_COMMAND);
 		commandList.add(WAYPOINT_COMMAND);
@@ -188,6 +200,40 @@ public class CommandLibrary {
 				}
 			}
 
+			return null;
+		}
+
+		private static CommandException ray(AbstractParameter<?>[] params) {
+			ClientPlayerEntity player = mc.player;
+			int range = ((IntParameter)params[0]).getValue();
+			String type = ((StringParameter)params[1]).getValue();
+			Vector3d playerEyePos = player.getEyePosition(1.0F);
+			Vector3d lookVector = player.getLookAngle();
+			Vector3d endPos = playerEyePos.add(lookVector.scale(range));
+
+			if (type.equals("entity")) {
+				EntityRayTraceResult entityHitResult = ProjectileHelper.getEntityHitResult(player, playerEyePos, endPos, player.getBoundingBox().inflate(range), e -> true, range * range);
+
+				if (entityHitResult != null) {
+					String distance = String.format(Locale.ROOT, "%.3f", entityHitResult.getLocation().subtract(playerEyePos).length());
+
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(new BlockPos(entityHitResult.getLocation())), distance), Util.NIL_UUID);
+					return null;
+				}
+			}
+			else if (type.equals("block") || type.equals("all") || type.isEmpty()) {
+				BlockRayTraceResult hitResult = mc.level.clip(new RayTraceContext(playerEyePos, endPos, BlockMode.OUTLINE, type.equals("block") ? FluidMode.NONE : FluidMode.ANY, player));
+
+				if (hitResult.getType() != Type.MISS) {
+					BlockState state = mc.level.getBlockState(hitResult.getBlockPos());
+					String distance = String.format(Locale.ROOT, "%.3f", hitResult.getLocation().subtract(playerEyePos).length());
+
+					player.sendMessage(new TranslationTextComponent("messages.clientmod:ray.block", state.getBlock().getName(), ClientUtility.formatBlockPos(hitResult.getBlockPos()), distance), Util.NIL_UUID);
+					return null;
+				}
+			}
+
+			player.sendMessage(new TranslationTextComponent("messages.clientmod:ray.miss", range), Util.NIL_UUID);
 			return null;
 		}
 

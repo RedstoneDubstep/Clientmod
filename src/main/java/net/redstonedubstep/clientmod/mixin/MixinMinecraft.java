@@ -44,7 +44,7 @@ public class MixinMinecraft {
 		}
 	}
 
-	@Redirect(method = "lambda$delayTextureReload$50", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;reloadResourcePacks()Ljava/util/concurrent/CompletableFuture;"))
+	@Redirect(method = "lambda$delayTextureReload$49", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;reloadResourcePacks()Ljava/util/concurrent/CompletableFuture;"))
 	private CompletableFuture<Void> onServerTextureReload(Minecraft minecraft) {
 		if (!ClientSettings.CONFIG.reloadServerResources.get() && minecraft.player != null) {
 			minecraft.player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.server_resources"));

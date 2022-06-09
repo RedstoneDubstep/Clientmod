@@ -1,7 +1,6 @@
 package net.redstonedubstep.clientmod;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
@@ -153,7 +152,7 @@ public class ClientEventHandler {
 					color = 0x6600FF00; //green marker when position is reached
 				}
 
-				GuiComponent.fill(event.getMatrixStack(), startX, startY, startX + squareSize, startY + squareSize, color);
+				GuiComponent.fill(event.getPoseStack(), startX, startY, startX + squareSize, startY + squareSize, color);
 			}
 		}
 	}

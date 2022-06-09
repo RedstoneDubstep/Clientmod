@@ -18,8 +18,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.gui.screens.Overlay;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.server.packs.resources.SimpleReloadInstance;
@@ -60,11 +59,11 @@ public abstract class MixinLoadingOverlay extends Overlay {
 				}
 
 				if (FieldHolder.currentTask != null)
-					Minecraft.getInstance().font.draw(stack, new TextComponent("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
+					Minecraft.getInstance().font.draw(stack, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
 			}
 			else if (FieldHolder.reloadingFinishTime == -1) {
 				FieldHolder.reloadingFinishTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.sendMessage(new TranslatableComponent("messages.clientmod:reloading.finished"), Util.NIL_UUID);
+				Minecraft.getInstance().player.sendMessage(Component.translatable("messages.clientmod:reloading.finished"), Util.NIL_UUID);
 			}
 		}
 	}

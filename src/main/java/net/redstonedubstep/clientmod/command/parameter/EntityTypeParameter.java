@@ -2,9 +2,9 @@ package net.redstonedubstep.clientmod.command.parameter;
 
 import java.util.Optional;
 
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.EntityType;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
@@ -61,6 +61,6 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 
 	@Override
 	public MutableComponent toDescription() {
-		return new TranslatableComponent("screen.clientmod:mainScreen.exception.allowedInputs", "the registry name of an Entity");
+		return Component.translatable("screen.clientmod:mainScreen.exception.allowedInputs", "the registry name of an Entity");
 	}
 }

@@ -5,8 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 
@@ -32,7 +31,7 @@ public class ImageScreen extends Screen {
 	}
 
 	public ImageScreen(String name, int width, int height, int screenWidth, int screenHeight, ResourceLocation backgroundPath) {
-		super(new TranslatableComponent(name));
+		super(Component.translatable(name));
 
 		background = backgroundPath;
 		this.imageWidth = width;
@@ -50,7 +49,7 @@ public class ImageScreen extends Screen {
 			verticalScrolling = screenHeight < imageHeight;
 		}
 
-		addRenderableWidget(new ExtendedButton((width + screenWidth) / 2 - 10, (height - screenHeight) / 2, 10, 10, new TextComponent("X"), this::closeScreen));
+		addRenderableWidget(new ExtendedButton((width + screenWidth) / 2 - 10, (height - screenHeight) / 2, 10, 10, Component.literal("X"), this::closeScreen));
 	}
 
 	@Override

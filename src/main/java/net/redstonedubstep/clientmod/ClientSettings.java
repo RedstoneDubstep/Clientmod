@@ -12,7 +12,6 @@ import net.minecraft.client.Option;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -129,7 +128,7 @@ public class ClientSettings {
 		private BetterBooleanOption(String nameKey, String tooltipKey, Supplier<Boolean> getter, Consumer<Boolean> setter, boolean registerAsSetting) {
 			super(nameKey);
 
-			this.tooltip = !tooltipKey.isEmpty() ? new TranslatableComponent(tooltipKey) : null;
+			this.tooltip = !tooltipKey.isEmpty() ? Component.translatable(tooltipKey) : null;
 			this.getter = getter;
 			this.setter = setter;
 

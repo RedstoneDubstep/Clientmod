@@ -3,8 +3,8 @@ package net.redstonedubstep.clientmod.command.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 
 public class StringParameter extends AbstractParameter<String> {
@@ -58,7 +58,7 @@ public class StringParameter extends AbstractParameter<String> {
 
 	@Override
 	public MutableComponent toDescription() {
-		MutableComponent component = new TranslatableComponent("screen.clientmod:mainScreen.exception.allowedInputs", "String");
+		MutableComponent component = Component.translatable("screen.clientmod:mainScreen.exception.allowedInputs", "String");
 
 		if (!allowedValues.isEmpty()) {
 			component.append(", allowed values: ");

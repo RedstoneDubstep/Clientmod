@@ -11,7 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.client.gui.GuiUtils;
 
@@ -20,7 +21,7 @@ public class SettingButton extends Button {
 	private final int baseHeight;
 
 	public SettingButton(int xPos, int yPos, int width, int height, String translationKey, Consumer<SettingButton> onClick, Supplier<Boolean> isOn) {
-		this(xPos, yPos, width, height, new TranslatableComponent(translationKey), onClick, isOn, null);
+		this(xPos, yPos, width, height, Component.translatable(translationKey), onClick, isOn, null);
 	}
 
 	public SettingButton(int xPos, int yPos, int width, int height, Component displayString, Consumer<SettingButton> onClick, Supplier<Boolean> isOn, Component tooltip) {
@@ -66,8 +67,8 @@ public class SettingButton extends Button {
 	}
 
 	public void updateText() {
-		if (isOn != null && getMessage() instanceof TranslatableComponent) {
-			setMessage(new TranslatableComponent(((TranslatableComponent)getMessage()).getKey(), new TranslatableComponent("screen.clientmod:settingsScreen." + (isOn.get() ? "on" : "off"))));
+		if (isOn != null && getMessage() instanceof MutableComponent component && component.getContents() instanceof TranslatableContents content) {
+			setMessage(Component.translatable(content.getKey(), Component.translatable("screen.clientmod:settingsScreen." + (isOn.get() ? "on" : "off"))));
 			validateHeight(width, getMessage());
 		}
 	}

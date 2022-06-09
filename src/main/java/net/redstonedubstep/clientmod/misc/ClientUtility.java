@@ -3,15 +3,14 @@ package net.redstonedubstep.clientmod.misc;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.world.entity.Entity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.HoverEvent.Action;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
 public class ClientUtility {
 	public static HashMap<Class<? extends Entity>, Integer> countEntitiesInList(List<Entity> list) {
@@ -35,7 +34,7 @@ public class ClientUtility {
 	}
 
 	public static MutableComponent fancyBlockPos(BlockPos pos, BlockPos originalPos) {
-		TextComponent position = new TextComponent(formatBlockPos(pos));
+		MutableComponent position = Component.literal(formatBlockPos(pos));
 		int diffX = pos.getX() - originalPos.getX();
 		int diffZ = pos.getZ() - originalPos.getZ();
 		String direction;
@@ -47,7 +46,7 @@ public class ClientUtility {
 			direction = diffX > 0 ? "Northeast" : "Northwest";
 		}
 
-		position.withStyle((s) -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, new TextComponent(direction))));
+		position.withStyle((s) -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, Component.literal(direction))));
 		return position;
 	}
 

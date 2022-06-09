@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.ClientSettings.BetterBooleanOption;
 import net.redstonedubstep.clientmod.screen.button.SettingButton;
@@ -17,7 +16,7 @@ public class SettingsScreen extends Screen {
 	private OptionsList settingsList;
 
 	public SettingsScreen() {
-		super(new TranslatableComponent("screen.clientmod:settingsScreen.name"));
+		super(Component.translatable("screen.clientmod:settingsScreen.name"));
 	}
 
 	@Override

@@ -5,25 +5,25 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 public class MainScreen extends Screen {
 
 	EditBox inputField;
-	MutableComponent helpMessage = new TranslatableComponent("");
+	MutableComponent helpMessage = Component.translatable("");
 	List<MutableComponent> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
-		super(new TextComponent("screen.clientmod:mainScreen.name"));
+		super(Component.literal("screen.clientmod:mainScreen.name"));
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class MainScreen extends Screen {
 		super.init();
 
 		minecraft.keyboardHandler.setSendRepeatsToGui(true);
-		inputField = new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, TextComponent.EMPTY);
+		inputField = new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, CommonComponents.EMPTY);
 		inputField.setTextColor(-1);
 		inputField.setTextColorUneditable(-1);
 		inputField.setBordered(true);
@@ -116,7 +116,7 @@ public class MainScreen extends Screen {
 	}
 
 	private void resetHelpMessages() {
-		helpMessage = new TranslatableComponent("");
+		helpMessage = Component.translatable("");
 		helpDescription = new ArrayList<>();
 	}
 

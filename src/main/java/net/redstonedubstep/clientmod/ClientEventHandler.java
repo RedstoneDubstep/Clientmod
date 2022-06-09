@@ -10,10 +10,10 @@ import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.HoverEvent.Action;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -110,7 +110,7 @@ public class ClientEventHandler {
 			CommandException result = CommandLibrary.parseAndExecuteCommand(command);
 
 			if (result != null) {
-				TranslatableComponent errorMessage = new TranslatableComponent("command.failed");
+				MutableComponent errorMessage = Component.translatable("command.failed");
 
 				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).withStyle(ChatFormatting.RED);
 				Minecraft.getInstance().player.sendMessage(errorMessage, Util.NIL_UUID);
@@ -162,7 +162,7 @@ public class ClientEventHandler {
 	public static void onScreenInit(ScreenEvent.InitScreenEvent.Post event) {
 		if (event.getScreen() instanceof MerchantScreen screen) {
 			Minecraft minecraft = screen.getMinecraft();
-			Button closeButton = new ExtendedButton(screen.getGuiLeft() + screen.inventoryLabelX + 50, screen.getGuiTop() + screen.inventoryLabelY, 10, 10, new TextComponent("X"), b -> minecraft.player.closeContainer());
+			Button closeButton = new ExtendedButton(screen.getGuiLeft() + screen.inventoryLabelX + 50, screen.getGuiTop() + screen.inventoryLabelY, 10, 10, Component.literal("X"), b -> minecraft.player.closeContainer());
 			event.addListener(closeButton);
 		}
 	}

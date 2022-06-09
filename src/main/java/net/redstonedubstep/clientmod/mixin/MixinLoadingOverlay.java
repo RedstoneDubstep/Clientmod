@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.gui.screens.Overlay;
@@ -63,7 +62,7 @@ public abstract class MixinLoadingOverlay extends Overlay {
 			}
 			else if (FieldHolder.reloadingFinishTime == -1) {
 				FieldHolder.reloadingFinishTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.sendMessage(Component.translatable("messages.clientmod:reloading.finished"), Util.NIL_UUID);
+				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.finished"));
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package net.redstonedubstep.clientmod.misc;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,7 +24,7 @@ public class WaypointManager {
 
 	public void setWaypoint(BlockPos waypoint) {
 		this.waypoint = waypoint;
-		player.sendMessage(Component.translatable("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)), Util.NIL_UUID);
+		player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)));
 	}
 
 	public BlockPos getWaypoint() {
@@ -34,11 +33,11 @@ public class WaypointManager {
 
 	public void resetWaypoint() {
 		if (waypoint != null) {
-			player.sendMessage(Component.translatable("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)), Util.NIL_UUID);
+			player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)));
 			waypoint = null;
 		}
 		else {
-			player.sendMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"), Util.NIL_UUID);
+			player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"));
 		}
 	}
 

@@ -142,10 +142,10 @@ public class CommandLibrary {
 
 			if (text.equals("lastDeath")) {
 				if (FieldHolder.lastDeathPosition == null) {
-					mc.player.sendMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"), Util.NIL_UUID);
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"));
 				}
 				else {
-					mc.player.sendMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())), Util.NIL_UUID);
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())));
 				}
 			}
 
@@ -182,21 +182,21 @@ public class CommandLibrary {
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
-					player.sendMessage(Component.translatable("messages.clientmod:radar.noEntitiesInRange", range), Util.NIL_UUID);
+					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.noEntitiesInRange", range));
 				else {
-					player.sendMessage(Component.translatable("messages.clientmod:radar.entitiesInRange", range), Util.NIL_UUID);
-					map.forEach((key, value) -> player.sendMessage(Component.literal("- " + value + " " + key.getSimpleName()), Util.NIL_UUID));
+					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.entitiesInRange", range));
+					map.forEach((key, value) -> player.sendSystemMessage(Component.literal("- " + value + " " + key.getSimpleName())));
 				}
 			} else {
 				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, s -> true);
 				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
 
 				if (list.size() == 0) {
-					player.sendMessage(Component.translatable("messages.clientmod:radar.noEntityTypeInRange", Component.translatable(entity.toString()), range), Util.NIL_UUID);
+					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.noEntityTypeInRange", Component.translatable(entity.toString()), range));
 				}
 				else {
-					player.sendMessage(Component.translatable("messages.clientmod:radar.entityTypeInRange", list.size(), Component.translatable(entity.toString()), range), Util.NIL_UUID);
-					list.forEach((entry) -> player.sendMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")"), Util.NIL_UUID));
+					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.entityTypeInRange", list.size(), Component.translatable(entity.toString()), range));
+					list.forEach((entry) -> player.sendSystemMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")")));
 				}
 			}
 
@@ -217,7 +217,7 @@ public class CommandLibrary {
 				if (entityHitResult != null) {
 					String distance = String.format(Locale.ROOT, "%.3f", entityHitResult.getLocation().subtract(playerEyePos).length());
 
-					player.sendMessage(Component.translatable("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(new BlockPos(entityHitResult.getLocation())), distance), Util.NIL_UUID);
+					player.sendSystemMessage(Component.translatable("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(new BlockPos(entityHitResult.getLocation())), distance));
 					return null;
 				}
 			}
@@ -228,12 +228,12 @@ public class CommandLibrary {
 					BlockState state = mc.level.getBlockState(hitResult.getBlockPos());
 					String distance = String.format(Locale.ROOT, "%.3f", hitResult.getLocation().subtract(playerEyePos).length());
 
-					player.sendMessage(Component.translatable("messages.clientmod:ray.block", state.getBlock().getName(), ClientUtility.formatBlockPos(hitResult.getBlockPos()), distance), Util.NIL_UUID);
+					player.sendSystemMessage(Component.translatable("messages.clientmod:ray.block", state.getBlock().getName(), ClientUtility.formatBlockPos(hitResult.getBlockPos()), distance));
 					return null;
 				}
 			}
 
-			player.sendMessage(Component.translatable("messages.clientmod:ray.miss", range), Util.NIL_UUID);
+			player.sendSystemMessage(Component.translatable("messages.clientmod:ray.miss", range));
 			return null;
 		}
 
@@ -275,9 +275,9 @@ public class CommandLibrary {
 			}
 			else if (text.equals("get")) {
 				if (waypointManager.hasWaypoint())
-					mc.player.sendMessage(Component.translatable("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), Util.NIL_UUID);
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())));
 				else
-					mc.player.sendMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"), Util.NIL_UUID);
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"));
 
 				return null;
 

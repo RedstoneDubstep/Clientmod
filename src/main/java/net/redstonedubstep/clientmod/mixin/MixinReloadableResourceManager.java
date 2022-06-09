@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.network.chat.Component;
@@ -40,7 +39,7 @@ public abstract class MixinReloadableResourceManager {
 
 			if (FieldHolder.reloadingStartTime == -1) {
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.sendMessage(Component.translatable("messages.clientmod:reloading.started"), Util.NIL_UUID);
+				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.started"));
 			}
 		}
 		

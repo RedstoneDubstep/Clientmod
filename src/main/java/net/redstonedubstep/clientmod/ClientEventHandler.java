@@ -113,7 +113,7 @@ public class ClientEventHandler {
 				MutableComponent errorMessage = Component.translatable("command.failed");
 
 				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).withStyle(ChatFormatting.RED);
-				Minecraft.getInstance().player.sendMessage(errorMessage, Util.NIL_UUID);
+				Minecraft.getInstance().player.sendSystemMessage(errorMessage);
 			}
 
 			event.setCanceled(true);

@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.network.chat.Component;
@@ -36,7 +35,7 @@ public class MixinMinecraft {
 					long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 
 					if (reloadDuration >= 0 && totalDuration >= 0)
-						Minecraft.getInstance().player.sendMessage(Component.translatable("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")), Util.NIL_UUID);
+						Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")));
 				}
 
 				FieldHolder.reloadingStartTime = -1;
@@ -48,7 +47,7 @@ public class MixinMinecraft {
 	@Redirect(method = "lambda$delayTextureReload$50", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;reloadResourcePacks()Ljava/util/concurrent/CompletableFuture;"))
 	private CompletableFuture<Void> onServerTextureReload(Minecraft minecraft) {
 		if (!ClientSettings.CONFIG.reloadServerResources.get() && minecraft.player != null) {
-			minecraft.player.sendMessage(Component.translatable("messages.clientmod:reloading.server_resources"), Util.NIL_UUID);
+			minecraft.player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.server_resources"));
 			return new CompletableFuture<>();
 		}
 		else

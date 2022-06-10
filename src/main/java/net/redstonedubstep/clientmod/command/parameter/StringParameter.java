@@ -62,7 +62,7 @@ public class StringParameter extends AbstractParameter<String> {
 
 		if (!allowedValues.isEmpty()) {
 			component.append(", allowed values: ");
-			allowedValues.forEach(s -> component.append(s + ", "));
+			component.append(String.join(", ", allowedValues));
 		}
 
 		return component;

@@ -100,11 +100,8 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onChatMessageSent(ClientChatEvent event) {
-		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.getValue()) {
-			if (!event.getMessage().startsWith("/")) {
-				event.setMessage("/teammsg " + event.getMessage());
-			}
-		}
+		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.getValue() && !event.getMessage().startsWith("/"))
+			event.setMessage("/teammsg " + event.getMessage());
 		else if (event.getMessage().startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen
 			String command = event.getMessage().replace("/clientmod ", "");
 			CommandException result = CommandLibrary.parseAndExecuteCommand(command);

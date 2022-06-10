@@ -66,8 +66,8 @@ public class SettingButton extends Button {
 	}
 
 	public void updateText() {
-		if (isOn != null && getMessage() instanceof TranslatableComponent) {
-			setMessage(new TranslatableComponent(((TranslatableComponent)getMessage()).getKey(), new TranslatableComponent("screen.clientmod:settingsScreen." + (isOn.get() ? "on" : "off"))));
+		if (isOn != null && getMessage() instanceof TranslatableComponent message) {
+			setMessage(new TranslatableComponent("options.generic_value", message, new TranslatableComponent("screen.clientmod:settingsScreen." + (isOn.get() ? "on" : "off"))));
 			validateHeight(width, getMessage());
 		}
 	}

@@ -1,29 +1,26 @@
 package net.redstonedubstep.clientmod;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Option;
-import net.minecraft.client.Options;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.redstonedubstep.clientmod.screen.button.SettingButton;
 
 public class ClientSettings {
-	public static final List<BetterBooleanOption> CONFIGS = new ArrayList<>();
-	public static final List<BetterBooleanOption> SETTINGS = new ArrayList<>();
+	public static final Map<OptionInstance<Boolean>, BooleanValue> CONFIGS = new LinkedHashMap<>();
+	public static final List<OptionInstance<Boolean>> SETTINGS = new ArrayList<>();
 
-	private static boolean sendMessagesWithTeammsg = false;
-	public static BetterBooleanOption SEND_MESSAGES_WITH_TEAMMSG = new BetterBooleanOption("sendMessagesWithTeammsg", () -> sendMessagesWithTeammsg, b -> sendMessagesWithTeammsg = b);
+	public static OptionInstance<Boolean> SEND_MESSAGES_WITH_TEAMMSG = registerSetting("sendMessagesWithTeammsg", false);
 
 	//config-related stuff
 	public static final ForgeConfigSpec CLIENT_SPEC;
@@ -93,57 +90,31 @@ public class ClientSettings {
 					.define("invincibleVillagers", false));
 		}
 
-		private static BooleanValue register(BooleanValue value) {
-			ClientSettings.CONFIGS.add(new BetterBooleanOption(value));
-			return value;
+		private static BooleanValue register(BooleanValue config) {
+			return register(config, b -> {});
 		}
 
-		private static BooleanValue register(BooleanValue value, Consumer<Boolean> onClick) {
-			ClientSettings.CONFIGS.add(new BetterBooleanOption(value, onClick));
-			return value;
+		private static BooleanValue register(BooleanValue config, Consumer<Boolean> onClick) {
+			OptionInstance<Boolean> option = OptionInstance.createBoolean("config.clientmod:" + config.getPath().get(0) + ".name", OptionInstance.cachedConstantTooltip(Component.translatable("config.clientmod:" + config.getPath().get(0) + ".description")), false, b -> {
+				config.set(b);
+				onClick.accept(b);
+			});
+
+			ClientSettings.CONFIGS.put(option, config);
+			return config;
 		}
 	}
 
-	public static class BetterBooleanOption extends Option {
-		public static final BetterBooleanOption EMPTY = new BetterBooleanOption("", "", null, null, false);
-		private final Component tooltip;
-		private final Supplier<Boolean> getter;
-		private final Consumer<Boolean> setter;
+	private static OptionInstance<Boolean> registerSetting(String settingName, boolean defaultValue) {
+		OptionInstance<Boolean> option = OptionInstance.createBoolean("setting.clientmod:" + settingName + ".name", OptionInstance.cachedConstantTooltip(Component.translatable("setting.clientmod:" + settingName + ".description")), defaultValue);
 
-		public BetterBooleanOption(BooleanValue config) {
-			this(config, b -> {});
-		}
+		ClientSettings.SETTINGS.add(option);
+		return option;
+	}
 
-		public BetterBooleanOption(BooleanValue config, Consumer<Boolean> onClick) {
-			this("config.clientmod:" + config.getPath().get(0) + ".name", "config.clientmod:" + config.getPath().get(0) + ".description", config::get, b -> {
-				config.set(b);
-				onClick.accept(b);
-			}, false);
-		}
-
-		public BetterBooleanOption(String settingName, Supplier<Boolean> getter, Consumer<Boolean> setter) {
-			this("setting.clientmod:" + settingName + ".name", "setting.clientmod:" + settingName + ".description", getter, setter, true);
-		}
-
-		private BetterBooleanOption(String nameKey, String tooltipKey, Supplier<Boolean> getter, Consumer<Boolean> setter, boolean registerAsSetting) {
-			super(nameKey);
-
-			this.tooltip = !tooltipKey.isEmpty() ? Component.translatable(tooltipKey) : null;
-			this.getter = getter;
-			this.setter = setter;
-
-			if (registerAsSetting) {
-				ClientSettings.SETTINGS.add(this);
-			}
-		}
-
-		@Override
-		public AbstractWidget createButton(Options options, int x, int y, int width) {
-			return new SettingButton(x, y, width, 20, getCaption(), (b) -> setter.accept(!getter.get()), getter, tooltip);
-		}
-
-		public boolean getValue() {
-			return getter.get();
+	public static void updateConfigSettingValues() {
+		for (Map.Entry<OptionInstance<Boolean>, BooleanValue> entry : ClientSettings.CONFIGS.entrySet()) {
+			entry.getKey().set(entry.getValue().get());
 		}
 	}
 }

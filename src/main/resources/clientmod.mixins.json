@@ -5,6 +5,7 @@
 	"refmap": "clientmod.refmap.json",
 	"client": [
 		"MixinCamera",
+		"MixinChatScreen",
 		"MixinFishingHookRenderer",
 		"MixinLoadingOverlay",
 		"MixinMinecraft",

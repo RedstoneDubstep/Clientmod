@@ -1,6 +1,5 @@
 package net.redstonedubstep.clientmod;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
@@ -10,9 +9,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.HoverEvent.Action;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -23,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -37,8 +32,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper.UnableToFindFieldException;
-import net.redstonedubstep.clientmod.command.CommandException;
-import net.redstonedubstep.clientmod.command.CommandLibrary;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
 import net.redstonedubstep.clientmod.misc.WaypointManager;
@@ -94,28 +87,6 @@ public class ClientEventHandler {
 			} catch(UnableToFindFieldException e) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onChatMessageSent(ClientChatEvent event) {
-		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.get()) {
-			if (!event.getMessage().startsWith("/")) {
-				event.setMessage("/teammsg " + event.getMessage());
-			}
-		}
-		else if (event.getMessage().startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen
-			String command = event.getMessage().replace("/clientmod ", "");
-			CommandException result = CommandLibrary.parseAndExecuteCommand(command);
-
-			if (result != null) {
-				MutableComponent errorMessage = Component.translatable("command.failed");
-
-				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).withStyle(ChatFormatting.RED);
-				Minecraft.getInstance().player.sendSystemMessage(errorMessage);
-			}
-
-			event.setCanceled(true);
 		}
 	}
 

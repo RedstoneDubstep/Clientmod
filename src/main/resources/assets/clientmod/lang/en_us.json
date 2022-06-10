@@ -26,7 +26,7 @@
   "screen.clientmod:mainScreen.exception.prefixNotFound": "No command with the prefix %s has been found!",
   "screen.clientmod:mainScreen.exception.missingParameter": "This command needs at least one more parameter!",
   "screen.clientmod:mainScreen.exception.invalidParameter": "This is not a valid parameter!",
-  "screen.clientmod:mainScreen.exception.position": "Position: %snd parameter",
+  "screen.clientmod:mainScreen.exception.position": "Position: %s. parameter",
   "screen.clientmod:mainScreen.exception.allowedInputs": "Allowed inputs: %s",
   "screen.clientmod:mainScreen.exception.wrongValue": "Given value: %s",
   "screen.clientmod:settingsScreen.name": "Clientmod Settings",

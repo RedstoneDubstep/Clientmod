@@ -11,7 +11,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
-import net.redstonedubstep.clientmod.misc.KeyBindings;
 
 @Mod(Clientmod.MODID)
 @EventBusSubscriber(modid=Clientmod.MODID, bus=Bus.MOD)
@@ -27,7 +26,6 @@ public class Clientmod {
 
 	@SubscribeEvent
 	public static void onFMLClientSetup(FMLClientSetupEvent event) {
-		KeyBindings.init();
 		CommandLibrary.addCommandsToList();
 	}
 }

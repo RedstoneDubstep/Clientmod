@@ -21,9 +21,8 @@ import net.redstonedubstep.clientmod.command.CommandLibrary;
 public class MixinChatScreen {
 	@ModifyVariable(method = "handleChatInput", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/ChatScreen;chatPreview:Lnet/minecraft/client/gui/chat/ClientChatPreview;"), argsOnly = true)
 	private String modifyChatInput(String original) {
-		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.get() && !original.startsWith("/")) {
+		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.get() && !original.startsWith("/"))
 			original = "/teammsg " + original;
-		}
 
 		return original;
 	}

@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 
 public class SettingButton extends Button {
 	private final Supplier<Boolean> isOn;
@@ -51,7 +51,7 @@ public class SettingButton extends Button {
 			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			int k = getYImage(isHoveredOrFocused());
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			GuiUtils.drawContinuousTexturedBox(stack, WIDGETS_LOCATION, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, getBlitOffset());
+			ScreenUtils.blitWithBorder(stack, WIDGETS_LOCATION, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, getBlitOffset());
 			renderBg(stack, mc, mouseX, mouseY);
 
 			for (int i = 0; i < buttonLines.size(); i++) {

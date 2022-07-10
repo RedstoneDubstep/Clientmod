@@ -28,7 +28,7 @@ public abstract class MixinReloadableResourceManager {
 	public ReloadInstance onNewReloadInstance(ResourceManager resourceManager, List<PreparableReloadListener> listeners, Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, boolean debugEnabled) {
 		if (Minecraft.getInstance().player != null) { //makes sure this only applies when reloading resources ingame, and not when starting the game
 			if (FieldHolder.reloadFilter != null) {
-				listeners = listeners.stream().filter(l -> FieldHolder.reloadFilter.stream().anyMatch(c -> c.isInstance(l) || (c == FontManager.class && l.getName().equals("FontManager")))).collect(Collectors.toList()); //TODO: implementation of that idea (writing it down because it's way to late to remember stuff): reload command should set the filter in FieldHolder and then trigger a normal reload via Minecraft.getInstance(), this mixin intercepts that and modifies the list according to the filter before resetting the filter
+				listeners = listeners.stream().filter(l -> FieldHolder.reloadFilter.stream().anyMatch(c -> c.isInstance(l) || (c == FontManager.class && l.getName().equals("FontManager")))).collect(Collectors.toList());
 				FieldHolder.reloadFilter = null;
 			}
 

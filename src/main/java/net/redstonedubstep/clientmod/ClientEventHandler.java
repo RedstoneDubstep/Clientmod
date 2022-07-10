@@ -19,11 +19,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
@@ -69,14 +68,14 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onClickEvent(ClickInputEvent event) {
+	public static void onClickEvent(InputEvent.InteractionKeyMappingTriggered event) {
 		if (ClientSettings.CONFIG.invincibleVillagers.get() && event.isAttack() && !Minecraft.getInstance().gameMode.getPlayerMode().isCreative() && Minecraft.getInstance().hitResult instanceof EntityHitResult hitResult && hitResult.getEntity() instanceof Villager)
 			event.setCanceled(true);
 	}
 
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code
 	@SubscribeEvent
-	public static void onInitGuiPost(ScreenEvent.InitScreenEvent.Post event) {
+	public static void onInitScreenPost(ScreenEvent.Init.Post event) {
 		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getScreen() instanceof TitleScreen screen) {
 			try {
 				boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, screen, "f_96720_");
@@ -96,14 +95,14 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void renderGameOverlayLayer(RenderGameOverlayEvent.PreLayer event) {
-		if (!ClientSettings.CONFIG.renderSpyglassOverlay.get() && event.getOverlay() == ForgeIngameGui.SPYGLASS_ELEMENT)
+	public static void renderGameOverlayLayer(RenderGuiOverlayEvent.Pre event) {
+		if (!ClientSettings.CONFIG.renderSpyglassOverlay.get() && event.getOverlay() == VanillaGuiOverlay.SPYGLASS.type())
 			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
-	public static void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
-		if(event.getType() == ElementType.LAYER) {
+	public static void onRenderGameOverlay(RenderGuiOverlayEvent.Post event) {
+		if(event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
 			Player player = Minecraft.getInstance().player;
 			Vec3 lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
 
@@ -116,11 +115,11 @@ public class ClientEventHandler {
 				int squareSize = relativePos.length() < 150 ? 20 : 10;
 				int startX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - squareSize / 2;
 				int startY = Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - squareSize / 2 + yOffset;
-				int alpha = Math.round(0x11 * dotProduct * 5) << 24;
+				int alpha = Math.round(0x11 * dotProduct * 30) << 24;
 				int color = alpha + (dotProduct > 0.299 ? 0xFFA500 : 0xFF0000); //default red, orange when the direction is correct
 
 				if (dotProductRaw == 0) {
-					color = 0x6600FF00; //green marker when position is reached
+					color = 0x9900FF00; //green marker when position is reached
 				}
 
 				GuiComponent.fill(event.getPoseStack(), startX, startY, startX + squareSize, startY + squareSize, color);
@@ -129,7 +128,7 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onScreenInit(ScreenEvent.InitScreenEvent.Post event) {
+	public static void onScreenInit(ScreenEvent.Init.Post event) {
 		if (event.getScreen() instanceof MerchantScreen screen) {
 			Minecraft minecraft = screen.getMinecraft();
 			Button closeButton = new ExtendedButton(screen.getGuiLeft() + screen.inventoryLabelX + 50, screen.getGuiTop() + screen.inventoryLabelY, 10, 10, Component.literal("X"), b -> minecraft.player.closeContainer());

@@ -1,5 +1,6 @@
 package net.redstonedubstep.clientmod.mixin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -35,7 +36,7 @@ public abstract class MixinReloadableResourceManager {
 
 			if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
 				FieldHolder.maxTaskAmount = listeners.size();
-				FieldHolder.oldTaskSet = listeners;
+				FieldHolder.oldTaskSet = new ArrayList<>(listeners);
 			}
 
 			if (FieldHolder.reloadingStartTime == -1) {

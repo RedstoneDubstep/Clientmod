@@ -10,7 +10,8 @@
 		"MixinLoadingOverlay",
 		"MixinMinecraft",
 		"MixinReloadableResourceManager",
-		"MixinSimpleReloadInstance"
+		"MixinSimpleReloadInstance",
+		"MixinVibrationSignalParticle"
 	],
 	"minVersion": "0.8"
 }

@@ -20,7 +20,7 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
-	@Shadow @Nullable private Overlay overlay;
+	@Shadow private Overlay overlay;
 
 	//At this point, reloading is fully done (and thus, the overlay gets removed so the player can move again), so we can do some post-stuff
 	@Inject(method = "setOverlay", at = @At("HEAD"))
@@ -44,7 +44,8 @@ public class MixinMinecraft {
 		}
 	}
 
-	@Redirect(method = "lambda$delayTextureReload$49", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;reloadResourcePacks()Ljava/util/concurrent/CompletableFuture;"))
+	//Prevent reloading of server resources on join, so they only apply once the player reloads their resources willingly
+	@Redirect(method = "lambda$delayTextureReload$50", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;reloadResourcePacks()Ljava/util/concurrent/CompletableFuture;"))
 	private CompletableFuture<Void> onServerTextureReload(Minecraft minecraft) {
 		if (!ClientSettings.CONFIG.reloadServerResources.get() && minecraft.player != null) {
 			minecraft.player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.server_resources"));

@@ -63,7 +63,6 @@ public class CommandLibrary {
 	private static final Command FOLDER_COMMAND = new Command("folder", CommandLibrary.Actions::folder, new StringParameter(Lists.newArrayList("resources", "mods", "mc")));
 	private static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter(Lists.newArrayList("trades", "brewing")));
 	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("lastDeath")));
-	private static final Command MSG_COMMAND = new Command("msg", CommandLibrary.Actions::msg, new StringParameter());
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
 	private static final Command RAY_COMMAND = new Command("ray", CommandLibrary.Actions::ray, new IntParameter(false, 100, 10000, 0), new StringParameter(Lists.newArrayList("all", "entity", "block"), false, "all"));
@@ -78,7 +77,6 @@ public class CommandLibrary {
 		commandList.add(FOLDER_COMMAND);
 		commandList.add(IMAGE_COMMAND);
 		commandList.add(LOG_COMMAND);
-		//commandList.add(MSG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
 		commandList.add(RAY_COMMAND);
@@ -148,17 +146,6 @@ public class CommandLibrary {
 					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())));
 				}
 			}
-
-			return null;
-		}
-
-		private static CommandException msg(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
-
-			if (text.equals("leave"))
-				mc.player.chat("Redstone has left the server.");
-			else
-				return CommandException.invalidParameter(params[0], 0, text);
 
 			return null;
 		}

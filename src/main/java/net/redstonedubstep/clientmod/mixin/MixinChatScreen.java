@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ public class MixinChatScreen {
 	}
 
 	@Inject(method = "handleChatInput", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/ChatScreen;chatPreview:Lnet/minecraft/client/gui/chat/ClientChatPreview;"), cancellable = true)
-	private void onChatInput(String text, boolean addToChat, CallbackInfo callbackInfo) {
+	private void onChatInput(String text, boolean addToChat, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (text.startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen
 			String command = text.replace("/clientmod ", "");
 			CommandException result = CommandLibrary.parseAndExecuteCommand(command);
@@ -40,7 +40,7 @@ public class MixinChatScreen {
 				Minecraft.getInstance().player.sendSystemMessage(errorMessage);
 			}
 
-			callbackInfo.cancel();
+			callbackInfo.setReturnValue(true);
 		}
 	}
 }

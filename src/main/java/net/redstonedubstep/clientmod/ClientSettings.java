@@ -44,6 +44,7 @@ public class ClientSettings {
 		public BooleanValue betterFishingHook;
 		public BooleanValue renderSpyglassOverlay;
 		public BooleanValue invincibleVillagers;
+		public BooleanValue enhancedItemInfo;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -88,6 +89,9 @@ public class ClientSettings {
 			invincibleVillagers = register(builder
 					.comment("Should Villagers be invincible to direct player attacks?")
 					.define("invincibleVillagers", false));
+			enhancedItemInfo = register(builder
+					.comment("Should certain items, like enchanted books, have additional information about their data displayed?")
+					.define("enhancedItemInfo", true));
 		}
 
 		private static BooleanValue register(BooleanValue config) {

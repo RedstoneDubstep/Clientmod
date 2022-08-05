@@ -55,6 +55,8 @@
   "config.clientmod:renderSpyglassOverlay.description": "Should the Spyglass overlay be rendered when scoping through a Spyglass?",
   "config.clientmod:invincibleVillagers.name": "Invincible Villagers",
   "config.clientmod:invincibleVillagers.description": "Should Villagers be invincible to direct player attacks?",
+  "config.clientmod:enhancedItemInfo.name": "Enhanced Item Info",
+  "config.clientmod:enhancedItemInfo.description": "Should certain items, like enchanted books, have additional information about their data displayed?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg",
   "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"

@@ -17,7 +17,6 @@ import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 public class MainScreen extends Screen {
-
 	EditBox inputField;
 	MutableComponent helpMessage = Component.translatable("");
 	List<MutableComponent> helpDescription = new ArrayList<>();
@@ -45,7 +44,7 @@ public class MainScreen extends Screen {
 		inputField.render(matrix, mouseX, mouseY, partialTicks);
 		font.draw(matrix, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
 		for (int i = 0; i < helpDescription.size(); i++) {
-			font.draw(matrix, helpDescription.get(i), (width - font.width(helpMessage.getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
+			font.draw(matrix, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
 		}
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
@@ -54,7 +53,6 @@ public class MainScreen extends Screen {
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (inputField.isFocused()) {
-			resetHelpMessages();
 
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 				if (inputField.getValue().isEmpty())
@@ -84,7 +82,6 @@ public class MainScreen extends Screen {
 	public boolean charTyped(char typedChar, int keyCode) {
 		if (inputField.isFocused()) {
 			inputField.charTyped(typedChar, keyCode);
-			resetHelpMessages();
 			return true;
 		}
 		else
@@ -111,7 +108,8 @@ public class MainScreen extends Screen {
 			inputField.setValue("");
 		}
 		else if (minecraft.screen.equals(this)) {
-			this.onClose();
+			resetHelpMessages();
+			onClose();
 		}
 	}
 

@@ -13,6 +13,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.GameRenderer;
@@ -67,6 +68,7 @@ public class CommandLibrary {
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
 	private static final Command RAY_COMMAND = new Command("ray", CommandLibrary.Actions::ray, new IntParameter(false, 100, 10000, 0), new StringParameter(Lists.newArrayList("all", "entity", "block"), false, "all"));
 	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures"), false, "all"));
+	private static final Command SERVERDATA_COMMAND = new Command("sdata", CommandLibrary.Actions::sdata, new StringParameter(Lists.newArrayList("name", "ip", "status", "motd", "ping", "protocol", "version")));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
 	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
 	private static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
@@ -81,6 +83,7 @@ public class CommandLibrary {
 		commandList.add(RADAR_COMMAND);
 		commandList.add(RAY_COMMAND);
 		commandList.add(RELOAD_COMMAND);
+		commandList.add(SERVERDATA_COMMAND);
 		commandList.add(SETTINGS_COMMAND);
 		commandList.add(WAYPOINT_COMMAND);
 		commandList.add(WIKI_COMMAND);
@@ -237,6 +240,29 @@ public class CommandLibrary {
 			};
 
 			mc.reloadResourcePacks();
+			return null;
+		}
+
+		private static CommandException sdata(AbstractParameter<?>[] params) {
+			String text = ((StringParameter)params[0]).getValue();
+			ServerData data = mc.getCurrentServer();
+			int latency = mc.player.connection.getPlayerInfo(mc.player.getUUID()).getLatency();
+
+			if (data == null) {
+				mc.player.sendSystemMessage(Component.translatable("messages.clientmod:sdata.notFound"));
+				return null;
+			}
+
+			mc.player.sendSystemMessage(switch (text) {
+				case "name" -> Component.translatable("messages.clientmod:sdata.name", data.name);
+				case "ip" -> Component.translatable("messages.clientmod:sdata.ip", data.ip);
+				case "status" -> Component.translatable("messages.clientmod:sdata.status", data.status);
+				case "motd" -> Component.translatable("messages.clientmod:sdata.motd", data.motd);
+				case "ping" -> Component.translatable("messages.clientmod:sdata.ping", latency);
+				case "protocol" -> Component.translatable("messages.clientmod:sdata.protocol", data.protocol);
+				case "version" -> Component.translatable("messages.clientmod:sdata.version", data.version);
+				default -> Component.empty();
+			});
 			return null;
 		}
 

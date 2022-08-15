@@ -26,6 +26,7 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -47,7 +48,7 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-		if (event.player instanceof LocalPlayer player) {
+		if (event.player instanceof LocalPlayer player && event.phase == Phase.START) {
 			if (ClientSettings.CONFIG.renderEntitesGlowing.get()) {
 				for (Entity entity : ((ClientLevel)player.level).entitiesForRendering()) {
 					if (entity instanceof LivingEntity living) {
@@ -124,6 +125,13 @@ public class ClientEventHandler {
 
 				GuiComponent.fill(event.getPoseStack(), startX, startY, startX + squareSize, startY + squareSize, color);
 			}
+		}
+		else if (event.getOverlay() == VanillaGuiOverlay.HOTBAR.type() && ClientSettings.CONFIG.speedometer.get()) {
+			double velocity = FieldHolder.deltaMovement.length() * 20;
+			int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+			int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+
+			Minecraft.getInstance().font.draw(event.getPoseStack(), String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFF);
 		}
 	}
 

@@ -65,6 +65,8 @@
   "config.clientmod:invincibleVillagers.description": "Should Villagers be invincible to direct player attacks?",
   "config.clientmod:enhancedItemInfo.name": "Enhanced Item Info",
   "config.clientmod:enhancedItemInfo.description": "Should certain items, like enchanted books, have additional information about their data displayed?",
+  "config.clientmod:speedometer.name": "Speedometer",
+  "config.clientmod:speedometer.description": "Should your current speed be displayed next to your hotbar?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg",
   "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"

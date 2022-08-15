@@ -45,6 +45,7 @@ public class ClientSettings {
 		public BooleanValue renderSpyglassOverlay;
 		public BooleanValue invincibleVillagers;
 		public BooleanValue enhancedItemInfo;
+		public BooleanValue speedometer;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -92,6 +93,9 @@ public class ClientSettings {
 			enhancedItemInfo = register(builder
 					.comment("Should certain items, like enchanted books, have additional information about their data displayed?")
 					.define("enhancedItemInfo", true));
+			speedometer = register(builder
+					.comment("Should your current speed be displayed next to your hotbar?")
+					.define("speedometer", false));
 		}
 
 		private static BooleanValue register(BooleanValue config) {

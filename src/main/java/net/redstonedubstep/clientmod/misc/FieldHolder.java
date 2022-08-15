@@ -5,11 +5,13 @@ import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.world.phys.Vec3;
 
 public class FieldHolder {
 	public static boolean isMinecraftStarting = true;
 	public static BlockPos lastDeathPosition = null;
 	public static Collection<Class<?>> reloadFilter = null;
+	public static Vec3 deltaMovement = Vec3.ZERO;
 
 	//mixin related fields that can't be put in mixin classes TODO: put these in a mixin class with protected and @Unique
 	public static PreparableReloadListener currentTask;

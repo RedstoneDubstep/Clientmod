@@ -127,7 +127,8 @@ public class ClientEventHandler {
 			}
 		}
 		else if (event.getOverlay() == VanillaGuiOverlay.HOTBAR.type() && ClientSettings.CONFIG.speedometer.get()) {
-			double velocity = FieldHolder.deltaMovement.length() * 20;
+			LocalPlayer player = Minecraft.getInstance().player;
+			double velocity = player.position().subtract(player.xo, player.yo, player.zo).length() * 20;
 			int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
 			int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 

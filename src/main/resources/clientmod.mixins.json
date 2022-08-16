@@ -8,7 +8,6 @@
 		"MixinChatScreen",
 		"MixinFishingHookRenderer",
 		"MixinItemRenderer",
-		"MixinLivingEntity",
 		"MixinLoadingOverlay",
 		"MixinMinecraft",
 		"MixinReloadableResourceManager",

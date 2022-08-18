@@ -7,7 +7,6 @@
 		"MixinCamera",
 		"MixinChatScreen",
 		"MixinFishingHookRenderer",
-		"MixinItemRenderer",
 		"MixinLoadingOverlay",
 		"MixinMinecraft",
 		"MixinReloadableResourceManager",

@@ -1,5 +1,14 @@
 package net.redstonedubstep.clientmod;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
@@ -7,7 +16,10 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,9 +28,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.IItemDecorator;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -143,5 +161,115 @@ public class ClientEventHandler {
 			Button closeButton = new ExtendedButton(screen.getGuiLeft() + screen.inventoryLabelX + 50, screen.getGuiTop() + screen.inventoryLabelY, 10, 10, Component.literal("X"), b -> minecraft.player.closeContainer());
 			event.addListener(closeButton);
 		}
+	}
+
+	public static void registerItemDecorations(BiConsumer<ItemLike, IItemDecorator> consumer) {
+		consumer.accept(Items.ENCHANTED_BOOK, (font, stack, x, y, blit) -> {
+			if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
+				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+				Tesselator tesselator = Tesselator.getInstance();
+				BufferBuilder bufferBuilder = tesselator.getBuilder();
+				int color = -1;
+				boolean hasMaxEnchantment = false;
+
+				for (Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+					if (enchantment.getKey().getMaxLevel() <= enchantment.getValue()) {
+						hasMaxEnchantment = true;
+						break;
+					}
+				}
+
+				if (enchantments.size() > 1)
+					color = hasMaxEnchantment ? 0xFF00FFFF : 0xFFFF8C00;
+				else if (enchantments.size() == 1)
+					color = hasMaxEnchantment ? 0xFF00FF00 : 0xFFFF0000;
+
+				RenderSystem.disableDepthTest();
+				RenderSystem.disableTexture();
+				RenderSystem.disableBlend();
+				Minecraft.getInstance().getItemRenderer().fillRect(bufferBuilder, x + 1, y + 1, 3, 3, color >> 16 & 255, color >> 8 & 255, color & 255, 255);
+			}
+
+			return true;
+		});
+
+		IItemDecorator beeIndicatorDecorator = (font, stack, x, y, blit) -> {
+			if (ClientSettings.CONFIG.enhancedItemInfo.get() && stack.hasTag()) {
+				PoseStack pose = new PoseStack();
+				ListTag tag = stack.getTag().getCompound("BlockEntityTag").getList("Bees", Tag.TAG_COMPOUND);
+
+				pose.translate(0.0D, 0.0D, blit + 200.0F);
+				MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+				font.drawInBatch(tag.size() + "", x + 8 - 2 - font.width(tag.size() + ""), y + 6 + 3, 0xFFD700, true, pose.last().pose(), multibuffersource$buffersource, false, 0, 15728880);
+				multibuffersource$buffersource.endBatch();
+			}
+
+			return false;
+		};
+		IItemDecorator equipmentEnchantmentDecorator = (font, stack, x, y, blit) -> {
+			if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
+				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+				Tesselator tesselator = Tesselator.getInstance();
+				BufferBuilder bufferBuilder = tesselator.getBuilder();
+				int color = -1;
+
+				if (enchantments.containsKey(Enchantments.ALL_DAMAGE_PROTECTION))
+					color = 0x696969;
+				else if (enchantments.containsKey(Enchantments.BLAST_PROTECTION))
+					color = 0x53CF43;
+				else if (enchantments.containsKey(Enchantments.FIRE_PROTECTION))
+					color = 0xFF7514;
+				else if (enchantments.containsKey(Enchantments.PROJECTILE_PROTECTION))
+					color = 0xDFDFDF;
+
+				if (enchantments.containsKey(Enchantments.SILK_TOUCH))
+					color = 0xFDDA0D;
+				else if (enchantments.containsKey(Enchantments.BLOCK_FORTUNE))
+					color = 0x4CBB17;
+
+				if (enchantments.containsKey(Enchantments.SHARPNESS))
+					color = 0xA9A9A9;
+				else if (enchantments.containsKey(Enchantments.SMITE))
+					color = 0x006400;
+				else if (enchantments.containsKey(Enchantments.BANE_OF_ARTHROPODS))
+					color = 0x964B00;
+
+				if (enchantments.containsKey(Enchantments.LOYALTY))
+					color = 0x1434A4;
+				else if (enchantments.containsKey(Enchantments.RIPTIDE))
+					color = 0x7DF9FF;
+
+				RenderSystem.disableDepthTest();
+				RenderSystem.disableTexture();
+				RenderSystem.disableBlend();
+
+				if (color >= 0)
+					Minecraft.getInstance().getItemRenderer().fillRect(bufferBuilder, x + 1, y + 1, 3, 3, color >> 16 & 255, color >> 8 & 255, color & 255, 255);
+			}
+
+			return true;
+		};
+
+		consumer.accept(Items.BEEHIVE, beeIndicatorDecorator);
+		consumer.accept(Items.BEE_NEST, beeIndicatorDecorator);
+		consumer.accept(Items.DIAMOND_HELMET, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_CHESTPLATE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_LEGGINGS, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_BOOTS, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_HELMET, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_CHESTPLATE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_LEGGINGS, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_BOOTS, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_AXE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_HOE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_PICKAXE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_SHOVEL, equipmentEnchantmentDecorator);
+		consumer.accept(Items.DIAMOND_SWORD, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_AXE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_HOE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_PICKAXE, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_SHOVEL, equipmentEnchantmentDecorator);
+		consumer.accept(Items.NETHERITE_SWORD, equipmentEnchantmentDecorator);
+		consumer.accept(Items.TRIDENT, equipmentEnchantmentDecorator);
 	}
 }

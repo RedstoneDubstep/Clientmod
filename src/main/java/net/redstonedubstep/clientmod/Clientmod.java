@@ -1,5 +1,6 @@
 package net.redstonedubstep.clientmod;
 
+import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
@@ -27,5 +28,10 @@ public class Clientmod {
 	@SubscribeEvent
 	public static void onFMLClientSetup(FMLClientSetupEvent event) {
 		CommandLibrary.addCommandsToList();
+	}
+
+	@SubscribeEvent
+	public static void onRegisterItemDecorations(RegisterItemDecorationsEvent event) {
+		ClientEventHandler.registerItemDecorations(event::register);
 	}
 }

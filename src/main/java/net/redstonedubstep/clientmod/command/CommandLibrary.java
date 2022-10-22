@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -41,6 +42,8 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -63,11 +66,11 @@ public class CommandLibrary {
 	public static ArrayList<Command> commandList = new ArrayList<>();
 	private static final Command FOLDER_COMMAND = new Command("folder", CommandLibrary.Actions::folder, new StringParameter(Lists.newArrayList("resources", "mods", "mc")));
 	private static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter(Lists.newArrayList("trades", "brewing")));
-	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("lastDeath")));
+	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("blockEntities", "lastDeath")));
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
 	private static final Command RAY_COMMAND = new Command("ray", CommandLibrary.Actions::ray, new IntParameter(false, 100, 10000, 0), new StringParameter(Lists.newArrayList("all", "entity", "block"), false, "all"));
-	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures"), false, "all"));
+	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures")));
 	private static final Command SERVERDATA_COMMAND = new Command("sdata", CommandLibrary.Actions::sdata, new StringParameter(Lists.newArrayList("name", "ip", "status", "motd", "ping", "protocol", "version")));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
 	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
@@ -147,6 +150,34 @@ public class CommandLibrary {
 				}
 				else {
 					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())));
+				}
+			}
+			else if (text.equals("blockEntities")) {
+				Map<BlockEntityType<?>, Integer> map = new HashMap<>();
+
+				for (LevelRenderer.RenderChunkInfo chunkInfo : mc.levelRenderer.renderChunksInFrustum) {
+					for (BlockEntity be : chunkInfo.chunk.getCompiledChunk().getRenderableBlockEntities()) {
+						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
+							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
+							map.putIfAbsent(be.getType(), 1);
+						}
+					}
+				}
+
+				synchronized(mc.levelRenderer.globalBlockEntities) {
+					for (BlockEntity be : mc.levelRenderer.globalBlockEntities) {
+						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
+							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
+							map.putIfAbsent(be.getType(), 1);
+						}
+					}
+				}
+
+				if (map.isEmpty())
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.noBlockEntitiesFound"));
+				else {
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.blockEntitiesFound"));
+					map.forEach((type, num) -> mc.player.sendSystemMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString())));
 				}
 			}
 

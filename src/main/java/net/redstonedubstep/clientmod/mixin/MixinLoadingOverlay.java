@@ -35,7 +35,7 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
 	private void injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (FieldHolder.isMinecraftStarting && ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof SimpleReloadInstance && Minecraft.getInstance().player != null) {
+		if (!FieldHolder.isMinecraftStarting && ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof SimpleReloadInstance && Minecraft.getInstance().player != null) {
 			if (!reload.isDone()) {
 				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)reload).preparingListeners);
 

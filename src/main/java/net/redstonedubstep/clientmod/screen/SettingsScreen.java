@@ -16,7 +16,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.redstonedubstep.clientmod.ClientSettings;
 
 public class SettingsScreen extends Screen {
-
 	private OptionsList settingsList;
 
 	public SettingsScreen() {
@@ -28,6 +27,8 @@ public class SettingsScreen extends Screen {
 		this.settingsList = new OptionsList(minecraft, width, height, 32, height - 32, 25);
 		ClientSettings.updateConfigSettingValues();
 		addRenderableWidget(settingsList);
+		settingsList.setRenderBackground(false);
+		settingsList.setRenderTopAndBottom(false);
 		settingsList.addSmall(ClientSettings.CONFIGS.keySet().toArray(new OptionInstance[]{}));
 		settingsList.addSmall(ClientSettings.SETTINGS.toArray(new OptionInstance[]{}));
 	}
@@ -37,7 +38,6 @@ public class SettingsScreen extends Screen {
 		renderBackground(matrix);
 		font.draw(matrix, title, (width - font.width(title.getString())) / 2, 20, 16777215);
 		super.render(matrix, mouseX, mouseY, partialTicks);
-		settingsList.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, tooltipAt(settingsList, mouseX, mouseY), mouseX, mouseY);
 	}
 

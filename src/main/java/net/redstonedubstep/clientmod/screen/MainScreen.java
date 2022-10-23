@@ -100,7 +100,7 @@ public class MainScreen extends Screen {
 	}
 
 	private void setHelpMessages(CommandException result) {
-		if (!inputField.getValue().isEmpty()) 
+		if (!inputField.getValue().isEmpty())
 			CommandLibrary.lastInputText = inputField.getValue();
 
 		if (result != null) {

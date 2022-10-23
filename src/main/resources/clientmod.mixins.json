@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_17",
 	"refmap": "clientmod.refmap.json",
 	"client": [
+		"MixinBlockEntityRenderDispatcher",
 		"MixinCamera",
 		"MixinChatScreen",
 		"MixinFishingHookRenderer",

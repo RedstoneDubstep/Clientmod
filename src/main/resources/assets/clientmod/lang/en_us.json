@@ -4,8 +4,6 @@
 
   "messages.clientmod:log.lastDeathPosition": "You died at this position: %s",
   "messages.clientmod:log.noLastDeathPosition": "You didn't die since you started Minecraft, you dummie!",
-  "messages.clientmod:log.noBlockEntitiesFound": "No visible renderable Block Entities found",
-  "messages.clientmod:log.blockEntitiesFound": "Visible renderable Block Entities:",
   "messages.clientmod:radar.noEntitiesInRange": "There are no entities in %s blocks range",
   "messages.clientmod:radar.entitiesInRange": "These are all the mobs in %s blocks range:",
   "messages.clientmod:radar.noEntityTypeInRange": "There are no mobs of type %s in %s blocks range",
@@ -13,6 +11,8 @@
   "messages.clientmod:ray.block": "Hit Block \"%1$s\" at position %2$s, distance: %3$s blocks",
   "messages.clientmod:ray.entity": "Hit Entity \"%1$s\" at position %2$s, distance: %3$s blocks",
   "messages.clientmod:ray.miss": "No hit result found within %s blocks",
+  "messages.clientmod:rbe.noBlockEntitiesFound": "No visible renderable Block Entities found",
+  "messages.clientmod:rbe.blockEntitiesFound": "Visible renderable Block Entities:",
   "messages.clientmod:sdata.notFound": "No Server Data of current server found",
   "messages.clientmod:sdata.name": "Server Name: \"%s\"",
   "messages.clientmod:sdata.ip": "Server IP: %s",

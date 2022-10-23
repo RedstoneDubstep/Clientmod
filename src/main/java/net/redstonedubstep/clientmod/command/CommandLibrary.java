@@ -51,6 +51,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.redstonedubstep.clientmod.Clientmod;
 import net.redstonedubstep.clientmod.command.parameter.AbstractParameter;
 import net.redstonedubstep.clientmod.command.parameter.EntityTypeParameter;
@@ -70,6 +71,7 @@ public class CommandLibrary {
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
 	private static final Command RAY_COMMAND = new Command("ray", CommandLibrary.Actions::ray, new IntParameter(false, 100, 10000, 0), new StringParameter(Lists.newArrayList("all", "entity", "block"), false, "all"));
+	private static final Command RBE_COMMAND = new Command("rbe", CommandLibrary.Actions::rbe, new StringParameter(new ArrayList<>(), false, ""));
 	private static final Command RELOAD_COMMAND = new Command("reload", CommandLibrary.Actions::reload, new StringParameter(Lists.newArrayList("all", "font", "misc", "renderers", "sounds", "textures")));
 	private static final Command SERVERDATA_COMMAND = new Command("sdata", CommandLibrary.Actions::sdata, new StringParameter(Lists.newArrayList("name", "ip", "status", "motd", "ping", "protocol", "version")));
 	private static final Command SETTINGS_COMMAND = new Command("settings", CommandLibrary.Actions::settings);
@@ -85,6 +87,7 @@ public class CommandLibrary {
 		commandList.add(NAMEMC_COMMAND);
 		commandList.add(RADAR_COMMAND);
 		commandList.add(RAY_COMMAND);
+		commandList.add(RBE_COMMAND);
 		commandList.add(RELOAD_COMMAND);
 		commandList.add(SERVERDATA_COMMAND);
 		commandList.add(SETTINGS_COMMAND);
@@ -150,34 +153,6 @@ public class CommandLibrary {
 				}
 				else {
 					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())));
-				}
-			}
-			else if (text.equals("blockEntities")) {
-				Map<BlockEntityType<?>, Integer> map = new HashMap<>();
-
-				for (LevelRenderer.RenderChunkInfo chunkInfo : mc.levelRenderer.renderChunksInFrustum) {
-					for (BlockEntity be : chunkInfo.chunk.getCompiledChunk().getRenderableBlockEntities()) {
-						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
-							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
-							map.putIfAbsent(be.getType(), 1);
-						}
-					}
-				}
-
-				synchronized(mc.levelRenderer.globalBlockEntities) {
-					for (BlockEntity be : mc.levelRenderer.globalBlockEntities) {
-						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
-							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
-							map.putIfAbsent(be.getType(), 1);
-						}
-					}
-				}
-
-				if (map.isEmpty())
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.noBlockEntitiesFound"));
-				else {
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.blockEntitiesFound"));
-					map.forEach((type, num) -> mc.player.sendSystemMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString())));
 				}
 			}
 
@@ -255,6 +230,50 @@ public class CommandLibrary {
 			}
 
 			player.sendSystemMessage(Component.translatable("messages.clientmod:ray.miss", range));
+			return null;
+		}
+
+		private static CommandException rbe(AbstractParameter<?>[] params) {
+			String beType = ((StringParameter)params[0]).getValue().replace(" ",  "_");
+
+			if (beType.isEmpty()) {
+				Map<BlockEntityType<?>, Integer> map = new HashMap<>();
+
+				for (LevelRenderer.RenderChunkInfo chunkInfo : mc.levelRenderer.renderChunksInFrustum) {
+					for (BlockEntity be : chunkInfo.chunk.getCompiledChunk().getRenderableBlockEntities()) {
+						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
+							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
+							map.putIfAbsent(be.getType(), 1);
+						}
+					}
+				}
+
+				synchronized(mc.levelRenderer.globalBlockEntities) {
+					for (BlockEntity be : mc.levelRenderer.globalBlockEntities) {
+						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
+							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
+							map.putIfAbsent(be.getType(), 1);
+						}
+					}
+				}
+
+				if (map.isEmpty())
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:rbe.noBlockEntitiesFound"));
+				else {
+					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:rbe.blockEntitiesFound"));
+					map.forEach((type, num) -> mc.player.sendSystemMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString())));
+				}
+
+				return null;
+			}
+
+			ResourceLocation beResourceKey = new ResourceLocation(beType);
+
+			if (ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(beResourceKey) == null)
+				return CommandException.invalidParameter(params[0], 0, beType);
+			else if (!FieldHolder.renderableBlockEntityFilter.remove(beResourceKey))
+				FieldHolder.renderableBlockEntityFilter.add(beResourceKey);
+
 			return null;
 		}
 

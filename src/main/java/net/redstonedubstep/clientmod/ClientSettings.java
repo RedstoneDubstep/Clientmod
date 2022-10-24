@@ -21,6 +21,7 @@ public class ClientSettings {
 	public static final List<OptionInstance<Boolean>> SETTINGS = new ArrayList<>();
 
 	public static OptionInstance<Boolean> SEND_MESSAGES_WITH_TEAMMSG = registerSetting("sendMessagesWithTeammsg", false);
+	public static OptionInstance<Boolean> REDUCE_ENTITY_DISTANCE = registerSetting("reduceEntityDistance", false);
 
 	//config-related stuff
 	public static final ForgeConfigSpec CLIENT_SPEC;

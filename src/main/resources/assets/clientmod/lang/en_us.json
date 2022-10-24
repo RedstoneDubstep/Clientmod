@@ -71,5 +71,7 @@
   "config.clientmod:speedometer.description": "Should your current speed be displayed next to your hotbar?",
 
   "setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg",
-  "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?"
+  "setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?",
+  "setting.clientmod:reduceEntityDistance.name": "Reduce Entity Distance",
+  "setting.clientmod:reduceEntityDistance.description": "Should the Entity render distance be lowered by a factor of 10?"
 }

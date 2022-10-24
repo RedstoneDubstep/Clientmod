@@ -19,6 +19,7 @@ import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 @Mixin(ChatScreen.class)
 public class MixinChatScreen {
+	//Automatically send chat messages as /teammsg commands
 	@ModifyVariable(method = "handleChatInput", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/ChatScreen;chatPreview:Lnet/minecraft/client/gui/chat/ClientChatPreview;"), argsOnly = true)
 	private String modifyChatInput(String original) {
 		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.get() && !original.startsWith("/"))
@@ -27,6 +28,7 @@ public class MixinChatScreen {
 		return original;
 	}
 
+	//Handle and parse chat inputs with the /clientmod prefix as commands from this mod
 	@Inject(method = "handleChatInput", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/ChatScreen;chatPreview:Lnet/minecraft/client/gui/chat/ClientChatPreview;"), cancellable = true)
 	private void onChatInput(String text, boolean addToChat, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (text.startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen

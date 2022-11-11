@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.HoverEvent.Action;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -34,16 +36,15 @@ public abstract class MixinReloadableResourceManager {
 			}
 
 			if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
+				List<PreparableReloadListener> readOnlyListeners = listeners;
+
 				FieldHolder.maxTaskAmount = listeners.size();
 				FieldHolder.oldTaskSet = new ArrayList<>(listeners);
-			}
-
-			if (FieldHolder.reloadingStartTime == -1) {
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.started"));
+				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, Component.literal(String.join(",", readOnlyListeners.stream().map(PreparableReloadListener::getName).toList()))))));
 			}
 		}
-		
+
 		return SimpleReloadInstance.create(resourceManager, listeners, backgroundExecutor, gameExecutor, waitingFor, debugEnabled);
 	}
 }

@@ -21,4 +21,5 @@ public class FieldHolder {
 	public static int maxTaskAmount = -1;
 	public static long reloadingStartTime = -1;
 	public static long reloadingFinishTime = -1;
+	public static boolean wasReloadingDone = false;
 }

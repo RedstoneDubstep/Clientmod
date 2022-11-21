@@ -35,8 +35,8 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
 	private void injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-		if (!FieldHolder.isMinecraftStarting && ClientSettings.CONFIG.enhancedReloadingInfo.get() && fadeIn && reload instanceof SimpleReloadInstance && Minecraft.getInstance().player != null) {
-			if (!reload.isDone()) {
+		if (!FieldHolder.isMinecraftStarting && ClientSettings.CONFIG.enhancedReloadingInfo.get() && Minecraft.getInstance().player != null) {
+			if (fadeIn && reload instanceof SimpleReloadInstance && !reload.isDone()) {
 				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)reload).preparingListeners);
 
 				//setup reloading-related fields
@@ -59,10 +59,6 @@ public abstract class MixinLoadingOverlay extends Overlay {
 
 				if (FieldHolder.currentTask != null)
 					Minecraft.getInstance().font.draw(stack, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
-			}
-			else if (FieldHolder.reloadingFinishTime == -1) {
-				FieldHolder.reloadingFinishTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.finished"));
 			}
 		}
 	}

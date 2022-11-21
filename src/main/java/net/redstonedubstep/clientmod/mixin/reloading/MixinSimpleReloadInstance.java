@@ -1,4 +1,4 @@
-package net.redstonedubstep.clientmod.mixin;
+package net.redstonedubstep.clientmod.mixin.reloading;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;

@@ -1,8 +1,6 @@
-package net.redstonedubstep.clientmod.mixin;
+package net.redstonedubstep.clientmod.mixin.reloading;
 
 import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,8 +22,8 @@ public class MixinMinecraft {
 
 	//At this point, reloading is fully done (and thus, the overlay gets removed so the player can move again), so we can do some post-stuff
 	@Inject(method = "setOverlay", at = @At("HEAD"))
-	private void onSetOverlay(Overlay pLoadingGui, CallbackInfo callbackInfo) {
-		if (pLoadingGui == null && overlay != null) {
+	private void onSetOverlay(Overlay newOverlay, CallbackInfo callbackInfo) {
+		if (newOverlay == null && overlay != null) {
 			if (ClientSettings.CONFIG.enhancedReloadingInfo.get()) {
 				FieldHolder.currentTask = null;
 				FieldHolder.maxTaskAmount = -1;

@@ -1,4 +1,4 @@
-package net.redstonedubstep.clientmod.mixin;
+package net.redstonedubstep.clientmod.mixin.rendering;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

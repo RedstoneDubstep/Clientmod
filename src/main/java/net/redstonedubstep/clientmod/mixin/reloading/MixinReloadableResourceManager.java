@@ -1,4 +1,4 @@
-package net.redstonedubstep.clientmod.mixin;
+package net.redstonedubstep.clientmod.mixin.reloading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ReloadableResourceManager.class)
 public abstract class MixinReloadableResourceManager {
-	//stop sounds from reloading, and fill some fields with information about the start of the reload
+	//Apply any set reload filter, and fill some fields with information about the start of the reload
 	@Redirect(method = "createReload", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/SimpleReloadInstance;create(Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Z)Lnet/minecraft/server/packs/resources/ReloadInstance;"))
 	public ReloadInstance onNewReloadInstance(ResourceManager resourceManager, List<PreparableReloadListener> listeners, Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, boolean debugEnabled) {
 		if (Minecraft.getInstance().player != null) { //makes sure this only applies when reloading resources ingame, and not when starting the game

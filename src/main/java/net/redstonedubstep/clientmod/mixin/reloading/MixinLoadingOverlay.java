@@ -1,4 +1,4 @@
-package net.redstonedubstep.clientmod.mixin;
+package net.redstonedubstep.clientmod.mixin.reloading;
 
 import java.util.ArrayList;
 import java.util.List;

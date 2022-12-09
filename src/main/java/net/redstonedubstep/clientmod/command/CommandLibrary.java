@@ -125,9 +125,9 @@ public class CommandLibrary {
 			String text = ((StringParameter)params[0]).getValue();
 
 			switch (text) {
-				case "resources": Util.getPlatform().openFile(mc.getResourcePackDirectory()); break;
-				case "mods": Util.getPlatform().openFile(FMLPaths.MODSDIR.get().toFile()); break;
-				case "mc": Util.getPlatform().openFile(FMLPaths.MODSDIR.get().getParent().toFile()); break;
+				case "resources" -> Util.getPlatform().openFile(mc.getResourcePackDirectory().toFile());
+				case "mods" -> Util.getPlatform().openFile(FMLPaths.MODSDIR.get().toFile());
+				case "mc" -> Util.getPlatform().openFile(FMLPaths.MODSDIR.get().getParent().toFile());
 			}
 
 			return null;
@@ -320,7 +320,7 @@ public class CommandLibrary {
 			mc.setScreen(new SettingsScreen());
 			return null;
 		}
-		
+
 		private static CommandException waypoint(AbstractParameter<?>[] params) {
 			String text = ((StringParameter)params[0]).getValue();
 			Integer x = ((IntParameter)params[1]).getValue();

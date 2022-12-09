@@ -29,7 +29,6 @@ public class MainScreen extends Screen {
 	public void init() {
 		super.init();
 
-		minecraft.keyboardHandler.setSendRepeatsToGui(true);
 		inputField = new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, CommonComponents.EMPTY);
 		inputField.setTextColor(-1);
 		inputField.setTextColorUneditable(-1);
@@ -74,7 +73,7 @@ public class MainScreen extends Screen {
 			else
 				return inputField.keyPressed(keyCode, scanCode, modifiers);
 		}
-		
+
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 

@@ -4,19 +4,15 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraftforge.client.gui.ScreenUtils;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 
-public class SettingButton extends Button {
+public class SettingButton extends ExtendedButton {
 	private final Supplier<Boolean> isOn;
 	private final int baseHeight;
 
@@ -26,44 +22,15 @@ public class SettingButton extends Button {
 
 	public SettingButton(int xPos, int yPos, int width, int height, Component displayString, Consumer<SettingButton> onClick, Supplier<Boolean> isOn, Component tooltip) {
 		super(xPos, yPos, width, height, displayString, b -> {
-			if(onClick != null)
+			if (onClick != null)
 				onClick.accept((SettingButton)b);
-		}, (b, matrix, x, y) -> {
-			if (tooltip != null)
-				Minecraft.getInstance().screen.renderTooltip(matrix, tooltip, x, y);
-		});
+		}, s -> Component.empty());
 
+		setTooltip(Tooltip.create(tooltip));
 		this.isOn = isOn;
 		this.baseHeight = height;
 		updateText();
 		validateHeight(width, getMessage());
-	}
-
-	//copied from ExtendedButton because we can't extend that class (oh the irony) due to the tooltip code missing there
-	@Override
-	public void renderButton(PoseStack stack, int mouseX, int mouseY, float partial)
-	{
-		if (visible && !getMessage().getString().isEmpty()) {
-			Minecraft mc = Minecraft.getInstance();
-			Component buttonText = getMessage();
-			List<FormattedCharSequence> buttonLines = mc.font.split(buttonText, width - 6);
-
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-			int k = getYImage(isHoveredOrFocused());
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			ScreenUtils.blitWithBorder(stack, WIDGETS_LOCATION, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, getBlitOffset());
-			renderBg(stack, mc, mouseX, mouseY);
-
-			for (int i = 0; i < buttonLines.size(); i++) {
-				FormattedCharSequence line = buttonLines.get(i);
-
-				mc.font.drawShadow(stack, line, x + width / 2 - mc.font.width(line) / 2, y + 6 + i * 12, getFGColor());
-			}
-
-			if (isHoveredOrFocused()) {
-				renderToolTip(stack, mouseX, mouseY);
-			}
-		}
 	}
 
 	public void updateText() {

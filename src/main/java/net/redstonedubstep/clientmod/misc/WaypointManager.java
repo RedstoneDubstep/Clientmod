@@ -11,9 +11,8 @@ public class WaypointManager {
 	private Player player = Minecraft.getInstance().player;
 
 	public static WaypointManager getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new WaypointManager();
-		}
 
 		return instance;
 	}
@@ -36,9 +35,8 @@ public class WaypointManager {
 			player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)));
 			waypoint = null;
 		}
-		else {
+		else
 			player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"));
-		}
 	}
 
 	public boolean hasWaypoint() {

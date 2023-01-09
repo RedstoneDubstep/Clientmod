@@ -20,7 +20,7 @@ public class ClientUtility {
 			if (!map.containsKey(entity.getClass()))
 				map.put(entity.getClass(), 1);
 			else
-				map.put(entity.getClass(), map.get(entity.getClass())+1);
+				map.put(entity.getClass(), map.get(entity.getClass()) + 1);
 		}
 
 		return map;
@@ -39,12 +39,10 @@ public class ClientUtility {
 		int diffZ = pos.getZ() - originalPos.getZ();
 		String direction;
 
-		if (diffZ > 0) {
+		if (diffZ > 0)
 			direction = diffX > 0 ? "Southeast" : "Southwest";
-		}
-		else {
+		else
 			direction = diffX > 0 ? "Northeast" : "Northwest";
-		}
 
 		position.withStyle((s) -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, Component.literal(direction))));
 		return position;

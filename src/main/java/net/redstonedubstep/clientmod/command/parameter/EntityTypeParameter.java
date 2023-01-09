@@ -7,7 +7,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.redstonedubstep.clientmod.command.CommandException;
 
-public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
+public class EntityTypeParameter extends AbstractParameter<EntityType<?>> {
 	private EntityType<?> value;
 	private EntityType<?> defaultValue;
 	private boolean required;
@@ -35,11 +35,10 @@ public class EntityTypeParameter extends AbstractParameter<EntityType<?>>{
 		String entityName = value.replace(" ", "_");
 		Optional<EntityType<?>> optional = EntityType.byString(entityName);
 
-		if (!optional.isPresent()) {
+		if (optional.isEmpty())
 			return CommandException.invalidParameter(this, pos, value);
-		} else {
-			this.value = optional.orElse(null);
-		}
+		else
+			this.value = optional.get();
 
 		return null;
 	}

@@ -69,16 +69,15 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
-		if (KeyBindings.openTextbox.consumeClick()) {
+		if (KeyBindings.openTextbox.consumeClick())
 			Minecraft.getInstance().setScreen(new MainScreen());
-		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		if (event.player instanceof LocalPlayer player && event.phase == Phase.START) {
 			if (ClientSettings.CONFIG.renderEntitesGlowing.get()) {
-				for (Entity entity : ((ClientLevel)player.level).entitiesForRendering()) {
+				for (Entity entity : ((ClientLevel) player.level).entitiesForRendering()) {
 					if (entity instanceof LivingEntity living) {
 						living.addEffect(new MobEffectInstance(MobEffects.GLOWING));
 						living.setSharedFlag(6, true);
@@ -104,9 +103,8 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		if (ClientSettings.CONFIG.logShulkerPlacement.get() && event.getItemStack().getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock) {
+		if (ClientSettings.CONFIG.logShulkerPlacement.get() && event.getItemStack().getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock)
 			LOGGER.info("Placed " + ForgeRegistries.BLOCKS.getKey(item.getBlock()) + " at " + ClientUtility.formatBlockPos(event.getPos()));
-		}
 	}
 
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code
@@ -116,10 +114,10 @@ public class ClientEventHandler {
 			try {
 				boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, screen, "f_96720_");
 
-				if (isTitleWronglySpelled) {
+				if (isTitleWronglySpelled)
 					Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.WITHER_DEATH, 1, 5));
-				}
-			} catch(UnableToFindFieldException e) {
+			}
+			catch (UnableToFindFieldException e) {
 				e.printStackTrace();
 			}
 		}
@@ -138,15 +136,15 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onRenderGameOverlay(RenderGuiOverlayEvent.Post event) {
-		if(event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
+		if (event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
 			Player player = Minecraft.getInstance().player;
 			Vec3 lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
 
 			if (WaypointManager.getInstance().hasWaypoint()) {
 				Vec3 relativePos = Vec3.atLowerCornerOf(WaypointManager.getInstance().getWaypoint().subtract(player.blockPosition()));
-				float dotProductRaw = (float)lookVec.dot(relativePos.multiply(1, 0, 1).normalize());
+				float dotProductRaw = (float) lookVec.dot(relativePos.multiply(1, 0, 1).normalize());
 				float dotProduct = Math.max(0, dotProductRaw - 0.7F);
-				int relativeHeight = Math.round((float)relativePos.y());
+				int relativeHeight = Math.round((float) relativePos.y());
 				int yOffset = relativeHeight > 3 ? -10 : (relativeHeight < -3 ? 10 : 0);
 				int squareSize = relativePos.length() < 150 ? 20 : 10;
 				int startX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - squareSize / 2;

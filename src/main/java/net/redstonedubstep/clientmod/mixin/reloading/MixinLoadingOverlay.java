@@ -29,7 +29,9 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	@Shadow
 	@Final
 	private ReloadInstance reload;
-	@Shadow @Final private boolean fadeIn;
+	@Shadow
+	@Final
+	private boolean fadeIn;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
@@ -37,7 +39,7 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	private void injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (!FieldHolder.isMinecraftStarting && ClientSettings.CONFIG.enhancedReloadingInfo.get() && Minecraft.getInstance().player != null) {
 			if (fadeIn && reload instanceof SimpleReloadInstance && !reload.isDone()) {
-				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>)reload).preparingListeners);
+				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>) reload).preparingListeners);
 
 				//setup reloading-related fields
 				if (FieldHolder.maxTaskAmount == -1)

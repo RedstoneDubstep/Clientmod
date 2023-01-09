@@ -14,7 +14,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 @Mod(Clientmod.MODID)
-@EventBusSubscriber(modid=Clientmod.MODID, bus=Bus.MOD)
+@EventBusSubscriber(modid = Clientmod.MODID, bus = Bus.MOD)
 public class Clientmod {
 	public static final String MODID = "clientmod";
 

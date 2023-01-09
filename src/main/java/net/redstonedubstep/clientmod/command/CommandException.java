@@ -62,7 +62,7 @@ public class CommandException {
 			fullDescription.append("\n");
 			fullDescription.append(c.withStyle(ChatFormatting.WHITE));
 		});
-		
+
 		return fullDescription;
 	}
 

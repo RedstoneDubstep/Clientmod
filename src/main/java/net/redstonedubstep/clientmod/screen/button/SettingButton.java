@@ -23,7 +23,7 @@ public class SettingButton extends ExtendedButton {
 	public SettingButton(int xPos, int yPos, int width, int height, Component displayString, Consumer<SettingButton> onClick, Supplier<Boolean> isOn, Component tooltip) {
 		super(xPos, yPos, width, height, displayString, b -> {
 			if (onClick != null)
-				onClick.accept((SettingButton)b);
+				onClick.accept((SettingButton) b);
 		}, s -> Component.empty());
 
 		setTooltip(Tooltip.create(tooltip));

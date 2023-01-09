@@ -22,8 +22,8 @@ public class SettingsScreen extends Screen {
 		addRenderableWidget(settingsList);
 		settingsList.setRenderBackground(false);
 		settingsList.setRenderTopAndBottom(false);
-		settingsList.addSmall(ClientSettings.CONFIGS.keySet().toArray(new OptionInstance[]{}));
-		settingsList.addSmall(ClientSettings.SETTINGS.toArray(new OptionInstance[]{}));
+		settingsList.addSmall(ClientSettings.CONFIGS.keySet().toArray(new OptionInstance[] {}));
+		settingsList.addSmall(ClientSettings.SETTINGS.toArray(new OptionInstance[] {}));
 	}
 
 	@Override

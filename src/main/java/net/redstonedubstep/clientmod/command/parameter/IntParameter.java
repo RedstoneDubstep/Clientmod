@@ -37,9 +37,10 @@ public class IntParameter extends AbstractParameter<Integer> {
 
 	@Override
 	public CommandException setValue(String value, int pos) {
-		try{
+		try {
 			this.value = Integer.parseInt(value);
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return CommandException.invalidParameter(this, pos, value);
 		}
 
@@ -66,6 +67,6 @@ public class IntParameter extends AbstractParameter<Integer> {
 
 	@Override
 	public MutableComponent toDescription() {
-		return Component.translatable( "Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: " + maxValue) : "") + (minValue > Integer.MIN_VALUE ? (", lowest allowed value: " + minValue) : ""));
+		return Component.translatable("Allowed input: Int" + (maxValue < Integer.MAX_VALUE ? (", highest allowed value: " + maxValue) : "") + (minValue > Integer.MIN_VALUE ? (", lowest allowed value: " + minValue) : ""));
 	}
 }

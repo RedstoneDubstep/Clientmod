@@ -122,7 +122,7 @@ public class CommandLibrary {
 
 	public static class Actions {
 		private static CommandException folder(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
+			String text = ((StringParameter) params[0]).getValue();
 
 			switch (text) {
 				case "resources" -> Util.getPlatform().openFile(mc.getResourcePackDirectory().toFile());
@@ -134,43 +134,43 @@ public class CommandLibrary {
 		}
 
 		private static CommandException image(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
+			String text = ((StringParameter) params[0]).getValue();
 
-			switch(text) {
-				case "trades" -> mc.setScreen(new ImageScreen("trades_screen", 1263, 595, new ResourceLocation(Clientmod.MODID, "textures/gui/trading_bartering_guide.png")));
-				case "brewing" -> mc.setScreen(new ImageScreen("brewing_guide", 350, 600, new ResourceLocation(Clientmod.MODID, "textures/gui/brewing_guide.png")));
+			switch (text) {
+				case "trades" ->
+						mc.setScreen(new ImageScreen("trades_screen", 1263, 595, new ResourceLocation(Clientmod.MODID, "textures/gui/trading_bartering_guide.png")));
+				case "brewing" ->
+						mc.setScreen(new ImageScreen("brewing_guide", 350, 600, new ResourceLocation(Clientmod.MODID, "textures/gui/brewing_guide.png")));
 			}
 
 			return null;
 		}
 
 		private static CommandException log(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
+			String text = ((StringParameter) params[0]).getValue();
 
 			if (text.equals("lastDeath")) {
-				if (FieldHolder.lastDeathPosition == null) {
+				if (FieldHolder.lastDeathPosition == null)
 					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"));
-				}
-				else {
+				else
 					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())));
-				}
 			}
 
 			return null;
 		}
 
 		private static CommandException namemc(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
-			String link = "https://de.namemc.com/profile/"+text;
+			String text = ((StringParameter) params[0]).getValue();
+			String link = "https://de.namemc.com/profile/" + text;
 
 			Util.getPlatform().openUri(link);
 			return null;
 		}
 
-		private static CommandException radar(AbstractParameter<?> [] params) {
+		private static CommandException radar(AbstractParameter<?>[] params) {
 			LocalPlayer player = mc.player;
-			int range = ((IntParameter)params[0]).getValue();
-			EntityType<?> entity = ((EntityTypeParameter)params[1]).getValue();
+			int range = ((IntParameter) params[0]).getValue();
+			EntityType<?> entity = ((EntityTypeParameter) params[1]).getValue();
 			AABB boundingBox = player.getBoundingBox().inflate(range);
 
 			if (entity == null) {
@@ -183,13 +183,13 @@ public class CommandLibrary {
 					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.entitiesInRange", range));
 					map.forEach((key, value) -> player.sendSystemMessage(Component.literal("- " + value + " " + key.getSimpleName())));
 				}
-			} else {
+			}
+			else {
 				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, s -> true);
 				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
 
-				if (list.size() == 0) {
+				if (list.size() == 0)
 					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.noEntityTypeInRange", Component.translatable(entity.toString()), range));
-				}
 				else {
 					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.entityTypeInRange", list.size(), Component.translatable(entity.toString()), range));
 					list.forEach((entry) -> player.sendSystemMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")")));
@@ -201,8 +201,8 @@ public class CommandLibrary {
 
 		private static CommandException ray(AbstractParameter<?>[] params) {
 			LocalPlayer player = mc.player;
-			int range = ((IntParameter)params[0]).getValue();
-			String type = ((StringParameter)params[1]).getValue();
+			int range = ((IntParameter) params[0]).getValue();
+			String type = ((StringParameter) params[1]).getValue();
 			Vec3 playerEyePos = player.getEyePosition();
 			Vec3 lookVector = player.getLookAngle();
 			Vec3 endPos = playerEyePos.add(lookVector.scale(range));
@@ -234,7 +234,7 @@ public class CommandLibrary {
 		}
 
 		private static CommandException rbe(AbstractParameter<?>[] params) {
-			String beType = ((StringParameter)params[0]).getValue().replace(" ",  "_");
+			String beType = ((StringParameter) params[0]).getValue().replace(" ", "_");
 
 			if (beType.isEmpty()) {
 				Map<BlockEntityType<?>, Integer> map = new HashMap<>();
@@ -248,7 +248,7 @@ public class CommandLibrary {
 					}
 				}
 
-				synchronized(mc.levelRenderer.globalBlockEntities) {
+				synchronized (mc.levelRenderer.globalBlockEntities) {
 					for (BlockEntity be : mc.levelRenderer.globalBlockEntities) {
 						if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
 							map.computeIfPresent(be.getType(), (t, i) -> i + 1);
@@ -278,9 +278,10 @@ public class CommandLibrary {
 		}
 
 		private static CommandException reload(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
+			String text = ((StringParameter) params[0]).getValue().replace(" ", "_");
 
-			FieldHolder.reloadFilter = switch(text) {
+			//@formatter:off
+			FieldHolder.reloadFilter = switch (text) {
 				default -> null;
 				case "font" -> Sets.newHashSet(LanguageManager.class, SplashManager.class, FontManager.class);
 				case "misc" -> Sets.newHashSet(GrassColorReloadListener.class, FoliageColorReloadListener.class, SearchRegistry.class);
@@ -288,13 +289,14 @@ public class CommandLibrary {
 				case "sounds" -> Sets.newHashSet(SoundManager.class);
 				case "textures" -> Sets.newHashSet(TextureManager.class, ModelManager.class, EntityModelSet.class, BlockRenderDispatcher.class, PaintingTextureManager.class, MobEffectTextureManager.class);
 			};
+			//@formatter:on
 
 			mc.reloadResourcePacks();
 			return null;
 		}
 
 		private static CommandException sdata(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
+			String text = ((StringParameter) params[0]).getValue();
 			ServerData data = mc.getCurrentServer();
 			int latency = mc.player.connection.getPlayerInfo(mc.player.getUUID()).getLatency();
 
@@ -322,10 +324,10 @@ public class CommandLibrary {
 		}
 
 		private static CommandException waypoint(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue();
-			Integer x = ((IntParameter)params[1]).getValue();
-			Integer y = ((IntParameter)params[2]).getValue();
-			Integer z = ((IntParameter)params[3]).getValue();
+			String text = ((StringParameter) params[0]).getValue();
+			Integer x = ((IntParameter) params[1]).getValue();
+			Integer y = ((IntParameter) params[2]).getValue();
+			Integer z = ((IntParameter) params[3]).getValue();
 			WaypointManager waypointManager = WaypointManager.getInstance();
 
 			if (text.isEmpty()) {
@@ -364,7 +366,7 @@ public class CommandLibrary {
 		}
 
 		private static CommandException wiki(AbstractParameter<?>[] params) {
-			String text = ((StringParameter)params[0]).getValue().replace(" ", "_");
+			String text = ((StringParameter) params[0]).getValue().replace(" ", "_");
 			String wiki_link = "https://minecraft.fandom.com/" + text;
 
 			Util.getPlatform().openUri(wiki_link);

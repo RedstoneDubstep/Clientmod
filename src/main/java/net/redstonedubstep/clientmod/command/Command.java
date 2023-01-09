@@ -10,14 +10,15 @@ public class Command {
 	private final Function<AbstractParameter<?>[], CommandException> action;
 
 	public Command(String prefix, Function<AbstractParameter<?>[], CommandException> action, AbstractParameter<?> param) {
-		this(prefix, action, new AbstractParameter[]{param});
+		this(prefix, action, new AbstractParameter[] {param});
 	}
+
 	public Command(String prefix, Function<AbstractParameter<?>[], CommandException> action, AbstractParameter<?>... params) {
 		this.prefix = prefix;
 		this.action = action;
 		this.params = params;
 	}
-	
+
 	public CommandException execute(String parameter) {
 		CommandException result = formatParameters(parameter);
 		if (result != null) //when something went wrong while formatting parameters

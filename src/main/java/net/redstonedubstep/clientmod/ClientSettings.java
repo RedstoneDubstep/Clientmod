@@ -47,6 +47,7 @@ public class ClientSettings {
 		public BooleanValue invincibleVillagers;
 		public BooleanValue enhancedItemInfo;
 		public BooleanValue speedometer;
+		public BooleanValue logShulkerPlacement;
 
 		Config(ForgeConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -97,6 +98,9 @@ public class ClientSettings {
 			speedometer = register(builder
 					.comment("Should your current speed be displayed next to your hotbar?")
 					.define("speedometer", false));
+			logShulkerPlacement = register(builder
+					.comment("Should the position of placed shulker boxes be logged?")
+					.define("logShulkerPlacement", true));
 		}
 
 		private static BooleanValue register(BooleanValue config) {

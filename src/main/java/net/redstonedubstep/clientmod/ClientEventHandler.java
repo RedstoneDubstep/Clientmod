@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,11 +31,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -45,11 +50,14 @@ import net.minecraftforge.client.gui.widget.ExtendedButton;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper.UnableToFindFieldException;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.redstonedubstep.clientmod.misc.ClientUtility;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 import net.redstonedubstep.clientmod.misc.KeyBindings;
 import net.redstonedubstep.clientmod.misc.WaypointManager;
@@ -57,6 +65,8 @@ import net.redstonedubstep.clientmod.screen.MainScreen;
 
 @EventBusSubscriber(modid = Clientmod.MODID, value = Dist.CLIENT)
 public class ClientEventHandler {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
 		if (KeyBindings.openTextbox.consumeClick()) {
@@ -90,6 +100,13 @@ public class ClientEventHandler {
 	public static void onClickEvent(InputEvent.InteractionKeyMappingTriggered event) {
 		if (ClientSettings.CONFIG.invincibleVillagers.get() && event.isAttack() && !Minecraft.getInstance().gameMode.getPlayerMode().isCreative() && Minecraft.getInstance().hitResult instanceof EntityHitResult hitResult && hitResult.getEntity() instanceof Villager)
 			event.setCanceled(true);
+	}
+
+	@SubscribeEvent
+	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+		if (ClientSettings.CONFIG.logShulkerPlacement.get() && event.getItemStack().getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock) {
+			LOGGER.info("Placed " + ForgeRegistries.BLOCKS.getKey(item.getBlock()) + " at " + ClientUtility.formatBlockPos(event.getPos()));
+		}
 	}
 
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code

@@ -20,7 +20,7 @@ import net.redstonedubstep.clientmod.command.CommandLibrary;
 @Mixin(ChatScreen.class)
 public class MixinChatScreen {
 	//Automatically send chat messages as /teammsg commands
-	@ModifyVariable(method = "handleChatInput", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/ChatScreen;chatPreview:Lnet/minecraft/client/gui/chat/ClientChatPreview;"), argsOnly = true)
+	@ModifyVariable(method = "handleChatInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getChat()Lnet/minecraft/client/gui/components/ChatComponent;"), argsOnly = true)
 	private String modifyChatInput(String original) {
 		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.get() && !original.startsWith("/"))
 			original = "/teammsg " + original;
@@ -29,7 +29,7 @@ public class MixinChatScreen {
 	}
 
 	//Handle and parse chat inputs with the /clientmod prefix as commands from this mod
-	@Inject(method = "handleChatInput", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/ChatScreen;chatPreview:Lnet/minecraft/client/gui/chat/ClientChatPreview;"), cancellable = true)
+	@Inject(method = "handleChatInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getChat()Lnet/minecraft/client/gui/components/ChatComponent;"), cancellable = true)
 	private void onChatInput(String text, boolean addToChat, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (text.startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen
 			String command = text.replace("/clientmod ", "");
@@ -42,7 +42,7 @@ public class MixinChatScreen {
 				Minecraft.getInstance().player.sendSystemMessage(errorMessage);
 			}
 
-			callbackInfo.setReturnValue(true);
+			callbackInfo.setReturnValue(false);
 		}
 	}
 }

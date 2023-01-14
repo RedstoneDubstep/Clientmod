@@ -104,7 +104,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
 		if (ClientSettings.CONFIG.logShulkerPlacement.get() && event.getItemStack().getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock)
-			LOGGER.info("Placed " + ForgeRegistries.BLOCKS.getKey(item.getBlock()) + " at " + ClientUtility.formatBlockPos(event.getPos()));
+			LOGGER.info("Placed " + ForgeRegistries.BLOCKS.getKey(item.getBlock()) + " with name " + event.getItemStack().getHoverName() + " at " + ClientUtility.formatBlockPos(event.getPos()));
 	}
 
 	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code

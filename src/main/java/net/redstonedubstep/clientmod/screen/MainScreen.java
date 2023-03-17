@@ -33,7 +33,7 @@ public class MainScreen extends Screen {
 		inputField.setTextColor(-1);
 		inputField.setTextColorUneditable(-1);
 		inputField.setBordered(true);
-		inputField.setFocus(true);
+		inputField.setFocused(true);
 	}
 
 	@Override

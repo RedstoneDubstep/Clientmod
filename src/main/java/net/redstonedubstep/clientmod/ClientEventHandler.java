@@ -8,11 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font.DisplayMode;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -182,8 +182,6 @@ public class ClientEventHandler {
 		consumer.accept(Items.ENCHANTED_BOOK, (font, stack, x, y, blit) -> {
 			if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
 				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-				Tesselator tesselator = Tesselator.getInstance();
-				BufferBuilder bufferBuilder = tesselator.getBuilder();
 				int color = -1;
 				boolean hasMaxEnchantment = false;
 
@@ -200,9 +198,8 @@ public class ClientEventHandler {
 					color = hasMaxEnchantment ? 0xFF00FF00 : 0xFFFF0000;
 
 				RenderSystem.disableDepthTest();
-				RenderSystem.disableTexture();
 				RenderSystem.disableBlend();
-				Minecraft.getInstance().getItemRenderer().fillRect(bufferBuilder, x + 1, y + 1, 3, 3, color >> 16 & 255, color >> 8 & 255, color & 255, 255);
+				GuiComponent.fill(new PoseStack(), x + 1, y + 1, x + 4, y + 4, color); //TODO get the PoseStack from the proper place
 			}
 
 			return true;
@@ -215,7 +212,7 @@ public class ClientEventHandler {
 
 				pose.translate(0.0D, 0.0D, blit + 200.0F);
 				MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-				font.drawInBatch(tag.size() + "", x + 8 - 2 - font.width(tag.size() + ""), y + 6 + 3, 0xFFD700, true, pose.last().pose(), multibuffersource$buffersource, false, 0, 15728880);
+				font.drawInBatch(tag.size() + "", x + 8 - 2 - font.width(tag.size() + ""), y + 6 + 3, 0xFFD700, true, pose.last().pose(), multibuffersource$buffersource, DisplayMode.NORMAL, 0, 15728880);
 				multibuffersource$buffersource.endBatch();
 			}
 
@@ -224,8 +221,6 @@ public class ClientEventHandler {
 		IItemDecorator equipmentEnchantmentDecorator = (font, stack, x, y, blit) -> {
 			if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
 				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-				Tesselator tesselator = Tesselator.getInstance();
-				BufferBuilder bufferBuilder = tesselator.getBuilder();
 				int color = -1;
 
 				if (enchantments.containsKey(Enchantments.ALL_DAMAGE_PROTECTION))
@@ -255,11 +250,10 @@ public class ClientEventHandler {
 					color = 0x7DF9FF;
 
 				RenderSystem.disableDepthTest();
-				RenderSystem.disableTexture();
 				RenderSystem.disableBlend();
 
 				if (color >= 0)
-					Minecraft.getInstance().getItemRenderer().fillRect(bufferBuilder, x + 1, y + 1, 3, 3, color >> 16 & 255, color >> 8 & 255, color & 255, 255);
+					GuiComponent.fill(new PoseStack(), x + 1, y + 1, y + 4, y + 4, color); //TODO get the PoseStack from the proper place
 			}
 
 			return true;

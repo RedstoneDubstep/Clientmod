@@ -213,7 +213,7 @@ public class CommandLibrary {
 				if (entityHitResult != null) {
 					String distance = String.format(Locale.ROOT, "%.3f", entityHitResult.getLocation().subtract(playerEyePos).length());
 
-					player.sendSystemMessage(Component.translatable("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(new BlockPos(entityHitResult.getLocation())), distance));
+					player.sendSystemMessage(Component.translatable("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(BlockPos.containing(entityHitResult.getLocation())), distance));
 					return null;
 				}
 			}

@@ -54,7 +54,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper.UnableToFindFieldException;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.redstonedubstep.clientmod.misc.ClientUtility;
@@ -107,14 +106,12 @@ public class ClientEventHandler {
 			LOGGER.info("Placed " + ForgeRegistries.BLOCKS.getKey(item.getBlock()) + " with name " + event.getItemStack().getHoverName() + " at " + ClientUtility.formatBlockPos(event.getPos()));
 	}
 
-	//play a sound if the "Minceraft" logo is shown, credits to bl4ckscor3 for that code
+	//play a sound if the "Minceraft" logo is shown
 	@SubscribeEvent
 	public static void onInitScreenPost(ScreenEvent.Init.Post event) {
 		if (ClientSettings.CONFIG.notifyWhenMinceraftScreen.get() && event.getScreen() instanceof TitleScreen screen) {
 			try {
-				boolean isTitleWronglySpelled = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, screen, "f_96720_");
-
-				if (isTitleWronglySpelled)
+				if (screen.logoRenderer.showEasterEgg)
 					Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.WITHER_DEATH, 1, 5));
 			}
 			catch (UnableToFindFieldException e) {

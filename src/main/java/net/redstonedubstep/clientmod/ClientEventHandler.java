@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Font.DisplayMode;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -176,84 +178,92 @@ public class ClientEventHandler {
 	}
 
 	public static void registerItemDecorations(BiConsumer<ItemLike, IItemDecorator> consumer) {
-		consumer.accept(Items.ENCHANTED_BOOK, (font, stack, x, y, blit) -> {
-			if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
-				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-				int color = -1;
-				boolean hasMaxEnchantment = false;
+		consumer.accept(Items.ENCHANTED_BOOK, new IItemDecorator() {
+			@Override
+			public boolean render(PoseStack pose, Font font, ItemStack stack, int x, int y) {
+				if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
+					Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+					int color = -1;
+					boolean hasMaxEnchantment = false;
 
-				for (Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-					if (enchantment.getKey().getMaxLevel() <= enchantment.getValue()) {
-						hasMaxEnchantment = true;
-						break;
+					for (Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+						if (enchantment.getKey().getMaxLevel() <= enchantment.getValue()) {
+							hasMaxEnchantment = true;
+							break;
+						}
 					}
+
+					if (enchantments.size() > 1)
+						color = hasMaxEnchantment ? 0xFF00FFFF : 0xFFFF8C00;
+					else if (enchantments.size() == 1)
+						color = hasMaxEnchantment ? 0xFF00FF00 : 0xFFFF0000;
+
+					RenderSystem.disableDepthTest();
+					RenderSystem.disableBlend();
+					GuiComponent.fill(pose, x + 1, y + 1, x + 4, y + 4, color);
 				}
 
-				if (enchantments.size() > 1)
-					color = hasMaxEnchantment ? 0xFF00FFFF : 0xFFFF8C00;
-				else if (enchantments.size() == 1)
-					color = hasMaxEnchantment ? 0xFF00FF00 : 0xFFFF0000;
-
-				RenderSystem.disableDepthTest();
-				RenderSystem.disableBlend();
-				GuiComponent.fill(new PoseStack(), x + 1, y + 1, x + 4, y + 4, color); //TODO get the PoseStack from the proper place
+				return true;
 			}
-
-			return true;
 		});
 
-		IItemDecorator beeIndicatorDecorator = (font, stack, x, y, blit) -> {
-			if (ClientSettings.CONFIG.enhancedItemInfo.get() && stack.hasTag()) {
-				PoseStack pose = new PoseStack();
-				ListTag tag = stack.getTag().getCompound("BlockEntityTag").getList("Bees", Tag.TAG_COMPOUND);
+		IItemDecorator beeIndicatorDecorator = new IItemDecorator() {
+			@Override
+			public boolean render(PoseStack pose, Font font, ItemStack stack, int x, int y) {
+				if (ClientSettings.CONFIG.enhancedItemInfo.get() && stack.hasTag()) {
+					ListTag tag = stack.getTag().getCompound("BlockEntityTag").getList("Bees", Tag.TAG_COMPOUND);
 
-				pose.translate(0.0D, 0.0D, blit + 200.0F);
-				MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-				font.drawInBatch(tag.size() + "", x + 8 - 2 - font.width(tag.size() + ""), y + 6 + 3, 0xFFD700, true, pose.last().pose(), multibuffersource$buffersource, DisplayMode.NORMAL, 0, 15728880);
-				multibuffersource$buffersource.endBatch();
+					pose.translate(0.0D, 0.0D, 200.0F);
+					MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+					font.drawInBatch(tag.size() + "", x + 8 - 2 - font.width(tag.size() + ""), y + 6 + 3, 0xFFD700, true, pose.last().pose(), multibuffersource$buffersource, DisplayMode.NORMAL, 0, 15728880);
+					multibuffersource$buffersource.endBatch();
+				}
+
+				return false;
 			}
-
-			return false;
 		};
-		IItemDecorator equipmentEnchantmentDecorator = (font, stack, x, y, blit) -> {
-			if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
-				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-				int color = -1;
+		IItemDecorator equipmentEnchantmentDecorator = new IItemDecorator() {
+			@Override
+			public boolean render(PoseStack pose, Font font, ItemStack stack, int x, int y) {
+				if (ClientSettings.CONFIG.enhancedItemInfo.get()) {
+					Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+					int color = -1;
 
-				if (enchantments.containsKey(Enchantments.ALL_DAMAGE_PROTECTION))
-					color = 0x696969;
-				else if (enchantments.containsKey(Enchantments.BLAST_PROTECTION))
-					color = 0x53CF43;
-				else if (enchantments.containsKey(Enchantments.FIRE_PROTECTION))
-					color = 0xFF7514;
-				else if (enchantments.containsKey(Enchantments.PROJECTILE_PROTECTION))
-					color = 0xDFDFDF;
+					if (enchantments.containsKey(Enchantments.ALL_DAMAGE_PROTECTION))
+						color = 0x696969;
+					else if (enchantments.containsKey(Enchantments.BLAST_PROTECTION))
+						color = 0x53CF43;
+					else if (enchantments.containsKey(Enchantments.FIRE_PROTECTION))
+						color = 0xFF7514;
+					else if (enchantments.containsKey(Enchantments.PROJECTILE_PROTECTION))
+						color = 0xDFDFDF;
 
-				if (enchantments.containsKey(Enchantments.SILK_TOUCH))
-					color = 0xFDDA0D;
-				else if (enchantments.containsKey(Enchantments.BLOCK_FORTUNE))
-					color = 0x4CBB17;
+					if (enchantments.containsKey(Enchantments.SILK_TOUCH))
+						color = 0xFDDA0D;
+					else if (enchantments.containsKey(Enchantments.BLOCK_FORTUNE))
+						color = 0x4CBB17;
 
-				if (enchantments.containsKey(Enchantments.SHARPNESS))
-					color = 0xA9A9A9;
-				else if (enchantments.containsKey(Enchantments.SMITE))
-					color = 0x006400;
-				else if (enchantments.containsKey(Enchantments.BANE_OF_ARTHROPODS))
-					color = 0x964B00;
+					if (enchantments.containsKey(Enchantments.SHARPNESS))
+						color = 0xA9A9A9;
+					else if (enchantments.containsKey(Enchantments.SMITE))
+						color = 0x006400;
+					else if (enchantments.containsKey(Enchantments.BANE_OF_ARTHROPODS))
+						color = 0x964B00;
 
-				if (enchantments.containsKey(Enchantments.LOYALTY))
-					color = 0x1434A4;
-				else if (enchantments.containsKey(Enchantments.RIPTIDE))
-					color = 0x7DF9FF;
+					if (enchantments.containsKey(Enchantments.LOYALTY))
+						color = 0x1434A4;
+					else if (enchantments.containsKey(Enchantments.RIPTIDE))
+						color = 0x7DF9FF;
 
-				RenderSystem.disableDepthTest();
-				RenderSystem.disableBlend();
+					RenderSystem.disableDepthTest();
+					RenderSystem.disableBlend();
 
-				if (color >= 0)
-					GuiComponent.fill(new PoseStack(), x + 1, y + 1, y + 4, y + 4, color); //TODO get the PoseStack from the proper place
+					if (color >= 0)
+						GuiComponent.fill(new PoseStack(), x + 1, y + 1, y + 4, y + 4, color);
+				}
+
+				return true;
 			}
-
-			return true;
 		};
 
 		consumer.accept(Items.BEEHIVE, beeIndicatorDecorator);

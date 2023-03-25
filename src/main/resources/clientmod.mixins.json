@@ -12,6 +12,7 @@
 		"reloading.MixinSimpleReloadInstance",
 		"rendering.MixinBlockEntityRenderDispatcher",
 		"rendering.MixinCamera",
+		"rendering.MixinEntityRenderDispatcher",
 		"rendering.MixinFishingHookRenderer",
 		"rendering.MixinLevelRenderer",
 		"rendering.MixinMobRenderer"

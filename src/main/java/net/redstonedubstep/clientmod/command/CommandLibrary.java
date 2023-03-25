@@ -69,6 +69,7 @@ public class CommandLibrary {
 	private static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter(Lists.newArrayList("trades", "brewing")));
 	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("blockEntities", "lastDeath")));
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
+	private static final Command NORENDER_COMMAND = new Command("norender", CommandLibrary.Actions::norender, new EntityTypeParameter());
 	private static final Command RADAR_COMMAND = new Command("radar", CommandLibrary.Actions::radar, new IntParameter(false, 100, 10000, 0), new EntityTypeParameter(false));
 	private static final Command RAY_COMMAND = new Command("ray", CommandLibrary.Actions::ray, new IntParameter(false, 100, 10000, 0), new StringParameter(Lists.newArrayList("all", "entity", "block"), false, "all"));
 	private static final Command RBE_COMMAND = new Command("rbe", CommandLibrary.Actions::rbe, new StringParameter(new ArrayList<>(), false, ""));
@@ -85,6 +86,7 @@ public class CommandLibrary {
 		commandList.add(IMAGE_COMMAND);
 		commandList.add(LOG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
+		commandList.add(NORENDER_COMMAND);
 		commandList.add(RADAR_COMMAND);
 		commandList.add(RAY_COMMAND);
 		commandList.add(RBE_COMMAND);
@@ -164,6 +166,16 @@ public class CommandLibrary {
 			String link = "https://de.namemc.com/profile/" + text;
 
 			Util.getPlatform().openUri(link);
+			return null;
+		}
+
+		private static CommandException norender(AbstractParameter<?>[] params) {
+			EntityType<?> entityType = ((EntityTypeParameter) params[0]).getValue();
+
+			if (entityType != null && !FieldHolder.renderableEntityFilter.remove(entityType)) {
+				FieldHolder.renderableEntityFilter.add(entityType);
+			}
+
 			return null;
 		}
 

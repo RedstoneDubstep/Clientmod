@@ -13,10 +13,10 @@ import net.redstonedubstep.clientmod.misc.FieldHolder;
 import net.redstonedubstep.clientmod.render.SimplestBlockEntityRenderer;
 
 @Mixin(BlockEntityRenderDispatcher.class)
-public class MixinBlockEntityRenderDispatcher {
+public class BlockEntityRenderDispatcherMixin {
 	//Change BE renderers for select block entities to a much simpler renderer
 	@Inject(method = "getRenderer", at = @At("HEAD"), cancellable = true)
-	private <E extends BlockEntity> void onGetRenderer(E be, CallbackInfoReturnable<BlockEntityRenderer<E>> callbackInfo) {
+	private <E extends BlockEntity> void clientmod$onGetRenderer(E be, CallbackInfoReturnable<BlockEntityRenderer<E>> callbackInfo) {
 		if (FieldHolder.renderableBlockEntityFilter.contains(BlockEntityType.getKey(be.getType())))
 			callbackInfo.setReturnValue(new SimplestBlockEntityRenderer<>());
 	}

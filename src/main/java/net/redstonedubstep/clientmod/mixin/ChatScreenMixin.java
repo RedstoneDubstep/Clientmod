@@ -18,10 +18,10 @@ import net.redstonedubstep.clientmod.command.CommandException;
 import net.redstonedubstep.clientmod.command.CommandLibrary;
 
 @Mixin(ChatScreen.class)
-public class MixinChatScreen {
+public class ChatScreenMixin {
 	//Automatically send chat messages as /teammsg commands
 	@ModifyVariable(method = "handleChatInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getChat()Lnet/minecraft/client/gui/components/ChatComponent;"), argsOnly = true)
-	private String modifyChatInput(String original) {
+	private String clientmod$modifyChatInput(String original) {
 		if (ClientSettings.SEND_MESSAGES_WITH_TEAMMSG.get() && !original.startsWith("/"))
 			original = "/teammsg " + original;
 
@@ -30,7 +30,7 @@ public class MixinChatScreen {
 
 	//Handle and parse chat inputs with the /clientmod prefix as commands from this mod
 	@Inject(method = "handleChatInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getChat()Lnet/minecraft/client/gui/components/ChatComponent;"), cancellable = true)
-	private void onChatInput(String text, boolean addToChat, CallbackInfoReturnable<Boolean> callbackInfo) {
+	private void clientmod$onChatInput(String text, boolean addToChat, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (text.startsWith("/clientmod ")) { //if you for some reason can't use the mod's screen
 			String command = text.replace("/clientmod ", "");
 			CommandException result = CommandLibrary.parseAndExecuteCommand(command);

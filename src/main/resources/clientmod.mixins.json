@@ -4,18 +4,18 @@
 	"compatibilityLevel": "JAVA_17",
 	"refmap": "clientmod.refmap.json",
 	"client": [
-		"MixinChatScreen",
-		"reloading.MixinLoadingOverlay",
-		"reloading.MixinMinecraft",
-		"reloading.MixinReloadableResourceManager",
-		"reloading.MixinReloadInstance",
-		"reloading.MixinSimpleReloadInstance",
-		"rendering.MixinBlockEntityRenderDispatcher",
-		"rendering.MixinCamera",
-		"rendering.MixinEntityRenderDispatcher",
-		"rendering.MixinFishingHookRenderer",
-		"rendering.MixinLevelRenderer",
-		"rendering.MixinMobRenderer"
+		"ChatScreenMixin",
+      "reloading.LoadingOverlayMixin",
+		"reloading.MinecraftMixin",
+		"reloading.ReloadableResourceManagerMixin",
+		"reloading.ReloadInstanceMixin",
+		"reloading.SimpleReloadInstanceMixin",
+		"rendering.BlockEntityRenderDispatcherMixin",
+		"rendering.CameraMixin",
+		"rendering.EntityRenderDispatcherMixin",
+		"rendering.FishingHookRendererMixin",
+		"rendering.LevelRendererMixin",
+		"rendering.MobRendererMixin"
 	],
 	"minVersion": "0.8"
 }

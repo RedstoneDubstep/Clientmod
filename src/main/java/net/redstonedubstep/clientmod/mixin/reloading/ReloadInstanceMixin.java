@@ -14,7 +14,7 @@ import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ReloadInstance.class)
-public interface MixinReloadInstance {
+public interface ReloadInstanceMixin {
 	@Shadow
 	CompletableFuture<?> done();
 

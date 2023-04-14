@@ -25,10 +25,10 @@ import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(ReloadableResourceManager.class)
-public abstract class MixinReloadableResourceManager {
+public class ReloadableResourceManagerMixin {
 	//Apply any set reload filter, and fill some fields with information about the start of the reload
 	@Redirect(method = "createReload", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/SimpleReloadInstance;create(Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Z)Lnet/minecraft/server/packs/resources/ReloadInstance;"))
-	public ReloadInstance onNewReloadInstance(ResourceManager resourceManager, List<PreparableReloadListener> listeners, Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, boolean debugEnabled) {
+	public ReloadInstance clientmod$onNewReloadInstance(ResourceManager resourceManager, List<PreparableReloadListener> listeners, Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, boolean debugEnabled) {
 		if (Minecraft.getInstance().player != null) { //makes sure this only applies when reloading resources ingame, and not when starting the game
 			if (FieldHolder.reloadFilter != null) {
 				listeners = listeners.stream().filter(l -> FieldHolder.reloadFilter.stream().anyMatch(c -> c.isInstance(l) || (c == FontManager.class && l.getName().equals("FontManager")))).collect(Collectors.toList());

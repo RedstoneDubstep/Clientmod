@@ -11,10 +11,10 @@ import net.minecraft.world.entity.Entity;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(EntityRenderDispatcher.class)
-public class MixinEntityRenderDispatcher {
+public class EntityRenderDispatcherMixin {
 	//Change BE renderers for select block entities to a much simpler renderer
 	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-	private <E extends Entity> void onShouldRender(E entity, Frustum frustum, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> callbackInfo) {
+	private <E extends Entity> void clientmod$onShouldRender(E entity, Frustum frustum, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (FieldHolder.renderableEntityFilter.contains(entity.getType()))
 			callbackInfo.setReturnValue(false);
 	}

@@ -15,10 +15,10 @@ import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.Clientmod;
 
 @Mixin(FishingHookRenderer.class)
-public class MixinFishingHookRenderer {
+public class FishingHookRendererMixin {
 	//Render fishing hook differently depending on ability to catch treasure at current position
 	@Redirect(method = "render(Lnet/minecraft/world/entity/projectile/FishingHook;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource;getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 0))
-	public VertexConsumer redirectGetBuffer(MultiBufferSource instance, RenderType renderType, FishingHook entity) {
+	public VertexConsumer clientmod$redirectGetBuffer(MultiBufferSource instance, RenderType renderType, FishingHook entity) {
 		if (ClientSettings.CONFIG.betterFishingHook.get() && entity.calculateOpenWater(entity.blockPosition()))
 			renderType = RenderType.entityCutout(new ResourceLocation(Clientmod.MODID, "textures/entity/fishing_hook_treasure.png"));
 

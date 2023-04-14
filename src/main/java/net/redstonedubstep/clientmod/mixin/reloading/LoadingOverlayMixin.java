@@ -25,7 +25,7 @@ import net.redstonedubstep.clientmod.ClientSettings;
 import net.redstonedubstep.clientmod.misc.FieldHolder;
 
 @Mixin(LoadingOverlay.class)
-public abstract class MixinLoadingOverlay extends Overlay {
+public abstract class LoadingOverlayMixin extends Overlay {
 	@Shadow
 	@Final
 	private ReloadInstance reload;
@@ -36,7 +36,7 @@ public abstract class MixinLoadingOverlay extends Overlay {
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
-	private void injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+	private void clientmod$injectRender(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (!FieldHolder.isMinecraftStarting && ClientSettings.CONFIG.enhancedReloadingInfo.get() && Minecraft.getInstance().player != null) {
 			if (fadeIn && reload instanceof SimpleReloadInstance && !reload.isDone()) {
 				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstance<Void>) reload).preparingListeners);
@@ -67,20 +67,20 @@ public abstract class MixinLoadingOverlay extends Overlay {
 
 	//Toggle the Gui's background
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;fill(Lcom/mojang/blaze3d/vertex/PoseStack;IIIII)V"))
-	public void redirectFill(PoseStack stack, int minX, int minY, int maxX, int maxY, int color) {
+	public void clientmod$redirectFill(PoseStack stack, int minX, int minY, int maxX, int maxY, int color) {
 		fill(stack, minX, minY, maxX, maxY, fadeIn && !ClientSettings.CONFIG.drawReloadingBackground.get() ? 16777215 : color);
 	}
 
 	//When reloading is finished, allows skipping to fade the overlay out and removes it instead
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/Util;getMillis()J", ordinal = 1))
-	public void onReloadFinished(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+	public void clientmod$onReloadFinished(PoseStack stack, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (reload.isDone() && !ClientSettings.CONFIG.reloadFade.get())
 			Minecraft.getInstance().setOverlay(null);
 	}
 
 	//Fixes that the overlay cannot finish reloading as long as it hasn't faded in properly
 	@Redirect(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;fadeIn:Z", opcode = Opcodes.GETFIELD, ordinal = 2))
-	public boolean shouldFadeIn(LoadingOverlay instance) {
+	public boolean clientmod$shouldFadeIn(LoadingOverlay instance) {
 		return fadeIn && ClientSettings.CONFIG.reloadFade.get();
 	}
 }

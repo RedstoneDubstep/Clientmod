@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.redstonedubstep.clientmod.ClientSettings;
 
 @Mixin(LevelRenderer.class)
-public class MixinLevelRenderer {
+public class LevelRendererMixin {
 	//Reduce the radius most entities stop rendering at by a factor of 10
 	@ModifyArg(method = "updateRenderChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setViewScale(D)V"))
-	private double redirectSetEntityViewScale(double renderDistWeight) {
+	private double clientmod$redirectSetEntityViewScale(double renderDistWeight) {
 		if (ClientSettings.REDUCE_ENTITY_DISTANCE.get())
 			renderDistWeight /= 10;
 

@@ -1,0 +1,75 @@
+plugins {
+    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'maven-publish'
+    id 'idea'
+}
+
+archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version}") {
+        exclude(group: "net.fabricmc", module: "fabric-loader")
+    }
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    implementation(project(":Common"))  {
+        exclude(group: "org.spongepowered", module: "mixin")
+    }
+}
+
+configurations.implementation { //REDSTONE test
+    exclude group: "org.spongepowered", module: "mixin"
+}
+
+loom {
+    runs {
+        client {
+            runDir("run/client") //REDSTONE doesn't sem to work for some reason
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+        }
+        server {
+            runDir("run/server")
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+        }
+    }
+
+    accessWidenerPath = file("src/main/resources/clientmod.accesswidener")
+}
+
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+    }
+}

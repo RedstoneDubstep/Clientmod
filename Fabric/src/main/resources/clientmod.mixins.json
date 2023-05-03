@@ -1,0 +1,29 @@
+{
+	"required": true,
+	"package": "redstonedubstep.mods.clientmod.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"ChatScreenMixin",
+		"accessor.EntityAccessor",
+		"accessor.FishingHookAccessor",
+		"accessor.LogoRendererAccessor",
+		"accessor.ScreenAccessor",
+		"accessor.SimpleReloadInstanceAccessor",
+		"accessor.TitleScreenAccessor",
+		"clothconfig.BooleanListEntryAccessor",
+		"reloading.LoadingOverlayMixin",
+		"reloading.MinecraftMixin",
+		"reloading.ReloadableResourceManagerMixin",
+		"reloading.ReloadInstanceMixin",
+		"reloading.SimpleReloadInstanceMixin",
+		"rendering.BlockEntityRenderDispatcherMixin",
+		"rendering.CameraMixin",
+		"rendering.EntityRenderDispatcherMixin",
+		"rendering.FishingHookRendererMixin",
+		"rendering.GuiMixin",
+		"rendering.ItemRendererMixin",
+		"rendering.LevelRendererMixin",
+		"rendering.MobRendererMixin"
+	],
+	"minVersion": "0.8"
+}

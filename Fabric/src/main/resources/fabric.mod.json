@@ -1,0 +1,30 @@
+{
+    "schemaVersion": 1,
+    "id": "clientmod",
+    "version": "${version}",
+    "name": "ClientmodFabricModName",
+    "description": "A mod created by Redstone_Dubstep that adds some neat features to the game.",
+    "authors": [
+      "Redstone_Dubstep"
+    ],
+
+    "license": "None",
+
+    "environment": "*",
+    "entrypoints": {
+      "client": [
+          "redstonedubstep.mods.clientmod.ClientmodFabric"
+      ]
+    },
+    "mixins": [
+      "clientmod.mixins.json"
+    ],
+    "accessWidener" : "clientmod.accesswidener",
+
+    "depends": {
+      "fabricloader": ">=0.14",
+      "fabric": "*",
+      "minecraft": "1.19.4",
+      "java": ">=17"
+    }
+  }

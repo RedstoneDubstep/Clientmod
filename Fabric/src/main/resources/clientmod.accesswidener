@@ -1,0 +1,6 @@
+accessWidener v1 named
+accessible class net/minecraft/client/renderer/LevelRenderer$RenderChunkInfo
+accessible field net/minecraft/client/renderer/LevelRenderer renderChunksInFrustum Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
+accessible field net/minecraft/client/renderer/LevelRenderer globalBlockEntities Ljava/util/Set;
+accessible field net/minecraft/client/renderer/LevelRenderer$RenderChunkInfo chunk Lnet/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk;
+#accessible field me/shedaniel/clothconfig2/gui/entries/BooleanListEntry bool Ljava/util/concurrent/atomic/AtomicBoolean; doesn't seem to work apparently

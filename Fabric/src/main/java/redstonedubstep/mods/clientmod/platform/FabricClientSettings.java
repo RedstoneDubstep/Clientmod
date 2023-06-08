@@ -1,6 +1,5 @@
 package redstonedubstep.mods.clientmod.platform;
 
-import me.shedaniel.autoconfig.annotation.Config;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.effect.MobEffects;
@@ -14,7 +13,6 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Config(name = ClientmodCommon.MOD_ID)
 public class FabricClientSettings extends ClientSettings {
     @Override
     public boolean notifyWhenMinceraftScreen() {

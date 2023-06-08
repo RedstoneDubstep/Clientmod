@@ -10,7 +10,6 @@
 		"accessor.ScreenAccessor",
 		"accessor.SimpleReloadInstanceAccessor",
 		"accessor.TitleScreenAccessor",
-		"clothconfig.BooleanListEntryAccessor",
 		"reloading.LoadingOverlayMixin",
 		"reloading.MinecraftMixin",
 		"reloading.ReloadableResourceManagerMixin",

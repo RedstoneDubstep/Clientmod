@@ -3,6 +3,7 @@ package redstonedubstep.mods.clientmod.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -52,12 +53,12 @@ public class ImageScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, background);
-		blit(matrix, (width - screenWidth) / 2, (height - screenHeight) / 2, xOffset, yOffset, screenWidth, screenHeight, imageWidth, imageHeight);
+		//RenderSystem.setShaderTexture(0, background); TODO see if needed
+		graphics.blit(background, (width - screenWidth) / 2, (height - screenHeight) / 2, xOffset, yOffset, screenWidth, screenHeight, imageWidth, imageHeight);
 
-		super.render(matrix, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

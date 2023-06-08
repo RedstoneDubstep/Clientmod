@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -37,16 +38,16 @@ public class MainScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(matrix);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		renderBackground(graphics);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		inputField.render(matrix, mouseX, mouseY, partialTicks);
-		font.draw(matrix, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
+		inputField.render(graphics, mouseX, mouseY, partialTicks);
+		graphics.drawString(font, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
 		for (int i = 0; i < helpDescription.size(); i++) {
-			font.draw(matrix, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
+			graphics.drawString(font, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
 		}
 
-		super.render(matrix, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

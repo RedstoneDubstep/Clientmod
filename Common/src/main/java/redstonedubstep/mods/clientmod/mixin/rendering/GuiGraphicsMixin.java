@@ -1,12 +1,23 @@
 package redstonedubstep.mods.clientmod.mixin.rendering;
 
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.tags.ItemTags;
@@ -16,19 +27,19 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
-import java.util.Map;
+@Mixin(GuiGraphics.class)
+public abstract class GuiGraphicsMixin {
+    @Shadow @Final private PoseStack pose;
 
-@Mixin(ItemRenderer.class)
-public class ItemRendererMixin {
-    @Inject(method = "renderGuiItemDecorations(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", shift = At.Shift.AFTER))
-    public void clientmod$onRenderGuiItemDecorations(PoseStack poseStack, Font font, ItemStack stack, int x, int y, String indicator, CallbackInfo callbackInfo) {
-        poseStack.pushPose();
+    @Shadow public abstract int drawString(Font $$0, @Nullable String $$1, int $$2, int $$3, int $$4);
+
+    @Shadow public abstract void fill(RenderType $$0, int $$1, int $$2, int $$3, int $$4, int $$5);
+
+    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", shift = At.Shift.AFTER))
+    public void clientmod$onRenderGuiItemDecorations(Font font, ItemStack stack, int x, int y, String subText, CallbackInfo callbackInfo) {
+        pose.pushPose();
 
         if (ClientSettings.INSTANCE.enhancedItemInfo()) {
             if (stack.is(Items.ENCHANTED_BOOK)) {
@@ -50,15 +61,15 @@ public class ItemRendererMixin {
 
                 RenderSystem.disableDepthTest();
                 RenderSystem.disableBlend();
-                GuiComponent.fill(poseStack, x + 1, y + 1, x + 4, y + 4, color);
+                fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, color);
             }
             else if (stack.is(Items.BEE_NEST) || stack.is(Items.BEEHIVE)) {
                 if (stack.hasTag()) {
                     ListTag tag = stack.getTag().getCompound("BlockEntityTag").getList("Bees", Tag.TAG_COMPOUND);
 
-                    poseStack.translate(0.0D, 0.0D, 200.0F);
+                    pose.translate(0.0D, 0.0D, 200.0F);
                     MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                    font.drawInBatch(String.valueOf(tag.size()), x + 8 - 2 - font.width(String.valueOf(tag.size())), y + 6 + 3, 0xFFD700, true, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+                    drawString(font, String.valueOf(tag.size()), x + 8 - 2 - font.width(String.valueOf(tag.size())), y + 6 + 3, 0xFFD700);
                     bufferSource.endBatch();
                 }
             }
@@ -96,10 +107,10 @@ public class ItemRendererMixin {
                 RenderSystem.disableBlend();
 
                 if (color >= 0)
-                    GuiComponent.fill(poseStack, x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);
+                    fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);
             }
         }
 
-        poseStack.popPose();
+        pose.popPose();
     }
 }

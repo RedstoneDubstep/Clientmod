@@ -45,6 +45,6 @@ public class ForgeClientEventHandler {
 	@SubscribeEvent
 	public static void onRenderGameOverlay(RenderGuiOverlayEvent.Post event) {
 		if (event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type())
-			ClientEventHandler.onRenderGameOverlay(event.getPoseStack());
+			ClientEventHandler.onRenderGameOverlay(event.getGuiGraphics());
 	}
 }

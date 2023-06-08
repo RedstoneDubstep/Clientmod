@@ -1,9 +1,7 @@
 package redstonedubstep.mods.clientmod;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -11,7 +9,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -47,7 +44,7 @@ public class ClientEventHandler {
 
         if (player != null) {
             if (ClientSettings.INSTANCE.renderEntitiesGlowing()) {
-                for (Entity entity : ((ClientLevel) player.level).entitiesForRendering()) {
+                for (Entity entity : player.clientLevel.entitiesForRendering()) {
                     if (entity instanceof LivingEntity living) {
                         living.addEffect(new MobEffectInstance(MobEffects.GLOWING));
                         ((EntityAccessor) living).invokeSetSharedFlag(6, true);
@@ -96,7 +93,7 @@ public class ClientEventHandler {
         ((ScreenAccessor) screen).getNarratables().add(widget);
     }
 
-    public static void onRenderGameOverlay(PoseStack poseStack) {
+    public static void onRenderGameOverlay(GuiGraphics graphics) {
         Player player = Minecraft.getInstance().player;
         Vec3 lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
 
@@ -116,7 +113,7 @@ public class ClientEventHandler {
                 color = 0x9900FF00; //green marker when position is reached
             }
 
-            GuiComponent.fill(poseStack, startX, startY, startX + squareSize, startY + squareSize, color);
+            graphics.fill(startX, startY, startX + squareSize, startY + squareSize, color);
         }
 
         else if (ClientSettings.INSTANCE.speedometer()) {
@@ -124,7 +121,7 @@ public class ClientEventHandler {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-            Minecraft.getInstance().font.draw(poseStack, String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFF);
+            graphics.drawString(Minecraft.getInstance().font, String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFF);
         }
     }
 }

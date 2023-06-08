@@ -21,7 +21,7 @@
 		"rendering.EntityRenderDispatcherMixin",
 		"rendering.FishingHookRendererMixin",
 		"rendering.GuiMixin",
-		"rendering.ItemRendererMixin",
+      "rendering.GuiGraphicsMixin",
 		"rendering.LevelRendererMixin",
 		"rendering.MobRendererMixin"
 	],

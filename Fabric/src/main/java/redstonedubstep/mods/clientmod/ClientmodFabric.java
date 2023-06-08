@@ -25,7 +25,7 @@ public class ClientmodFabric implements ClientModInitializer {
         });
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> ClientEventHandler.onInitScreenPost(screen));
         KeyBindingHelper.registerKeyBinding(ClientmodCommon.openTextbox);
-        HudRenderCallback.EVENT.register((poseStack, tickDelta) -> ClientEventHandler.onRenderGameOverlay(poseStack));
+        HudRenderCallback.EVENT.register((graphics, tickDelta) -> ClientEventHandler.onRenderGameOverlay(graphics));
         ((FabricClientSettings) FabricClientSettings.INSTANCE).loadConfig();
     }
 }

@@ -1,8 +1,7 @@
 package redstonedubstep.mods.clientmod.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -27,9 +26,9 @@ public class SettingsScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(matrix);
-		font.draw(matrix, title, (width - font.width(title.getString())) / 2, 20, 16777215);
-		super.render(matrix, mouseX, mouseY, partialTicks);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		renderBackground(graphics);
+		graphics.drawString(font, title, (width - font.width(title.getString())) / 2, 20, 16777215);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 }

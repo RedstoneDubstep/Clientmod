@@ -16,6 +16,7 @@ public abstract class ClientSettings {
     public static final ClientSettings INSTANCE = Services.load(ClientSettings.class);
     public static OptionInstance<Boolean> SEND_MESSAGES_WITH_TEAMMSG = registerSetting("sendMessagesWithTeammsg", false);
     public static OptionInstance<Boolean> REDUCE_ENTITY_DISTANCE = registerSetting("reduceEntityDistance", false);
+    public static OptionInstance<Boolean> SHOW_PING_DATA = registerSetting("showPingData", false);
 
     //Configs
     public abstract boolean notifyWhenMinceraftScreen();
@@ -47,9 +48,17 @@ public abstract class ClientSettings {
     public abstract boolean logShulkerPlacement();
 
     //Settings
-    public abstract boolean sendMessagesWithTeammsg();
+    public boolean sendMessagesWithTeammsg() {
+        return SEND_MESSAGES_WITH_TEAMMSG.get();
+    }
 
-    public abstract boolean reduceEntityDistance();
+    public boolean reduceEntityDistance() {
+        return REDUCE_ENTITY_DISTANCE.get();
+    }
+
+    public boolean showPingData() {
+        return SHOW_PING_DATA.get();
+    }
 
     protected static void registerConfig(String id, Supplier<Boolean> getConfig, Consumer<Boolean> saveConfig, Consumer<Boolean> onClick) {
         OptionInstance<Boolean> option = OptionInstance.createBoolean("config.clientmod:" + id + ".name", OptionInstance.cachedConstantTooltip(Component.translatable("config.clientmod:" + id + ".description")), false, b -> {

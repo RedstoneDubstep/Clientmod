@@ -75,5 +75,7 @@
 	"setting.clientmod:sendMessagesWithTeammsg.name": "Send Messages with Teammsg",
 	"setting.clientmod:sendMessagesWithTeammsg.description": "Should all your chat messages be sent to team members only?",
 	"setting.clientmod:reduceEntityDistance.name": "Reduce Entity Distance",
-	"setting.clientmod:reduceEntityDistance.description": "Should the Entity render distance be lowered by a factor of 10?"
+	"setting.clientmod:reduceEntityDistance.description": "Should the Entity render distance be lowered by a factor of 10?",
+	"setting.clientmod:showPingData.name": "Show Ping Data",
+	"setting.clientmod:showPingData.description": "Should the latency value be shown on top of the indicator in the tab player list?"
 }

@@ -22,7 +22,8 @@
 		"rendering.GuiMixin",
 		"rendering.GuiGraphicsMixin",
 		"rendering.LevelRendererMixin",
-		"rendering.MobRendererMixin"
+		"rendering.MobRendererMixin",
+		"rendering.PlayerTabOverlayMixin"
 	],
 	"minVersion": "0.8"
 }

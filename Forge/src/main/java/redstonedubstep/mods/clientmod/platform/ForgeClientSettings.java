@@ -81,16 +81,6 @@ public class ForgeClientSettings extends ClientSettings {
 		return CONFIG.logShulkerPlacement.get();
 	}
 
-	@Override
-	public boolean sendMessagesWithTeammsg() {
-		return SEND_MESSAGES_WITH_TEAMMSG.get();
-	}
-
-	@Override
-	public boolean reduceEntityDistance() {
-		return REDUCE_ENTITY_DISTANCE.get();
-	}
-
 	//config-related stuff
 	public static final ForgeConfigSpec CLIENT_SPEC;
 	public static final Config CONFIG;

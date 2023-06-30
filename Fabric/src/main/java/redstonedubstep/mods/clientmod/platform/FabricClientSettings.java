@@ -84,16 +84,6 @@ public class FabricClientSettings extends ClientSettings {
         return logShulkerPlacement.get();
     }
 
-    @Override
-    public boolean sendMessagesWithTeammsg() {
-        return SEND_MESSAGES_WITH_TEAMMSG.get();
-    }
-
-    @Override
-    public boolean reduceEntityDistance() {
-        return REDUCE_ENTITY_DISTANCE.get();
-    }
-
     BooleanConfig notifyWhenMinceraftScreen = register(new BooleanConfig()
             .comment("Should Minecraft play a (loud) sound when the Minceraft logo is shown?")
             .define("notifyWhenMinceraftScreen", true));

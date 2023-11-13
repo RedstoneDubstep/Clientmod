@@ -1,16 +1,17 @@
 package redstonedubstep.mods.clientmod.platform;
 
+import java.util.function.Consumer;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import org.apache.commons.lang3.tuple.Pair;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import redstonedubstep.mods.clientmod.mixin.accessor.EntityAccessor;
 
-import java.util.function.Consumer;
-
-public class ForgeClientSettings extends ClientSettings {
+public class NeoForgeClientSettings extends ClientSettings {
 	@Override
 	public boolean notifyWhenMinceraftScreen() {
 		return CONFIG.notifyWhenMinceraftScreen.get();
@@ -82,11 +83,11 @@ public class ForgeClientSettings extends ClientSettings {
 	}
 
 	//config-related stuff
-	public static final ForgeConfigSpec CLIENT_SPEC;
+	public static final ModConfigSpec CLIENT_SPEC;
 	public static final Config CONFIG;
 
 	static {
-		final Pair<Config, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Config::new);
+		final Pair<Config, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Config::new);
 		CLIENT_SPEC = specPair.getRight();
 		CONFIG = specPair.getLeft();
 	}
@@ -107,7 +108,7 @@ public class ForgeClientSettings extends ClientSettings {
 		public BooleanValue speedometer;
 		public BooleanValue logShulkerPlacement;
 
-		Config(ForgeConfigSpec.Builder builder) {
+		Config(ModConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
 			notifyWhenMinceraftScreen = register(builder
 					.comment("Should Minecraft play a (loud) sound when the Minceraft logo is shown?")

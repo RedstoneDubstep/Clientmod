@@ -4,12 +4,12 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLPaths;
 
-public class ForgeAccessHelper extends AccessHelper {
+public class NeoForgeAccessHelper extends AccessHelper {
     @Override
     public Path getModsDir() {
         return FMLPaths.MODSDIR.get();
@@ -17,8 +17,8 @@ public class ForgeAccessHelper extends AccessHelper {
 
     @Override
     public void populateBECountMap(Map<BlockEntityType<?>, Integer> map, Minecraft mc) {
-        for (LevelRenderer.RenderChunkInfo chunkInfo : mc.levelRenderer.renderChunksInFrustum) {
-            for (BlockEntity be : chunkInfo.chunk.getCompiledChunk().getRenderableBlockEntities()) {
+        for (SectionRenderDispatcher.RenderSection section : mc.levelRenderer.visibleSections) {
+            for (BlockEntity be : section.getCompiled().getRenderableBlockEntities()) {
                 if (mc.levelRenderer.cullingFrustum.isVisible(be.getRenderBoundingBox())) {
                     map.computeIfPresent(be.getType(), (t, i) -> i + 1);
                     map.putIfAbsent(be.getType(), 1);

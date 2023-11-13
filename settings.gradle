@@ -2,12 +2,12 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven {
-            name = 'Forge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-        maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'NeoForge'
+            url = 'https://maven.neoforged.net/releases/'
         }
         maven {
             name = 'Sponge Snapshots'
@@ -16,4 +16,12 @@ pluginManagement {
     }
 }
 
-include("Common", "Fabric", "Forge")
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
+
+// This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbxrains.com/issue/IDEA-317606)
+rootProject.name = 'Clientmod_1.20.x'
+include("common")
+include("fabric")
+include("neoforge")

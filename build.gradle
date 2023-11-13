@@ -1,9 +1,16 @@
+plugins {
+    id 'fabric-loom' version '1.2-SNAPSHOT' apply(false)
+    id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT' apply(false)
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT' apply(false)
+}
+
 subprojects {
     apply plugin: 'java'
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-    //java.withSourcesJar() REDSTONE no sources or javadoc needed
-    //java.withJavadocJar()
+    println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+    java.withSourcesJar() //REDSTONE no sources or javadoc needed
+    java.withJavadocJar()
 
     jar {
         from(rootProject.file("LICENSE")) {
@@ -25,15 +32,14 @@ subprojects {
         }
     }
 
-    /*sourcesJar {
+    sourcesJar {
         from(rootProject.file("LICENSE")) {
             rename { "${it}_${mod_id}" }
         }
-    }*/ //REDSTONE no sources jar
+    } //REDSTONE no sources jar
 
     repositories {
         mavenCentral()
-
         maven {
             name = 'Sponge / Mixin'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
@@ -42,20 +48,32 @@ subprojects {
             name = 'BlameJared Maven (CrT / Bookshelf)'
             url = 'https://maven.blamejared.com'
         }
-        maven {
-            name = "Cloth Config Maven"
-            url = "https://maven.shedaniel.me/"
-        }
-        maven {
-            url "https://maven.terraformersmc.com/releases/"
-        }
     }
 
     tasks.withType(JavaCompile).configureEach {
 
         it.options.encoding = 'UTF-8'
-        it.options.release = 17
+        it.options.getRelease().set(17)
     }
+
+    /*processResources {
+        def expandProps = [
+                "version": version,
+                "group": project.group, //Else we target the task's group.
+                "minecraft_version": minecraft_version,
+                "fabric_version": fabric_version,
+                "fabric_loader_version": fabric_loader_version,
+                "mod_name": mod_name,
+                "mod_author": mod_author,
+                "mod_id": mod_id,
+                "neoforge_version": neoforge_version,
+        ]
+
+        filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', '*.mixins.json']) {
+            expand expandProps
+        }
+        inputs.properties(expandProps)
+    }*/
 
     // Disables Gradle's custom module metadata from being published to maven. The
     // metadata includes mapped dependencies which are not reasonably consumable by

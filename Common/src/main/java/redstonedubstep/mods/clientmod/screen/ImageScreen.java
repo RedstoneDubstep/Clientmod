@@ -1,7 +1,6 @@
 package redstonedubstep.mods.clientmod.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -54,21 +53,19 @@ public class ImageScreen extends Screen {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		//RenderSystem.setShaderTexture(0, background); TODO see if needed
-		graphics.blit(background, (width - screenWidth) / 2, (height - screenHeight) / 2, xOffset, yOffset, screenWidth, screenHeight, imageWidth, imageHeight);
-
 		super.render(graphics, mouseX, mouseY, partialTicks);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		graphics.blit(background, (width - screenWidth) / 2, (height - screenHeight) / 2, xOffset, yOffset, screenWidth, screenHeight, imageWidth, imageHeight);
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		super.mouseScrolled(mouseX, mouseY, delta);
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 
 		if ((hasShiftDown() || !verticalScrolling) && horizontalScrolling)
-			xOffset += (delta == -1 ? 24 : -24);
+			xOffset += (scrollY == -1 ? 24 : -24);
 		else if (verticalScrolling)
-			yOffset += (delta == -1 ? 24 : -24);
+			yOffset += (scrollY == -1 ? 24 : -24);
 		return true;
 	}
 

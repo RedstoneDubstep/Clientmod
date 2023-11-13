@@ -20,15 +20,13 @@ public class SettingsScreen extends Screen {
 		ClientSettings.INSTANCE.updateOptionInstancesFromConfig();
 		addRenderableWidget(settingsList);
 		settingsList.setRenderBackground(false);
-		settingsList.setRenderTopAndBottom(false);
 		settingsList.addSmall(ClientSettings.CONFIGS.keySet().toArray(new OptionInstance[] {}));
 		settingsList.addSmall(ClientSettings.SETTINGS.toArray(new OptionInstance[] {}));
 	}
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(graphics);
-		graphics.drawString(font, title, (width - font.width(title.getString())) / 2, 20, 16777215);
 		super.render(graphics, mouseX, mouseY, partialTicks);
+		graphics.drawString(font, title, (width - font.width(title.getString())) / 2, 20, 16777215);
 	}
 }

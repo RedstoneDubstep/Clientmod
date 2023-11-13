@@ -1,21 +1,20 @@
 package redstonedubstep.mods.clientmod;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
-@EventBusSubscriber(modid = ClientmodCommon.MOD_ID, value = Dist.CLIENT)
-public class ForgeClientEventHandler {
+@Mod.EventBusSubscriber(modid = ClientmodCommon.MOD_ID, value = Dist.CLIENT)
+public class NeoForgeClientEventHandler {
 	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event) {
+	public static void onClientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == TickEvent.Phase.START)
 			ClientEventHandler.onClientTick();
 	}

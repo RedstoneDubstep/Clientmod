@@ -1,72 +1,71 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'maven-publish'
+    id 'java'
     id 'idea'
+    id 'maven-publish'
+    id 'fabric-loom'
 }
-
-archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
-
+base {
+    archivesName = "${mod_name}-fabric-${minecraft_version}"
+}
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.officialMojangMappings()
-    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version}") {
-        exclude(group: "net.fabricmc", module: "fabric-loader")
-    }
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation(project(":Common"))  {
+    implementation(project(":common"))  {
         exclude(group: "org.spongepowered", module: "mixin")
     }
 }
 
-configurations.implementation { //REDSTONE test
+/*configurations.implementation { //REDSTONE test
     exclude group: "org.spongepowered", module: "mixin"
-}
+}*/
 
 loom {
+    if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
+        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
     runs {
         client {
-            runDir("run/client") //REDSTONE doesn't sem to work for some reason
             client()
             setConfigName("Fabric Client")
             ideConfigGenerated(true)
+            runDir("run/client") //REDSTONE doesn't sem to work for some reason
         }
         server {
-            runDir("run/server")
             server()
             setConfigName("Fabric Server")
             ideConfigGenerated(true)
+            runDir("run/server")
         }
     }
-
-    accessWidenerPath = file("src/main/resources/clientmod.accesswidener")
 }
 
+tasks.withType(JavaCompile).configureEach {
+    source(project(":common").sourceSets.main.allSource)
+}
+tasks.withType(Javadoc).configureEach {
+    source(project(":common").sourceSets.main.allJava)
+}
+tasks.named("sourcesJar", Jar) {
+    from(project(":common").sourceSets.main.allSource)
+}
 
 processResources {
-    from project(":Common").sourceSets.main.resources
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-}
-
-tasks.withType(JavaCompile) {
-    source(project(":Common").sourceSets.main.allSource)
+    from project(":common").sourceSets.main.resources
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
+            artifactId base.archivesName.get()
             from components.java
         }
     }
-
     repositories {
         maven {
             url "file://" + System.getenv("local_maven")

@@ -16,7 +16,7 @@ public class SettingsScreen extends Screen {
 
 	@Override
 	public void init() {
-		this.settingsList = new OptionsList(minecraft, width, height, 32, height - 32, 25);
+		this.settingsList = new OptionsList(minecraft, width, height - 64, 32, 25);
 		ClientSettings.INSTANCE.updateOptionInstancesFromConfig();
 		addRenderableWidget(settingsList);
 		settingsList.setRenderBackground(false);

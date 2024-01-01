@@ -60,7 +60,7 @@ public abstract class LoadingOverlayMixin extends Overlay {
 				}
 
 				if (FieldHolder.currentTask != null)
-					graphics.drawString(Minecraft.getInstance().font, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0);
+					graphics.drawString(Minecraft.getInstance().font, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0xFFFFFF);
 			}
 		}
 	}

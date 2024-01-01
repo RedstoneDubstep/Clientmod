@@ -42,7 +42,7 @@ A mod created by Redstone_Dubstep that adds some neat features to the game.
 
 [[dependencies.clientmod]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="[1.16.3,]"
     ordering="NONE"
     side="CLIENT"

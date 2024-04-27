@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.ReloadInstance;
-import redstonedubstep.mods.clientmod.platform.ClientSettings;
 import redstonedubstep.mods.clientmod.misc.FieldHolder;
+import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
 @Mixin(ReloadInstance.class)
 public interface ReloadInstanceMixin {
@@ -31,7 +31,7 @@ public interface ReloadInstanceMixin {
 		boolean isDone = done().isDone();
 
 		if (isDone && !FieldHolder.wasReloadingDone && !FieldHolder.isMinecraftStarting && ClientSettings.INSTANCE.enhancedReloadingInfo()) {
-			if (FieldHolder.reloadingStartTime >= 0) {
+			if (Minecraft.getInstance().player != null && FieldHolder.reloadingStartTime >= 0) {
 				long duration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 
 				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.finished", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")));

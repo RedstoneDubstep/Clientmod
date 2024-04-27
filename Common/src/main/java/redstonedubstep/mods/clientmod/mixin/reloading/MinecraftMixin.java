@@ -2,8 +2,6 @@ package redstonedubstep.mods.clientmod.mixin.reloading;
 
 import java.util.concurrent.CompletableFuture;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,15 +14,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import redstonedubstep.mods.clientmod.platform.ClientSettings;
 import redstonedubstep.mods.clientmod.misc.FieldHolder;
+import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 	@Shadow
 	private Overlay overlay;
 	@Shadow
-	@Nullable
 	public LocalPlayer player;
 
 	//At this point, reloading is fully done (and thus, the overlay gets removed so the player can move again), so we can do some post-stuff

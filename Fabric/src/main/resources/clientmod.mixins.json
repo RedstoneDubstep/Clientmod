@@ -1,6 +1,7 @@
 {
 	"required": true,
 	"package": "redstonedubstep.mods.clientmod.mixin",
+	"refmap": "clientmod.refmap.json",
 	"compatibilityLevel": "JAVA_17",
 	"client": [
 		"ChatScreenMixin",
@@ -19,8 +20,8 @@
 		"rendering.CameraMixin",
 		"rendering.EntityRenderDispatcherMixin",
 		"rendering.FishingHookRendererMixin",
-		"rendering.GuiMixin",
 		"rendering.GuiGraphicsMixin",
+		"rendering.GuiMixin",
 		"rendering.LevelRendererMixin",
 		"rendering.MobRendererMixin",
 		"rendering.PlayerTabOverlayMixin"

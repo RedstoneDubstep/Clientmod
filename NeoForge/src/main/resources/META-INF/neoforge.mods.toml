@@ -11,6 +11,8 @@ modId = "clientmod" #mandatory
 version = "${version}" #mandatory
 # A display name for the mod
 displayName = "Clientmod" #mandatory
+# To mark this mod as clientside-only
+displayTest = "IGNORE_SERVER_VERSION"
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI

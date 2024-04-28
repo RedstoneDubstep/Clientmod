@@ -13,6 +13,7 @@ minecraft {
 
 dependencies {
     compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
+    compileOnly 'io.github.llamalad7:mixinextras-neoforge:0.3.5' //REDSTONE trying to get llamalad mixin to work
 }
 
 configurations {

@@ -1,25 +1,25 @@
 package redstonedubstep.mods.clientmod.screen;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.OptionsList;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.network.chat.Component;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
-public class SettingsScreen extends Screen {
+public class SettingsScreen extends OptionsSubScreen {
 	private OptionsList settingsList;
 
 	public SettingsScreen() {
-		super(Component.translatable("screen.clientmod:settingsScreen.name"));
+		super(null, Minecraft.getInstance().options, Component.translatable("screen.clientmod:settingsScreen.name"));
 	}
 
 	@Override
 	public void init() {
-		this.settingsList = new OptionsList(minecraft, width, height - 64, 32, 25);
+		this.settingsList = new OptionsList(minecraft, width, height - 64, this);
 		ClientSettings.INSTANCE.updateOptionInstancesFromConfig();
 		addRenderableWidget(settingsList);
-		settingsList.setRenderBackground(false);
 		settingsList.addSmall(ClientSettings.CONFIGS.keySet().toArray(new OptionInstance[] {}));
 		settingsList.addSmall(ClientSettings.SETTINGS.toArray(new OptionInstance[] {}));
 	}

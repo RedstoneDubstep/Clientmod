@@ -1,8 +1,8 @@
 package redstonedubstep.mods.clientmod;
 
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.IExtensionPoint;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -10,12 +10,11 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import redstonedubstep.mods.clientmod.platform.NeoForgeClientSettings;
 
 @Mod(ClientmodCommon.MOD_ID)
-@Mod.EventBusSubscriber(modid = ClientmodCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ClientmodCommon.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientmodNeoForge {
-	public ClientmodNeoForge() {
+	public ClientmodNeoForge(ModContainer container) {
 		ClientmodCommon.init();
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "", (a, b) -> b));
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, NeoForgeClientSettings.CLIENT_SPEC);
+		container.registerConfig(ModConfig.Type.CLIENT, NeoForgeClientSettings.CLIENT_SPEC);
 	}
 
 	@SubscribeEvent

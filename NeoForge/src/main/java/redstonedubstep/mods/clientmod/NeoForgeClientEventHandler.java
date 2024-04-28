@@ -2,21 +2,20 @@ package redstonedubstep.mods.clientmod;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
-@Mod.EventBusSubscriber(modid = ClientmodCommon.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ClientmodCommon.MOD_ID, value = Dist.CLIENT)
 public class NeoForgeClientEventHandler {
 	@SubscribeEvent
-	public static void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase == TickEvent.Phase.START)
-			ClientEventHandler.onClientTick();
+	public static void onClientTick(ClientTickEvent.Pre event) {
+		ClientEventHandler.onClientTick();
 	}
 
 	@SubscribeEvent
@@ -36,14 +35,14 @@ public class NeoForgeClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void renderGameOverlayLayer(RenderGuiOverlayEvent.Pre event) {
-		if (!ClientSettings.INSTANCE.renderSpyglassOverlay() && event.getOverlay() == VanillaGuiOverlay.SPYGLASS.type())
+	public static void renderGameOverlayLayer(RenderGuiLayerEvent.Pre event) {
+		if (!ClientSettings.INSTANCE.renderSpyglassOverlay() && event.getName().equals(VanillaGuiLayers.CAMERA_OVERLAYS))
 			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
-	public static void onRenderGameOverlay(RenderGuiOverlayEvent.Post event) {
-		if (event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type())
+	public static void onRenderGameOverlay(RenderGuiLayerEvent.Post event) {
+		if (event.getName().equals(VanillaGuiLayers.CROSSHAIR))
 			ClientEventHandler.onRenderGameOverlay(event.getGuiGraphics());
 	}
 }

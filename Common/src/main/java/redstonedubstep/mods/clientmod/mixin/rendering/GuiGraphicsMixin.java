@@ -1,6 +1,6 @@
 package redstonedubstep.mods.clientmod.mixin.rendering;
 
-import java.util.Map;
+import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -14,12 +14,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +28,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
 @Mixin(GuiGraphics.class)
@@ -43,12 +46,12 @@ public abstract class GuiGraphicsMixin {
 
         if (ClientSettings.INSTANCE.enhancedItemInfo()) {
             if (stack.is(Items.ENCHANTED_BOOK)) {
-                Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+                ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
                 int color = -1;
                 boolean hasMaxEnchantment = false;
 
-                for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-                    if (enchantment.getKey().getMaxLevel() <= enchantment.getValue()) {
+                for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
+                    if (enchantment.getKey().value().getMaxLevel() <= enchantment.getIntValue()) {
                         hasMaxEnchantment = true;
                         break;
                     }
@@ -64,43 +67,43 @@ public abstract class GuiGraphicsMixin {
                 fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, color);
             }
             else if (stack.is(Items.BEE_NEST) || stack.is(Items.BEEHIVE)) {
-                if (stack.hasTag()) {
-                    ListTag tag = stack.getTag().getCompound("BlockEntityTag").getList("Bees", Tag.TAG_COMPOUND);
+                List<BeehiveBlockEntity.Occupant> bees = stack.get(DataComponents.BEES);
 
+                if (bees != null) {
                     pose.translate(0.0D, 0.0D, 200.0F);
                     MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                    drawString(font, String.valueOf(tag.size()), x + 8 - 2 - font.width(String.valueOf(tag.size())), y + 6 + 3, 0xFFD700);
+                    drawString(font, String.valueOf(bees.size()), x + 8 - 2 - font.width(String.valueOf(bees.size())), y + 6 + 3, 0xFFD700);
                     bufferSource.endBatch();
                 }
             }
-            else if (stack.getItem() instanceof ArmorItem || stack.is(ItemTags.TOOLS)) {
-                Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+            else if (stack.getItem() instanceof ArmorItem || stack.is(ItemTags.BREAKS_DECORATED_POTS)) {
+                List<Enchantment> enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack).entrySet().stream().map(e -> e.getKey().value()).toList();
                 int color = -1;
 
-                if (enchantments.containsKey(Enchantments.ALL_DAMAGE_PROTECTION))
+                if (enchantments.contains(Enchantments.PROTECTION))
                     color = 0x696969;
-                else if (enchantments.containsKey(Enchantments.BLAST_PROTECTION))
+                else if (enchantments.contains(Enchantments.BLAST_PROTECTION))
                     color = 0x53CF43;
-                else if (enchantments.containsKey(Enchantments.FIRE_PROTECTION))
+                else if (enchantments.contains(Enchantments.FIRE_PROTECTION))
                     color = 0xFF7514;
-                else if (enchantments.containsKey(Enchantments.PROJECTILE_PROTECTION))
+                else if (enchantments.contains(Enchantments.PROJECTILE_PROTECTION))
                     color = 0xDFDFDF;
 
-                if (enchantments.containsKey(Enchantments.SILK_TOUCH))
+                if (enchantments.contains(Enchantments.SILK_TOUCH))
                     color = 0xFDDA0D;
-                else if (enchantments.containsKey(Enchantments.BLOCK_FORTUNE))
+                else if (enchantments.contains(Enchantments.FORTUNE))
                     color = 0x4CBB17;
 
-                if (enchantments.containsKey(Enchantments.SHARPNESS))
+                if (enchantments.contains(Enchantments.SHARPNESS))
                     color = 0xA9A9A9;
-                else if (enchantments.containsKey(Enchantments.SMITE))
+                else if (enchantments.contains(Enchantments.SMITE))
                     color = 0x006400;
-                else if (enchantments.containsKey(Enchantments.BANE_OF_ARTHROPODS))
+                else if (enchantments.contains(Enchantments.BANE_OF_ARTHROPODS))
                     color = 0x964B00;
 
-                if (enchantments.containsKey(Enchantments.LOYALTY))
+                if (enchantments.contains(Enchantments.LOYALTY))
                     color = 0x1434A4;
-                else if (enchantments.containsKey(Enchantments.RIPTIDE))
+                else if (enchantments.contains(Enchantments.RIPTIDE))
                     color = 0x7DF9FF;
 
                 RenderSystem.disableDepthTest();

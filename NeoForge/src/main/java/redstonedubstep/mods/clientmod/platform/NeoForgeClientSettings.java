@@ -82,6 +82,11 @@ public class NeoForgeClientSettings extends ClientSettings {
 		return CONFIG.logShulkerPlacement.get();
 	}
 
+	@Override
+	public boolean fixSpectatingChunks() {
+		return CONFIG.fixSpectatingChunks.get();
+	}
+
 	//config-related stuff
 	public static final ModConfigSpec CLIENT_SPEC;
 	public static final Config CONFIG;
@@ -107,6 +112,7 @@ public class NeoForgeClientSettings extends ClientSettings {
 		public BooleanValue enhancedItemInfo;
 		public BooleanValue speedometer;
 		public BooleanValue logShulkerPlacement;
+		public BooleanValue fixSpectatingChunks;
 
 		Config(ModConfigSpec.Builder builder) {
 			//for some reason we can't use language files in here, so comments are in english
@@ -160,6 +166,9 @@ public class NeoForgeClientSettings extends ClientSettings {
 			logShulkerPlacement = register(builder
 					.comment("Should the position of placed shulker boxes be logged?")
 					.define("logShulkerPlacement", true));
+			fixSpectatingChunks = register(builder
+					.comment("Should the bug where chunks don't load for a player spectating an entity be fixed?")
+					.define("fixSpectatingChunks", true));
 		}
 
 		private static BooleanValue register(BooleanValue config) {

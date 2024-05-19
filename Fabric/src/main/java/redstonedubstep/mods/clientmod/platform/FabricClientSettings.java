@@ -1,17 +1,22 @@
 package redstonedubstep.mods.clientmod.platform;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import redstonedubstep.mods.clientmod.ClientmodCommon;
 import redstonedubstep.mods.clientmod.mixin.accessor.EntityAccessor;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class FabricClientSettings extends ClientSettings {
     @Override
@@ -84,6 +89,11 @@ public class FabricClientSettings extends ClientSettings {
         return logShulkerPlacement.get();
     }
 
+    @Override
+    public boolean fixSpectatingChunks() {
+        return fixSpectatingChunks.get();
+    }
+
     BooleanConfig notifyWhenMinceraftScreen = register(new BooleanConfig()
             .comment("Should Minecraft play a (loud) sound when the Minceraft logo is shown?")
             .define("notifyWhenMinceraftScreen", true));
@@ -134,6 +144,9 @@ public class FabricClientSettings extends ClientSettings {
     BooleanConfig logShulkerPlacement = register(new BooleanConfig()
             .comment("Should the position of placed shulker boxes be logged?")
             .define("logShulkerPlacement", true));
+    BooleanConfig fixSpectatingChunks = register(new BooleanConfig()
+            .comment("Should the bug where chunks don't load for a player spectating an entity be fixed?")
+            .define("fixSpectatingChunks", true));
 
     private static BooleanConfig register(BooleanConfig config) {
         return register(config, b -> {

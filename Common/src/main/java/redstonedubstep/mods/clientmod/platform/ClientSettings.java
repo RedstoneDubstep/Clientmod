@@ -1,14 +1,14 @@
 package redstonedubstep.mods.clientmod.platform;
 
-import net.minecraft.client.OptionInstance;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import net.minecraft.client.OptionInstance;
+import net.minecraft.network.chat.Component;
 
 public abstract class ClientSettings {
     public static final Map<OptionInstance<Boolean>, Supplier<Boolean>> CONFIGS = new LinkedHashMap<>();
@@ -46,6 +46,8 @@ public abstract class ClientSettings {
     public abstract boolean speedometer();
 
     public abstract boolean logShulkerPlacement();
+
+    public abstract boolean fixSpectatingChunks();
 
     //Settings
     public boolean sendMessagesWithTeammsg() {

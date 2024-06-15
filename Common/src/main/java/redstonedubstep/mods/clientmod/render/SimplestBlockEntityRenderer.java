@@ -16,8 +16,8 @@ public class SimplestBlockEntityRenderer<T extends BlockEntity> implements Block
 		VertexConsumer consumer = bufferSource.getBuffer(RenderType.lines());
 		Matrix4f positionMatrix = poseStack.last().pose();
 
-		consumer.vertex(positionMatrix, 0.0F, 0.0F, 0.0F).color(0xFF00FF00).normal(0.0F, 1.0F, 0.0F).endVertex();
-		consumer.vertex(positionMatrix, 1.0F, 1.0F, 1.0F).color(0xFF00FF00).normal(0.0F, 1.0F, 0.0F).endVertex();
+		consumer.addVertex(positionMatrix, 0.0F, 0.0F, 0.0F).setColor(0xFF00FF00).setNormal(0.0F, 1.0F, 0.0F);
+		consumer.addVertex(positionMatrix, 1.0F, 1.0F, 1.0F).setColor(0xFF00FF00).setNormal(0.0F, 1.0F, 0.0F);
 	}
 
 	@Override

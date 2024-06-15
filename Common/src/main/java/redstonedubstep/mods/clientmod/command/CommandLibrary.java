@@ -1,6 +1,15 @@
 package redstonedubstep.mods.clientmod.command;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Predicate;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
@@ -50,9 +59,6 @@ import redstonedubstep.mods.clientmod.misc.WaypointManager;
 import redstonedubstep.mods.clientmod.platform.AccessHelper;
 import redstonedubstep.mods.clientmod.screen.ImageScreen;
 import redstonedubstep.mods.clientmod.screen.SettingsScreen;
-
-import java.util.*;
-import java.util.function.Predicate;
 
 public class CommandLibrary {
 	public static ArrayList<Command> commandList = new ArrayList<>();
@@ -131,9 +137,9 @@ public class CommandLibrary {
 
 			switch (text) {
 				case "trades" ->
-						mc.setScreen(new ImageScreen("trades_screen", 1263, 595, new ResourceLocation(ClientmodCommon.MOD_ID, "textures/gui/trading_bartering_guide.png")));
+						mc.setScreen(new ImageScreen("trades_screen", 1263, 595, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/trading_bartering_guide.png")));
 				case "brewing" ->
-						mc.setScreen(new ImageScreen("brewing_guide", 350, 600, new ResourceLocation(ClientmodCommon.MOD_ID, "textures/gui/brewing_guide.png")));
+						mc.setScreen(new ImageScreen("brewing_guide", 350, 600, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/brewing_guide.png")));
 			}
 
 			return null;
@@ -254,7 +260,7 @@ public class CommandLibrary {
 				return null;
 			}
 
-			ResourceLocation beResourceKey = new ResourceLocation(beType);
+			ResourceLocation beResourceKey = ResourceLocation.tryParse(beType);
 
 			if (BuiltInRegistries.BLOCK_ENTITY_TYPE.get(beResourceKey) == null)
 				return CommandException.invalidParameter(params[0], 0, beType);

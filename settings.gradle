@@ -56,7 +56,7 @@ plugins {
 }
 
 // This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbxrains.com/issue/IDEA-317606)
-rootProject.name = 'Clientmod_1.20.x'
+//rootProject.name = 'Clientmod_1.21'
 include("common")
 include("fabric")
 include("neoforge")

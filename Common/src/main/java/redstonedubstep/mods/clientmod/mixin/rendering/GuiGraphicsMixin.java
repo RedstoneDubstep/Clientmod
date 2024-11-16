@@ -14,11 +14,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -73,40 +76,46 @@ public abstract class GuiGraphicsMixin {
                 }
             }
             else if (stack.getItem() instanceof ArmorItem || stack.is(ItemTags.BREAKS_DECORATED_POTS)) {
-                List<Enchantment> enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack).entrySet().stream().map(e -> e.getKey().value()).toList();
-                int color = -1;
+                try {
+                    List<Enchantment> enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack).entrySet().stream().map(e -> e.getKey().value()).toList();
+                    RegistryLookup<Enchantment> enchantmentRegistry = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                    int color = -1;
 
-                if (enchantments.contains(Enchantments.PROTECTION))
-                    color = 0x696969;
-                else if (enchantments.contains(Enchantments.BLAST_PROTECTION))
-                    color = 0x53CF43;
-                else if (enchantments.contains(Enchantments.FIRE_PROTECTION))
-                    color = 0xFF7514;
-                else if (enchantments.contains(Enchantments.PROJECTILE_PROTECTION))
-                    color = 0xDFDFDF;
+                    if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.PROTECTION).value()))
+                        color = 0x696969;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.BLAST_PROTECTION).value()))
+                        color = 0x53CF43;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.FIRE_PROTECTION).value()))
+                        color = 0xFF7514;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.PROJECTILE_PROTECTION).value()))
+                        color = 0xDFDFDF;
 
-                if (enchantments.contains(Enchantments.SILK_TOUCH))
-                    color = 0xFDDA0D;
-                else if (enchantments.contains(Enchantments.FORTUNE))
-                    color = 0x4CBB17;
+                    if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.SILK_TOUCH).value()))
+                        color = 0xFDDA0D;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.FORTUNE).value()))
+                        color = 0x4CBB17;
 
-                if (enchantments.contains(Enchantments.SHARPNESS))
-                    color = 0xA9A9A9;
-                else if (enchantments.contains(Enchantments.SMITE))
-                    color = 0x006400;
-                else if (enchantments.contains(Enchantments.BANE_OF_ARTHROPODS))
-                    color = 0x964B00;
+                    if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.SHARPNESS).value()))
+                        color = 0xA9A9A9;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.SMITE).value()))
+                        color = 0x006400;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.BANE_OF_ARTHROPODS).value()))
+                        color = 0x964B00;
 
-                if (enchantments.contains(Enchantments.LOYALTY))
-                    color = 0x1434A4;
-                else if (enchantments.contains(Enchantments.RIPTIDE))
-                    color = 0x7DF9FF;
+                    if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.LOYALTY).value()))
+                        color = 0x1434A4;
+                    else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.RIPTIDE).value()))
+                        color = 0x7DF9FF;
 
-                RenderSystem.disableDepthTest();
-                RenderSystem.disableBlend();
+                    RenderSystem.disableDepthTest();
+                    RenderSystem.disableBlend();
 
-                if (color >= 0)
-                    fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);
+                    if (color >= 0)
+                        fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 

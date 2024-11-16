@@ -18,11 +18,11 @@
 		"rendering.BlockEntityRenderDispatcherMixin",
 		"rendering.CameraMixin",
 		"rendering.EntityRenderDispatcherMixin",
+		"rendering.EntityRendererMixin",
 		"rendering.FishingHookRendererMixin",
 		"rendering.GuiGraphicsMixin",
 		"rendering.GuiMixin",
 		"rendering.LevelRendererMixin",
-		"rendering.MobRendererMixin",
 		"rendering.PlayerTabOverlayMixin"
 	],
 	"minVersion": "0.8"

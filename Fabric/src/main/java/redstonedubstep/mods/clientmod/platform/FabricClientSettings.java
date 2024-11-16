@@ -89,11 +89,6 @@ public class FabricClientSettings extends ClientSettings {
         return logShulkerPlacement.get();
     }
 
-    @Override
-    public boolean fixSpectatingChunks() {
-        return fixSpectatingChunks.get();
-    }
-
     BooleanConfig notifyWhenMinceraftScreen = register(new BooleanConfig()
             .comment("Should Minecraft play a (loud) sound when the Minceraft logo is shown?")
             .define("notifyWhenMinceraftScreen", true));
@@ -144,9 +139,6 @@ public class FabricClientSettings extends ClientSettings {
     BooleanConfig logShulkerPlacement = register(new BooleanConfig()
             .comment("Should the position of placed shulker boxes be logged?")
             .define("logShulkerPlacement", true));
-    BooleanConfig fixSpectatingChunks = register(new BooleanConfig()
-            .comment("Should the bug where chunks don't load for a player spectating an entity be fixed?")
-            .define("fixSpectatingChunks", true));
 
     private static BooleanConfig register(BooleanConfig config) {
         return register(config, b -> {

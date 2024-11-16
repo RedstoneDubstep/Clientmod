@@ -47,8 +47,6 @@ public abstract class ClientSettings {
 
     public abstract boolean logShulkerPlacement();
 
-    public abstract boolean fixSpectatingChunks();
-
     //Settings
     public boolean sendMessagesWithTeammsg() {
         return SEND_MESSAGES_WITH_TEAMMSG.get();

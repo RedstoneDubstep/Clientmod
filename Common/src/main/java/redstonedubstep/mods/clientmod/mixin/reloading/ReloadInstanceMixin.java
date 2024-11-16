@@ -34,7 +34,7 @@ public interface ReloadInstanceMixin {
 			if (Minecraft.getInstance().player != null && FieldHolder.reloadingStartTime >= 0) {
 				long duration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 
-				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.finished", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")));
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable("messages.clientmod:reloading.finished", DurationFormatUtils.formatDuration(duration, "mm:ss.SSS")), false);
 
 				if (FieldHolder.reloadingFinishTime == -1)
 					FieldHolder.reloadingFinishTime = System.currentTimeMillis();

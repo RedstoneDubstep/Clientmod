@@ -1,24 +1,29 @@
 package redstonedubstep.mods.clientmod.mixin.reloading;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.HoverEvent.Action;
-import net.minecraft.server.packs.resources.*;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ReloadInstance;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleReloadInstance;
 import net.minecraft.util.Unit;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import redstonedubstep.mods.clientmod.misc.FieldHolder;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.stream.Collectors;
 
 @Mixin(ReloadableResourceManager.class)
 public class ReloadableResourceManagerMixin {
@@ -39,7 +44,7 @@ public class ReloadableResourceManagerMixin {
 				FieldHolder.maxTaskAmount = listeners.size();
 				FieldHolder.oldTaskSet = new ArrayList<>(listeners);
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, ComponentUtils.formatList(readOnlyListeners.stream().map(PreparableReloadListener::getName).toList())))));
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, ComponentUtils.formatList(readOnlyListeners.stream().map(PreparableReloadListener::getName).toList())))), false);
 			}
 		}
 

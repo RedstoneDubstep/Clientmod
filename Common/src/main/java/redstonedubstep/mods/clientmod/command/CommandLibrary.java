@@ -150,9 +150,9 @@ public class CommandLibrary {
 
 			if (text.equals("lastDeath")) {
 				if (FieldHolder.lastDeathPosition == null)
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"));
+					mc.player.displayClientMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"), false);
 				else
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())));
+					mc.player.displayClientMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())), false);
 			}
 
 			return null;
@@ -187,10 +187,10 @@ public class CommandLibrary {
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
-					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.noEntitiesInRange", range));
+					player.displayClientMessage(Component.translatable("messages.clientmod:radar.noEntitiesInRange", range), false);
 				else {
-					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.entitiesInRange", range));
-					map.forEach((key, value) -> player.sendSystemMessage(Component.literal("- " + value + " " + key.getSimpleName())));
+					player.displayClientMessage(Component.translatable("messages.clientmod:radar.entitiesInRange", range), false);
+					map.forEach((key, value) -> player.displayClientMessage(Component.literal("- " + value + " " + key.getSimpleName()), false));
 				}
 			}
 			else {
@@ -198,10 +198,10 @@ public class CommandLibrary {
 				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
 
 				if (list.size() == 0)
-					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.noEntityTypeInRange", Component.translatable(entity.toString()), range));
+					player.displayClientMessage(Component.translatable("messages.clientmod:radar.noEntityTypeInRange", Component.translatable(entity.toString()), range), false);
 				else {
-					player.sendSystemMessage(Component.translatable("messages.clientmod:radar.entityTypeInRange", list.size(), Component.translatable(entity.toString()), range));
-					list.forEach((entry) -> player.sendSystemMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")")));
+					player.displayClientMessage(Component.translatable("messages.clientmod:radar.entityTypeInRange", list.size(), Component.translatable(entity.toString()), range), false);
+					list.forEach((entry) -> player.displayClientMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")"), false));
 				}
 			}
 
@@ -222,7 +222,7 @@ public class CommandLibrary {
 				if (entityHitResult != null) {
 					String distance = String.format(Locale.ROOT, "%.3f", entityHitResult.getLocation().subtract(playerEyePos).length());
 
-					player.sendSystemMessage(Component.translatable("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(BlockPos.containing(entityHitResult.getLocation())), distance));
+					player.displayClientMessage(Component.translatable("messages.clientmod:ray.entity", entityHitResult.getEntity().getName(), ClientUtility.formatBlockPos(BlockPos.containing(entityHitResult.getLocation())), distance), false);
 					return null;
 				}
 			}
@@ -233,12 +233,12 @@ public class CommandLibrary {
 					BlockState state = mc.level.getBlockState(hitResult.getBlockPos());
 					String distance = String.format(Locale.ROOT, "%.3f", hitResult.getLocation().subtract(playerEyePos).length());
 
-					player.sendSystemMessage(Component.translatable("messages.clientmod:ray.block", state.getBlock().getName(), ClientUtility.formatBlockPos(hitResult.getBlockPos()), distance));
+					player.displayClientMessage(Component.translatable("messages.clientmod:ray.block", state.getBlock().getName(), ClientUtility.formatBlockPos(hitResult.getBlockPos()), distance), false);
 					return null;
 				}
 			}
 
-			player.sendSystemMessage(Component.translatable("messages.clientmod:ray.miss", range));
+			player.displayClientMessage(Component.translatable("messages.clientmod:ray.miss", range), false);
 			return null;
 		}
 
@@ -251,10 +251,10 @@ public class CommandLibrary {
 				AccessHelper.INSTANCE.populateBECountMap(map, mc);
 
 				if (map.isEmpty())
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:rbe.noBlockEntitiesFound"));
+					mc.player.displayClientMessage(Component.translatable("messages.clientmod:rbe.noBlockEntitiesFound"), false);
 				else {
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:rbe.blockEntitiesFound"));
-					map.forEach((type, num) -> mc.player.sendSystemMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString())));
+					mc.player.displayClientMessage(Component.translatable("messages.clientmod:rbe.blockEntitiesFound"), false);
+					map.forEach((type, num) -> mc.player.displayClientMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString()), false));
 				}
 
 				return null;
@@ -305,11 +305,11 @@ public class CommandLibrary {
 			int latency = mc.player.connection.getPlayerInfo(mc.player.getUUID()).getLatency();
 
 			if (data == null) {
-				mc.player.sendSystemMessage(Component.translatable("messages.clientmod:sdata.notFound"));
+				mc.player.displayClientMessage(Component.translatable("messages.clientmod:sdata.notFound"), false);
 				return null;
 			}
 
-			mc.player.sendSystemMessage(switch (text) {
+			mc.player.displayClientMessage(switch (text) {
 				case "name" -> Component.translatable("messages.clientmod:sdata.name", data.name);
 				case "ip" -> Component.translatable("messages.clientmod:sdata.ip", data.ip);
 				case "status" -> Component.translatable("messages.clientmod:sdata.status", data.status);
@@ -318,7 +318,7 @@ public class CommandLibrary {
 				case "protocol" -> Component.translatable("messages.clientmod:sdata.protocol", data.protocol);
 				case "version" -> Component.translatable("messages.clientmod:sdata.version", data.version);
 				default -> Component.empty();
-			});
+			}, false);
 			return null;
 		}
 
@@ -344,9 +344,9 @@ public class CommandLibrary {
 			}
 			else if (text.equals("get")) {
 				if (waypointManager.hasWaypoint())
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())));
+					mc.player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), false);
 				else
-					mc.player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"));
+					mc.player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"), false);
 
 				return null;
 

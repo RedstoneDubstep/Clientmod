@@ -6,46 +6,34 @@ pluginManagement {
             forRepository {
                 maven {
                     name = 'Fabric'
-                    url = uri("https://maven.fabricmc.net")
+                    url = uri('https://maven.fabricmc.net')
                 }
             }
             filter {
-                includeGroup("net.fabricmc")
-                includeGroup("fabric-loom")
+                includeGroup('net.fabricmc')
+                includeGroup('fabric-loom')
             }
         }
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'NeoForge'
-                    url = uri("https://maven.neoforged.net/releases")
+                    name = 'Sponge'
+                    url = uri('https://repo.spongepowered.org/repository/maven-public')
                 }
             }
             filter {
-                includeGroupAndSubgroups("net.neoforged")
-                includeGroup("codechicken")
+                includeGroupAndSubgroups("org.spongepowered")
             }
         }
         exclusiveContent {
             forRepository {
                 maven {
                     name = 'Forge'
-                    url = uri("https://maven.minecraftforge.net")
+                    url = uri('https://maven.minecraftforge.net')
                 }
             }
             filter {
-                includeGroupAndSubgroups("net.minecraftforge")
-            }
-        }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'Sponge Snapshots'
-                    url = uri("https://repo.spongepowered.org/repository/maven-public")
-                }
-            }
-            filter {
-                includeGroupAndSubgroups("org.spongepowered")
+                includeGroupAndSubgroups('net.minecraftforge')
             }
         }
     }
@@ -55,8 +43,8 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-// This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbxrains.com/issue/IDEA-317606)
-//rootProject.name = 'Clientmod_1.21'
-include("common")
-include("fabric")
-include("neoforge")
+// This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbrains.com/issue/IDEA-317606)
+//rootProject.name = ''
+include('common')
+include('fabric')
+include('neoforge')

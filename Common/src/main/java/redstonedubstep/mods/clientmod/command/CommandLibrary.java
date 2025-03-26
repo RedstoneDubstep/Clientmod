@@ -16,7 +16,6 @@ import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -273,7 +272,7 @@ public class CommandLibrary {
 		private static CommandException reload(AbstractParameter<?>[] params) {
 			String text = ((StringParameter) params[0]).getValue().replace(" ", "_");
 			Predicate<Class<?>> fontTest = c -> classEqualsAny(c, LanguageManager.class, SplashManager.class, FontManager.class);
-			Predicate<Class<?>> renderersTest = c -> classEqualsAny(c, BlockEntityRenderDispatcher.class, BlockEntityWithoutLevelRenderer.class, EntityRenderDispatcher.class, ItemInHandRenderer.class, ItemRenderer.class, GameRenderer.class, LevelRenderer.class);
+			Predicate<Class<?>> renderersTest = c -> classEqualsAny(c, BlockEntityRenderDispatcher.class, EntityRenderDispatcher.class, ItemInHandRenderer.class, ItemRenderer.class, GameRenderer.class, LevelRenderer.class);
 			Predicate<Class<?>> soundsTest = c -> c.equals(SoundManager.class);
 			Predicate<Class<?>> texturesTest = c -> classEqualsAny(c, TextureManager.class, ModelManager.class, EntityModelSet.class, BlockRenderDispatcher.class, PaintingTextureManager.class, MobEffectTextureManager.class);
 

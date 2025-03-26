@@ -27,13 +27,13 @@ runs {
     server {
         workingDirectory project.file('run/server')
         //ideaModule "${rootProject.name}.${project.name}.main"
-        programArgument '--nogui'
+        arguments.addAll '--nogui'
     }
 
-    data {
+    clientData {
         workingDirectory project.file('run/data')
         //ideaModule "${rootProject.name}.${project.name}.main"
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        arguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 

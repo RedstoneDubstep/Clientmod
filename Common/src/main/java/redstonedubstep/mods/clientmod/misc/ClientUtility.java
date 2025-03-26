@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.HoverEvent.Action;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +43,7 @@ public class ClientUtility {
 		else
 			direction = diffX > 0 ? "Northeast" : "Northwest";
 
-		position.withStyle((s) -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, Component.literal(direction))));
+		position.withStyle((s) -> s.withHoverEvent(new HoverEvent.ShowText(Component.literal(direction))));
 		return position;
 	}
 
@@ -52,7 +51,7 @@ public class ClientUtility {
 		MutableComponent fancyBlockPos = fancyBlockPos(pos, originalPos);
 		String clickCommand = "/clientmod waypoint set " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
 
-		fancyBlockPos.withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickCommand)));
+		fancyBlockPos.withStyle(s -> s.withClickEvent(new ClickEvent.RunCommand(clickCommand)));
 		return fancyBlockPos;
 	}
 

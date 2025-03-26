@@ -15,7 +15,6 @@ import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.HoverEvent.Action;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -44,7 +43,7 @@ public class ReloadableResourceManagerMixin {
 				FieldHolder.maxTaskAmount = listeners.size();
 				FieldHolder.oldTaskSet = new ArrayList<>(listeners);
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, ComponentUtils.formatList(readOnlyListeners.stream().map(PreparableReloadListener::getName).toList())))), false);
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(ComponentUtils.formatList(readOnlyListeners.stream().map(PreparableReloadListener::getName).toList())))), false);
 			}
 		}
 

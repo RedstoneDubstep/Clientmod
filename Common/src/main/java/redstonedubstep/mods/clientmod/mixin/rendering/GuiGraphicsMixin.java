@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -22,10 +21,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.Bees;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -63,19 +61,18 @@ public abstract class GuiGraphicsMixin {
                 else if (enchantments.size() == 1)
                     color = hasMaxEnchantment ? 0xFF00FF00 : 0xFFFF0000;
 
-                RenderSystem.disableDepthTest();
-                RenderSystem.disableBlend();
                 fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, color);
             }
             else if (stack.is(Items.BEE_NEST) || stack.is(Items.BEEHIVE)) {
-                List<BeehiveBlockEntity.Occupant> bees = stack.get(DataComponents.BEES);
+                Bees beesComponent = stack.get(DataComponents.BEES);
+                List<BeehiveBlockEntity.Occupant> bees = beesComponent != null ? beesComponent.bees() : null;
 
                 if (bees != null) {
                     pose.translate(0.0D, 0.0D, 200.0F);
                     drawString(font, String.valueOf(bees.size()), x + 8 - 2 - font.width(String.valueOf(bees.size())), y + 6 + 3, 0xFFD700);
                 }
             }
-            else if (stack.getItem() instanceof ArmorItem || stack.is(ItemTags.BREAKS_DECORATED_POTS)) {
+            else if (stack.has(DataComponents.EQUIPPABLE) || stack.has(DataComponents.WEAPON) || stack.has(DataComponents.TOOL)) {
                 try {
                     List<Enchantment> enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack).entrySet().stream().map(e -> e.getKey().value()).toList();
                     RegistryLookup<Enchantment> enchantmentRegistry = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
@@ -106,9 +103,6 @@ public abstract class GuiGraphicsMixin {
                         color = 0x1434A4;
                     else if (enchantments.contains(enchantmentRegistry.getOrThrow(Enchantments.RIPTIDE).value()))
                         color = 0x7DF9FF;
-
-                    RenderSystem.disableDepthTest();
-                    RenderSystem.disableBlend();
 
                     if (color >= 0)
                         fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);

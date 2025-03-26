@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.HoverEvent.Action;
 import net.minecraft.network.chat.MutableComponent;
 import redstonedubstep.mods.clientmod.command.CommandException;
 import redstonedubstep.mods.clientmod.command.CommandLibrary;
@@ -38,7 +37,7 @@ public class ChatScreenMixin {
 			if (result != null) {
 				MutableComponent errorMessage = Component.translatable("command.failed");
 
-				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent(Action.SHOW_TEXT, result.getFullDescription()))).withStyle(ChatFormatting.RED);
+				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(result.getFullDescription()))).withStyle(ChatFormatting.RED);
 				Minecraft.getInstance().player.displayClientMessage(errorMessage, false);
 			}
 

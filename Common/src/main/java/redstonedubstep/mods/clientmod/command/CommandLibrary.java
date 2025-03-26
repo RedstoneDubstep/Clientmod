@@ -75,7 +75,14 @@ public class CommandLibrary {
 	private static final Command WAYPOINT_COMMAND = new Command("waypoint", CommandLibrary.Actions::waypoint, new StringParameter(Lists.newArrayList("set", "get", "remove"), false, ""), new IntParameter(false, null), new IntParameter(false, null), new IntParameter(false, null));
 	private static final Command WIKI_COMMAND = new Command("wiki", CommandLibrary.Actions::wiki, new StringParameter());
 	public static String lastInputText;
-	private static final Minecraft mc = Minecraft.getInstance();
+	private static Minecraft mc;
+
+	private static Minecraft mc() {
+		if (mc == null)
+			mc = Minecraft.getInstance();
+
+		return mc;
+	}
 
 	public static void addCommandsToList() {
 		commandList.add(FOLDER_COMMAND);
@@ -123,7 +130,7 @@ public class CommandLibrary {
 			String text = ((StringParameter) params[0]).getValue();
 
 			switch (text) {
-				case "resources" -> Util.getPlatform().openFile(mc.getResourcePackDirectory().toFile());
+				case "resources" -> Util.getPlatform().openFile(mc().getResourcePackDirectory().toFile());
 				case "mods" -> Util.getPlatform().openFile(AccessHelper.INSTANCE.getModsDir().toFile());
 				case "mc" -> Util.getPlatform().openFile(AccessHelper.INSTANCE.getModsDir().getParent().toFile());
 			}
@@ -136,9 +143,9 @@ public class CommandLibrary {
 
 			switch (text) {
 				case "trades" ->
-						mc.setScreen(new ImageScreen("trades_screen", 1263, 595, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/trading_bartering_guide.png")));
+						mc().setScreen(new ImageScreen("trades_screen", 1263, 595, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/trading_bartering_guide.png")));
 				case "brewing" ->
-						mc.setScreen(new ImageScreen("brewing_guide", 350, 600, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/brewing_guide.png")));
+						mc().setScreen(new ImageScreen("brewing_guide", 350, 600, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/brewing_guide.png")));
 			}
 
 			return null;
@@ -149,9 +156,9 @@ public class CommandLibrary {
 
 			if (text.equals("lastDeath")) {
 				if (FieldHolder.lastDeathPosition == null)
-					mc.player.displayClientMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"), false);
+					mc().player.displayClientMessage(Component.translatable("messages.clientmod:log.noLastDeathPosition"), false);
 				else
-					mc.player.displayClientMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc.player.blockPosition())), false);
+					mc().player.displayClientMessage(Component.translatable("messages.clientmod:log.lastDeathPosition", ClientUtility.fancyWaypointBlockPos(FieldHolder.lastDeathPosition, mc().player.blockPosition())), false);
 			}
 
 			return null;
@@ -176,13 +183,13 @@ public class CommandLibrary {
 		}
 
 		private static CommandException radar(AbstractParameter<?>[] params) {
-			LocalPlayer player = mc.player;
+			LocalPlayer player = mc().player;
 			int range = ((IntParameter) params[0]).getValue();
 			EntityType<?> entity = ((EntityTypeParameter) params[1]).getValue();
 			AABB boundingBox = player.getBoundingBox().inflate(range);
 
 			if (entity == null) {
-				List<Entity> list = mc.level.getEntities(player, boundingBox, s -> true);
+				List<Entity> list = mc().level.getEntities(player, boundingBox, s -> true);
 				HashMap<Class<? extends Entity>, Integer> map = ClientUtility.countEntitiesInList(list);
 
 				if (list.size() == 0)
@@ -193,14 +200,14 @@ public class CommandLibrary {
 				}
 			}
 			else {
-				List<? extends Entity> list = mc.level.getEntities(entity, boundingBox, s -> true);
-				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc.player.blockPosition())));
+				List<? extends Entity> list = mc().level.getEntities(entity, boundingBox, s -> true);
+				list.sort(Comparator.comparingDouble(e -> ClientUtility.distanceBetween(e.blockPosition(), mc().player.blockPosition())));
 
 				if (list.size() == 0)
 					player.displayClientMessage(Component.translatable("messages.clientmod:radar.noEntityTypeInRange", Component.translatable(entity.toString()), range), false);
 				else {
 					player.displayClientMessage(Component.translatable("messages.clientmod:radar.entityTypeInRange", list.size(), Component.translatable(entity.toString()), range), false);
-					list.forEach((entry) -> player.displayClientMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc.player.blockPosition())).append(")"), false));
+					list.forEach((entry) -> player.displayClientMessage(Component.literal("- " + entry.getName().getString() + " (").append(ClientUtility.fancyWaypointBlockPos(entry.blockPosition(), mc().player.blockPosition())).append(")"), false));
 				}
 			}
 
@@ -208,7 +215,7 @@ public class CommandLibrary {
 		}
 
 		private static CommandException ray(AbstractParameter<?>[] params) {
-			LocalPlayer player = mc.player;
+			LocalPlayer player = mc().player;
 			int range = ((IntParameter) params[0]).getValue();
 			String type = ((StringParameter) params[1]).getValue();
 			Vec3 playerEyePos = player.getEyePosition();
@@ -226,10 +233,10 @@ public class CommandLibrary {
 				}
 			}
 			else if (type.equals("block") || type.equals("all") || type.isEmpty()) {
-				BlockHitResult hitResult = mc.level.clip(new ClipContext(playerEyePos, endPos, Block.OUTLINE, type.equals("block") ? Fluid.NONE : Fluid.ANY, player));
+				BlockHitResult hitResult = mc().level.clip(new ClipContext(playerEyePos, endPos, Block.OUTLINE, type.equals("block") ? Fluid.NONE : Fluid.ANY, player));
 
 				if (hitResult.getType() != Type.MISS) {
-					BlockState state = mc.level.getBlockState(hitResult.getBlockPos());
+					BlockState state = mc().level.getBlockState(hitResult.getBlockPos());
 					String distance = String.format(Locale.ROOT, "%.3f", hitResult.getLocation().subtract(playerEyePos).length());
 
 					player.displayClientMessage(Component.translatable("messages.clientmod:ray.block", state.getBlock().getName(), ClientUtility.formatBlockPos(hitResult.getBlockPos()), distance), false);
@@ -250,10 +257,10 @@ public class CommandLibrary {
 				AccessHelper.INSTANCE.populateBECountMap(map, mc);
 
 				if (map.isEmpty())
-					mc.player.displayClientMessage(Component.translatable("messages.clientmod:rbe.noBlockEntitiesFound"), false);
+					mc().player.displayClientMessage(Component.translatable("messages.clientmod:rbe.noBlockEntitiesFound"), false);
 				else {
-					mc.player.displayClientMessage(Component.translatable("messages.clientmod:rbe.blockEntitiesFound"), false);
-					map.forEach((type, num) -> mc.player.displayClientMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString()), false));
+					mc().player.displayClientMessage(Component.translatable("messages.clientmod:rbe.blockEntitiesFound"), false);
+					map.forEach((type, num) -> mc().player.displayClientMessage(Component.literal("- " + num + " " + BlockEntityType.getKey(type).toString()), false));
 				}
 
 				return null;
@@ -285,7 +292,7 @@ public class CommandLibrary {
 				case "textures" -> texturesTest;
 			};
 
-			mc.reloadResourcePacks();
+			mc().reloadResourcePacks();
 			return null;
 		}
 
@@ -300,15 +307,15 @@ public class CommandLibrary {
 
 		private static CommandException sdata(AbstractParameter<?>[] params) {
 			String text = ((StringParameter) params[0]).getValue();
-			ServerData data = mc.getCurrentServer();
-			int latency = mc.player.connection.getPlayerInfo(mc.player.getUUID()).getLatency();
+			ServerData data = mc().getCurrentServer();
+			int latency = mc().player.connection.getPlayerInfo(mc().player.getUUID()).getLatency();
 
 			if (data == null) {
-				mc.player.displayClientMessage(Component.translatable("messages.clientmod:sdata.notFound"), false);
+				mc().player.displayClientMessage(Component.translatable("messages.clientmod:sdata.notFound"), false);
 				return null;
 			}
 
-			mc.player.displayClientMessage(switch (text) {
+			mc().player.displayClientMessage(switch (text) {
 				case "name" -> Component.translatable("messages.clientmod:sdata.name", data.name);
 				case "ip" -> Component.translatable("messages.clientmod:sdata.ip", data.ip);
 				case "status" -> Component.translatable("messages.clientmod:sdata.status", data.status);
@@ -322,7 +329,7 @@ public class CommandLibrary {
 		}
 
 		private static CommandException settings(AbstractParameter<?>[] params) {
-			mc.setScreen(new SettingsScreen());
+			mc().setScreen(new SettingsScreen());
 			return null;
 		}
 
@@ -334,7 +341,7 @@ public class CommandLibrary {
 			WaypointManager waypointManager = WaypointManager.getInstance();
 
 			if (text.isEmpty()) {
-				waypointManager.setWaypoint(mc.player.blockPosition());
+				waypointManager.setWaypoint(mc().player.blockPosition());
 				return null;
 			}
 			else if (text.equals("remove")) {
@@ -343,9 +350,9 @@ public class CommandLibrary {
 			}
 			else if (text.equals("get")) {
 				if (waypointManager.hasWaypoint())
-					mc.player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), false);
+					mc().player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.currentWaypoint", ClientUtility.formatBlockPos(waypointManager.getWaypoint())), false);
 				else
-					mc.player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"), false);
+					mc().player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"), false);
 
 				return null;
 

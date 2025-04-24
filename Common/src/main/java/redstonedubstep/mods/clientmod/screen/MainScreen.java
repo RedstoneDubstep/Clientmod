@@ -30,6 +30,7 @@ public class MainScreen extends Screen {
 		super.init();
 
 		inputField = new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, CommonComponents.EMPTY);
+		inputField.setMaxLength(2048);
 		inputField.setTextColor(-1);
 		inputField.setTextColorUneditable(-1);
 		inputField.setBordered(true);

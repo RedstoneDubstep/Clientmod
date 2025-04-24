@@ -254,7 +254,7 @@ public class CommandLibrary {
 			if (beType.isEmpty()) {
 				Map<BlockEntityType<?>, Integer> map = new HashMap<>();
 
-				AccessHelper.INSTANCE.populateBECountMap(map, mc);
+				AccessHelper.INSTANCE.populateBECountMap(map, mc());
 
 				if (map.isEmpty())
 					mc().player.displayClientMessage(Component.translatable("messages.clientmod:rbe.noBlockEntitiesFound"), false);

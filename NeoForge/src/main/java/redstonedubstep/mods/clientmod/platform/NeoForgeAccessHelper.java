@@ -19,7 +19,7 @@ public class NeoForgeAccessHelper extends AccessHelper {
     @Override
     public void populateBECountMap(Map<BlockEntityType<?>, Integer> map, Minecraft mc) {
         for (SectionRenderDispatcher.RenderSection section : mc.levelRenderer.visibleSections) {
-            for (BlockEntity be : section.getCompiled().getRenderableBlockEntities()) {
+            for (BlockEntity be : section.getSectionMesh().getRenderableBlockEntities()) {
                 BlockEntityRenderer<BlockEntity> renderer = mc.getBlockEntityRenderDispatcher().getRenderer(be);
 
                 if (renderer != null && mc.levelRenderer.cullingFrustum.isVisible(renderer.getRenderBoundingBox(be))) {
@@ -29,8 +29,8 @@ public class NeoForgeAccessHelper extends AccessHelper {
             }
         }
 
-        synchronized (mc.levelRenderer.globalBlockEntities) {
-            for (BlockEntity be : mc.levelRenderer.globalBlockEntities) {
+        synchronized (mc.level.getGloballyRenderedBlockEntities()) {
+            for (BlockEntity be : mc.level.getGloballyRenderedBlockEntities()) {
                 BlockEntityRenderer<BlockEntity> renderer = mc.getBlockEntityRenderDispatcher().getRenderer(be);
 
                 if (renderer != null && mc.levelRenderer.cullingFrustum.isVisible(renderer.getRenderBoundingBox(be))) {

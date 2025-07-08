@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -40,18 +38,17 @@ public class MainScreen extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		super.render(graphics, mouseX, mouseY, partialTicks);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		inputField.render(graphics, mouseX, mouseY, partialTicks);
-		graphics.drawString(font, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 16711680);
+		graphics.drawString(font, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 0xFFFF0000);
+
 		for (int i = 0; i < helpDescription.size(); i++) {
-			graphics.drawString(font, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 16711680);
+			graphics.drawString(font, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 0xFFFF0000);
 		}
 	}
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (inputField.isFocused()) {
-
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 				if (inputField.getValue().isEmpty())
 					return false;

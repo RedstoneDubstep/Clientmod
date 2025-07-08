@@ -27,12 +27,12 @@ public class MinecraftMixin {
 	//At this point, reloading is fully done (and thus, the overlay gets removed so the player can move again), so we can do some post-stuff
 	@Inject(method = "setOverlay", at = @At("HEAD"))
 	private void clientmod$onSetOverlay(Overlay newOverlay, CallbackInfo callbackInfo) {
-		if (newOverlay == null && overlay != null) {
+		if (newOverlay == null && overlay != null && Minecraft.getInstance().player != null) {
 			if (ClientSettings.INSTANCE.enhancedReloadingInfo()) {
 				FieldHolder.currentTask = null;
 				FieldHolder.maxTaskAmount = -1;
 
-				if (Minecraft.getInstance().player != null && FieldHolder.reloadingStartTime >= 0) {
+				if (FieldHolder.reloadingStartTime >= 0) {
 					long reloadDuration = FieldHolder.reloadingFinishTime - FieldHolder.reloadingStartTime;
 					long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 

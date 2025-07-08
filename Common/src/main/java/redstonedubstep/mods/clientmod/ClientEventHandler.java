@@ -121,7 +121,7 @@ public class ClientEventHandler {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-            graphics.drawString(Minecraft.getInstance().font, String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFF);
+            graphics.drawString(Minecraft.getInstance().font, String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFFFF);
         }
     }
 }

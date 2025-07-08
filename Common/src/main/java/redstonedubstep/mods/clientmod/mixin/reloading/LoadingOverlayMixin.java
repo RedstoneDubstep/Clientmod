@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.gui.screens.Overlay;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadInstance;
@@ -34,7 +33,6 @@ public abstract class LoadingOverlayMixin extends Overlay {
 	private boolean fadeIn;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
-	@SuppressWarnings("unchecked")
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
 	private void clientmod$injectRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		if (!FieldHolder.isMinecraftStarting && ClientSettings.INSTANCE.enhancedReloadingInfo() && Minecraft.getInstance().player != null) {
@@ -60,15 +58,15 @@ public abstract class LoadingOverlayMixin extends Overlay {
 				}
 
 				if (FieldHolder.currentTask != null)
-					graphics.drawString(Minecraft.getInstance().font, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0xFFFFFF);
+					graphics.drawString(Minecraft.getInstance().font, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0xFFFFFFFF);
 			}
 		}
 	}
 
 	//Toggle the Gui's background
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(Lnet/minecraft/client/renderer/RenderType;IIIII)V"))
-	public void clientmod$redirectFill(GuiGraphics instance, RenderType type, int minX, int minY, int maxX, int maxY, int color) {
-		instance.fill(type, minX, minY, maxX, maxY, fadeIn && !ClientSettings.INSTANCE.drawReloadingBackground() ? 16777215 : color);
+	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
+	public void clientmod$redirectFill(GuiGraphics instance, int minX, int minY, int maxX, int maxY, int color) {
+		instance.fill(minX, minY, maxX, maxY, fadeIn && !ClientSettings.INSTANCE.drawReloadingBackground() ? 16777215 : color);
 	}
 
 	//When reloading is finished, allows skipping to fade the overlay out and removes it instead

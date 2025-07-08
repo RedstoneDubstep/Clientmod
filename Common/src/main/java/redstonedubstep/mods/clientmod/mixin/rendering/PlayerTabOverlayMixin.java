@@ -13,9 +13,9 @@ import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
 @Mixin(PlayerTabOverlay.class)
 public class PlayerTabOverlayMixin {
-	@Inject(method = "renderPingIcon", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"))
+	@Inject(method = "renderPingIcon", at = @At(value = "TAIL"))
 	private void clientmod$onRenderPingIcon(GuiGraphics guiGraphics, int width, int x, int y, PlayerInfo info, CallbackInfo callbackInfo) {
 		if (ClientSettings.INSTANCE.showPingData())
-			guiGraphics.drawString(Minecraft.getInstance().font, String.valueOf(info.getLatency()), x + width - 11, y, 0xD0D0D0, false);
+			guiGraphics.drawString(Minecraft.getInstance().font, String.valueOf(info.getLatency()), x + width - 11, y, 0xFFD0D0D0, false);
 	}
 }

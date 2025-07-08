@@ -18,14 +18,14 @@ public class FabricAccessHelper extends AccessHelper {
     @Override
     public void populateBECountMap(Map<BlockEntityType<?>, Integer> map, Minecraft mc) {
         for (SectionRenderDispatcher.RenderSection section : mc.levelRenderer.visibleSections) {
-            for (BlockEntity be : section.getCompiled().getRenderableBlockEntities()) {
+            for (BlockEntity be : section.getSectionMesh().getRenderableBlockEntities()) {
                 map.computeIfPresent(be.getType(), (t, i) -> i + 1);
                 map.putIfAbsent(be.getType(), 1);
             }
         }
 
-        synchronized (mc.levelRenderer.globalBlockEntities) {
-            for (BlockEntity be : mc.levelRenderer.globalBlockEntities) {
+        synchronized (mc.level.getGloballyRenderedBlockEntities()) {
+            for (BlockEntity be : mc.level.getGloballyRenderedBlockEntities()) {
                 map.computeIfPresent(be.getType(), (t, i) -> i + 1);
                 map.putIfAbsent(be.getType(), 1);
             }

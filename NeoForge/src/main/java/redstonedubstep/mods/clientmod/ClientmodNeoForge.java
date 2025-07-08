@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import redstonedubstep.mods.clientmod.platform.NeoForgeClientSettings;
 
 @Mod(ClientmodCommon.MOD_ID)
-@EventBusSubscriber(modid = ClientmodCommon.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ClientmodCommon.MOD_ID)
 public class ClientmodNeoForge {
 	public ClientmodNeoForge(ModContainer container) {
 		ClientmodCommon.init();

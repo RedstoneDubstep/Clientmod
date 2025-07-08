@@ -3,6 +3,7 @@ package redstonedubstep.mods.clientmod.mixin.rendering;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -10,13 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
@@ -33,15 +31,15 @@ import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
 @Mixin(GuiGraphics.class)
 public abstract class GuiGraphicsMixin {
-    @Shadow @Final private PoseStack pose;
+    @Shadow @Final private Matrix3x2fStack pose;
 
-    @Shadow public abstract int drawString(Font $$0, @Nullable String $$1, int $$2, int $$3, int $$4);
+    @Shadow public abstract void drawString(Font $$0, @Nullable String $$1, int $$2, int $$3, int $$4);
 
-    @Shadow public abstract void fill(RenderType $$0, int $$1, int $$2, int $$3, int $$4, int $$5);
+    @Shadow public abstract void fill(int $$1, int $$2, int $$3, int $$4, int $$5);
 
-    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", shift = At.Shift.AFTER))
+    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;popMatrix()Lorg/joml/Matrix3x2fStack;", shift = At.Shift.AFTER))
     public void clientmod$onRenderGuiItemDecorations(Font font, ItemStack stack, int x, int y, String subText, CallbackInfo callbackInfo) {
-        pose.pushPose();
+        pose.pushMatrix();
 
         if (ClientSettings.INSTANCE.enhancedItemInfo()) {
             if (stack.is(Items.ENCHANTED_BOOK)) {
@@ -61,16 +59,14 @@ public abstract class GuiGraphicsMixin {
                 else if (enchantments.size() == 1)
                     color = hasMaxEnchantment ? 0xFF00FF00 : 0xFFFF0000;
 
-                fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, color);
+                fill(x + 1, y + 1, x + 4, y + 4, color);
             }
             else if (stack.is(Items.BEE_NEST) || stack.is(Items.BEEHIVE)) {
                 Bees beesComponent = stack.get(DataComponents.BEES);
                 List<BeehiveBlockEntity.Occupant> bees = beesComponent != null ? beesComponent.bees() : null;
 
-                if (bees != null) {
-                    pose.translate(0.0D, 0.0D, 200.0F);
-                    drawString(font, String.valueOf(bees.size()), x + 8 - 2 - font.width(String.valueOf(bees.size())), y + 6 + 3, 0xFFD700);
-                }
+                if (bees != null)
+                    drawString(font, String.valueOf(bees.size()), x + 8 - 2 - font.width(String.valueOf(bees.size())), y + 6 + 3, 0xFFFFD700);
             }
             else if (stack.has(DataComponents.EQUIPPABLE) || stack.has(DataComponents.WEAPON) || stack.has(DataComponents.TOOL)) {
                 try {
@@ -105,7 +101,7 @@ public abstract class GuiGraphicsMixin {
                         color = 0x7DF9FF;
 
                     if (color >= 0)
-                        fill(RenderType.guiOverlay(), x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);
+                        fill(x + 1, y + 1, x + 4, y + 4, 0xFF000000 | color);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -113,6 +109,6 @@ public abstract class GuiGraphicsMixin {
             }
         }
 
-        pose.popPose();
+        pose.popMatrix();
     }
 }

@@ -167,9 +167,11 @@ public class NeoForgeClientSettings extends ClientSettings {
 		}
 
 		private static BooleanValue register(BooleanValue config, Consumer<Boolean> onClick) {
-			registerConfig(config.getPath().get(0), config, config::set, onClick);
+			registerConfig(config.getPath().getFirst(), config, value -> {
+				config.set(value);
+				config.save();
+			}, onClick);
 			return config;
 		}
 	}
-
 }

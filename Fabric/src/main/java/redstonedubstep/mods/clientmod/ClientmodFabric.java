@@ -20,7 +20,7 @@ public class ClientmodFabric implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> ClientEventHandler.onClientTick());
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> world instanceof ClientLevel && ClientEventHandler.onAttackEvent() ? InteractionResult.FAIL : InteractionResult.PASS);
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            ClientEventHandler.onRightClickBlock(player.getItemInHand(hand), hitResult.getBlockPos());
+            ClientEventHandler.onRightClickBlock(player, player.getItemInHand(hand), hitResult.getBlockPos());
             return InteractionResult.PASS;
         });
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> ClientEventHandler.onInitScreenPost(screen));

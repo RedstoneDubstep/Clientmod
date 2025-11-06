@@ -61,6 +61,7 @@ import redstonedubstep.mods.clientmod.screen.SettingsScreen;
 public class CommandLibrary {
 	public static ArrayList<Command> commandList = new ArrayList<>();
 	private static final Command FOLDER_COMMAND = new Command("folder", CommandLibrary.Actions::folder, new StringParameter(Lists.newArrayList("resources", "mods", "mc")));
+	private static final Command HOTBARSHUFFLE_COMMAND = new Command("hotbarshuffle", CommandLibrary.Actions::hotbarshuffle, new IntParameter(false, 0, 8, -1), new IntParameter(false, 8, 8, -1));
 	private static final Command IMAGE_COMMAND = new Command("image", CommandLibrary.Actions::image, new StringParameter(Lists.newArrayList("trades", "brewing")));
 	private static final Command LOG_COMMAND = new Command("log", CommandLibrary.Actions::log, new StringParameter(Lists.newArrayList("blockEntities", "lastDeath")));
 	private static final Command NAMEMC_COMMAND = new Command("namemc", CommandLibrary.Actions::namemc, new StringParameter());
@@ -85,6 +86,7 @@ public class CommandLibrary {
 
 	public static void addCommandsToList() {
 		commandList.add(FOLDER_COMMAND);
+		commandList.add(HOTBARSHUFFLE_COMMAND);
 		commandList.add(IMAGE_COMMAND);
 		commandList.add(LOG_COMMAND);
 		commandList.add(NAMEMC_COMMAND);
@@ -134,6 +136,12 @@ public class CommandLibrary {
 				case "mc" -> Util.getPlatform().openFile(AccessHelper.INSTANCE.getModsDir().getParent().toFile());
 			}
 
+			return null;
+		}
+
+		private static CommandException hotbarshuffle(AbstractParameter<?>[] params) {
+			FieldHolder.hotbarShuffleStart = ((IntParameter) params[0]).getValue();
+			FieldHolder.hotbarShuffleEnd = ((IntParameter) params[1]).getValue();
 			return null;
 		}
 

@@ -26,7 +26,7 @@ public class NeoForgeClientEventHandler {
 
 	@SubscribeEvent
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		ClientEventHandler.onRightClickBlock(event.getItemStack(), event.getPos());
+		ClientEventHandler.onRightClickBlock(event.getEntity(), event.getItemStack(), event.getPos());
 	}
 
 	@SubscribeEvent

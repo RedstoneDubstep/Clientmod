@@ -1,14 +1,14 @@
 package redstonedubstep.mods.clientmod.misc;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.world.entity.EntityType;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.world.entity.EntityType;
 
 public class FieldHolder {
 	public static boolean isMinecraftStarting = true;
@@ -16,6 +16,7 @@ public class FieldHolder {
 	public static Predicate<Class<?>> reloadFilter = null;
 	public static final Set<ResourceLocation> renderableBlockEntityFilter = new HashSet<>();
 	public static final Set<EntityType<?>> renderableEntityFilter = new HashSet<>();
+	public static int hotbarShuffleStart = -1, hotbarShuffleEnd = -1, nextHotbarSlot = -1;
 
 	//mixin related fields that can't be put in mixin classes TODO: put these in a mixin class with protected and @Unique
 	public static PreparableReloadListener currentTask;

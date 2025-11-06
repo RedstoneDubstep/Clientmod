@@ -12,8 +12,10 @@ import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -59,6 +61,11 @@ public class ClientEventHandler {
 
             if (player.deathTime == 1)
                 FieldHolder.lastDeathPosition = player.blockPosition();
+
+			if (FieldHolder.nextHotbarSlot > -1) {
+				player.getInventory().setSelectedSlot(FieldHolder.nextHotbarSlot);
+				FieldHolder.nextHotbarSlot = -1;
+			}
         }
     }
 
@@ -66,9 +73,24 @@ public class ClientEventHandler {
         return ClientSettings.INSTANCE.invincibleVillagers() && !Minecraft.getInstance().gameMode.getPlayerMode().isCreative() && Minecraft.getInstance().hitResult instanceof EntityHitResult hitResult && hitResult.getEntity() instanceof Villager;
     }
 
-    public static void onRightClickBlock(ItemStack useStack, BlockPos pos) {
+    public static void onRightClickBlock(Player player, ItemStack useStack, BlockPos pos) {
         if (ClientSettings.INSTANCE.logShulkerPlacement() && useStack.getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock)
             ClientmodCommon.LOGGER.info("Placed " + item.getBlock().getDescriptionId() + " with name " + useStack.getHoverName() + " at " + ClientUtility.formatBlockPos(pos));
+
+		if (player.level().isClientSide && FieldHolder.hotbarShuffleStart > -1) {
+			WeightedList.Builder<Integer> validSlotsBuilder = new WeightedList.Builder<>();
+			NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
+			int lastShuffleSlot = Math.min(FieldHolder.hotbarShuffleEnd, 8);
+
+			for (var slot = FieldHolder.hotbarShuffleStart; slot <= lastShuffleSlot; slot++) {
+				ItemStack hotbarItem = items.get(slot);
+
+				if (!hotbarItem.isEmpty())
+					validSlotsBuilder.add(slot, hotbarItem.getCount());
+			}
+
+			validSlotsBuilder.build().getRandom(player.level().random).ifPresent(slot -> FieldHolder.nextHotbarSlot = slot);
+		}
     }
 
     //play a sound if the "Minceraft" logo is shown

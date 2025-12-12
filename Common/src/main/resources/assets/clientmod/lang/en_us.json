@@ -1,5 +1,5 @@
 {
-	"key.clientmod:category": "Clientmod",
+	"key.category.clientmod.clientmod": "Clientmod",
 	"key.clientmod:openTextbox.name": "Open Textbox",
 
 	"messages.clientmod:log.lastDeathPosition": "You died at this position: %s",

@@ -8,6 +8,8 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -47,17 +49,19 @@ public class MainScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+	public boolean keyPressed(KeyEvent event) {
+		int keyCode = event.key();
+
 		if (inputField.isFocused()) {
 			if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 				if (inputField.getValue().isEmpty())
 					return false;
 			}
 
-			if (minecraft.options.keyInventory.matches(keyCode, scanCode))
+			if (minecraft.options.keyInventory.matches(event))
 				return false;
 			else if (keyCode == GLFW.GLFW_KEY_ESCAPE)
-				return super.keyPressed(keyCode, scanCode, modifiers);
+				return super.keyPressed(event);
 			else if (keyCode == GLFW.GLFW_KEY_ENTER)
 				return submitText(inputField.getValue());
 			else if (keyCode == GLFW.GLFW_KEY_UP)
@@ -67,20 +71,20 @@ public class MainScreen extends Screen {
 			else if (keyCode == GLFW.GLFW_KEY_TAB)
 				inputField.setValue(CommandLibrary.getCompleteCommand(inputField.getValue()));
 			else
-				return inputField.keyPressed(keyCode, scanCode, modifiers);
+				return inputField.keyPressed(event);
 		}
 
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(event);
 	}
 
 	@Override
-	public boolean charTyped(char typedChar, int keyCode) {
+	public boolean charTyped(CharacterEvent event) {
 		if (inputField.isFocused()) {
-			inputField.charTyped(typedChar, keyCode);
+			inputField.charTyped(event);
 			return true;
 		}
 		else
-			return super.charTyped(typedChar, keyCode);
+			return super.charTyped(event);
 	}
 
 	private boolean submitText(String input) {

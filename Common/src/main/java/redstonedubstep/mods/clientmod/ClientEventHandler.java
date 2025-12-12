@@ -9,6 +9,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -44,9 +45,9 @@ public class ClientEventHandler {
 
         LocalPlayer player = Minecraft.getInstance().player;
 
-        if (player != null) {
+        if (player != null && player.level() instanceof ClientLevel level) {
             if (ClientSettings.INSTANCE.renderEntitiesGlowing()) {
-                for (Entity entity : player.clientLevel.entitiesForRendering()) {
+                for (Entity entity : level.entitiesForRendering()) {
                     if (entity instanceof LivingEntity living) {
                         living.addEffect(new MobEffectInstance(MobEffects.GLOWING));
                         ((EntityAccessor) living).invokeSetSharedFlag(6, true);
@@ -77,7 +78,7 @@ public class ClientEventHandler {
         if (ClientSettings.INSTANCE.logShulkerPlacement() && useStack.getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock)
             ClientmodCommon.LOGGER.info("Placed " + item.getBlock().getDescriptionId() + " with name " + useStack.getHoverName() + " at " + ClientUtility.formatBlockPos(pos));
 
-		if (player.level().isClientSide && FieldHolder.hotbarShuffleStart > -1) {
+		if (player.level().isClientSide() && FieldHolder.hotbarShuffleStart > -1) {
 			WeightedList.Builder<Integer> validSlotsBuilder = new WeightedList.Builder<>();
 			NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
 			int lastShuffleSlot = Math.min(FieldHolder.hotbarShuffleEnd, 8);

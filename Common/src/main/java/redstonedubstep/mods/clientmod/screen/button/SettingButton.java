@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -47,8 +48,8 @@ public class SettingButton extends Button {
 	}
 
 	@Override
-	public void onPress() {
-		super.onPress();
+	public void onPress(InputWithModifiers input) {
+		super.onPress(input);
 		updateText();
 	}
 }

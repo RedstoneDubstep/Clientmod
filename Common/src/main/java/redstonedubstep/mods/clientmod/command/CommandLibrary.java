@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.PaintingTextureManager;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.client.resources.language.LanguageManager;
 import net.minecraft.client.resources.model.ModelManager;
@@ -288,7 +287,7 @@ public class CommandLibrary {
 			Predicate<Class<?>> fontTest = c -> classEqualsAny(c, LanguageManager.class, SplashManager.class, FontManager.class);
 			Predicate<Class<?>> renderersTest = c -> classEqualsAny(c, BlockEntityRenderDispatcher.class, EntityRenderDispatcher.class, ItemInHandRenderer.class, ItemRenderer.class, GameRenderer.class, LevelRenderer.class);
 			Predicate<Class<?>> soundsTest = c -> c.equals(SoundManager.class);
-			Predicate<Class<?>> texturesTest = c -> classEqualsAny(c, TextureManager.class, ModelManager.class, EntityModelSet.class, BlockRenderDispatcher.class, PaintingTextureManager.class);
+			Predicate<Class<?>> texturesTest = c -> classEqualsAny(c, TextureManager.class, ModelManager.class, EntityModelSet.class, BlockRenderDispatcher.class);
 
 			FieldHolder.reloadFilter = switch (text) {
 				default -> null;

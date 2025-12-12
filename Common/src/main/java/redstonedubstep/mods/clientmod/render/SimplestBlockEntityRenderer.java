@@ -1,24 +1,26 @@
 package redstonedubstep.mods.clientmod.render;
 
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
 
-public class SimplestBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+public class SimplestBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> implements BlockEntityRenderer<T, S> {
 	@Override
-	public void render(T be, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraPos) {
-		VertexConsumer consumer = bufferSource.getBuffer(RenderType.lines());
-		Matrix4f positionMatrix = poseStack.last().pose();
+	public S createRenderState() {
+		return (S) new BlockEntityRenderState();
+	}
 
-		consumer.addVertex(positionMatrix, 0.0F, 0.0F, 0.0F).setColor(0xFF00FF00).setNormal(0.0F, 1.0F, 0.0F);
-		consumer.addVertex(positionMatrix, 1.0F, 1.0F, 1.0F).setColor(0xFF00FF00).setNormal(0.0F, 1.0F, 0.0F);
+	@Override
+	public void submit(S renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
+		collector.submitCustomGeometry(poseStack, RenderType.lines(), (pose, consumer) -> {
+			consumer.addVertex(pose, 0.0F, 0.0F, 0.0F).setColor(0xFF00FF00).setNormal(0.0F, 1.0F, 0.0F);
+			consumer.addVertex(pose, 1.0F, 1.0F, 1.0F).setColor(0xFF00FF00).setNormal(0.0F, 1.0F, 0.0F);
+		});
 	}
 
 	@Override

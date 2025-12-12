@@ -1,5 +1,8 @@
 package redstonedubstep.mods.clientmod.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -60,7 +63,7 @@ public class ImageScreen extends Screen {
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
 		super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 
-		if ((hasShiftDown() || !verticalScrolling) && horizontalScrolling)
+		if ((InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), 340) || !verticalScrolling) && horizontalScrolling)
 			xOffset += (scrollY == -1 ? 24 : -24);
 		else if (verticalScrolling)
 			yOffset += (scrollY == -1 ? 24 : -24);

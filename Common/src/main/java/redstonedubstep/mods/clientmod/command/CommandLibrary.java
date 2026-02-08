@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -31,7 +30,8 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -149,9 +149,9 @@ public class CommandLibrary {
 
 			switch (text) {
 				case "trades" ->
-						mc().setScreen(new ImageScreen("trades_screen", 1263, 595, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/trading_bartering_guide.png")));
+						mc().setScreen(new ImageScreen("trades_screen", 1263, 595, Identifier.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/trading_bartering_guide.png")));
 				case "brewing" ->
-						mc().setScreen(new ImageScreen("brewing_guide", 350, 600, ResourceLocation.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/brewing_guide.png")));
+						mc().setScreen(new ImageScreen("brewing_guide", 350, 600, Identifier.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "textures/gui/brewing_guide.png")));
 			}
 
 			return null;
@@ -272,7 +272,7 @@ public class CommandLibrary {
 				return null;
 			}
 
-			ResourceLocation beResourceKey = ResourceLocation.tryParse(beType);
+			Identifier beResourceKey = Identifier.tryParse(beType);
 
 			if (BuiltInRegistries.BLOCK_ENTITY_TYPE.get(beResourceKey) == null)
 				return CommandException.invalidParameter(params[0], 0, beType);

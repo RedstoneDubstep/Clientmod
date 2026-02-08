@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LoadingOverlay;
@@ -34,7 +37,7 @@ public abstract class LoadingOverlayMixin extends Overlay {
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
-	private void clientmod$injectRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+	private void clientmod$injectRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo callbackInfo) {
 		if (!FieldHolder.isMinecraftStarting && ClientSettings.INSTANCE.enhancedReloadingInfo() && Minecraft.getInstance().player != null) {
 			if (fadeIn && reload instanceof SimpleReloadInstance && !reload.isDone()) {
 				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstanceAccessor) reload).getPreparingListeners());
@@ -70,15 +73,15 @@ public abstract class LoadingOverlayMixin extends Overlay {
 	}
 
 	//When reloading is finished, allows skipping to fade the overlay out and removes it instead
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/Util;getMillis()J", ordinal = 1))
-	public void clientmod$onReloadFinished(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Util;getMillis()J"))
+	public void clientmod$onReloadFinished(CallbackInfo callbackInfo) {
 		if (reload.isDone() && !ClientSettings.INSTANCE.reloadFade())
 			Minecraft.getInstance().setOverlay(null);
 	}
 
 	//Fixes that the overlay cannot finish reloading as long as it hasn't faded in properly
-	@Redirect(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;fadeIn:Z", opcode = 180, ordinal = 2)) //Opcodes.GETFIELD
-	public boolean clientmod$shouldFadeIn(LoadingOverlay instance) {
-		return fadeIn && ClientSettings.INSTANCE.reloadFade();
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;isReadyToFadeOut()Z"))
+	public boolean clientmod$alwaysReadyToFadeOut(LoadingOverlay instance, Operation<Boolean> original) {
+		return original.call(instance) || !ClientSettings.INSTANCE.reloadFade();
 	}
 }

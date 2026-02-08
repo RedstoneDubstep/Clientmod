@@ -8,10 +8,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ImageScreen extends Screen {
-	private final ResourceLocation background;
+	private final Identifier background;
 	boolean horizontalScrolling;
 	boolean verticalScrolling;
 	int imageWidth;
@@ -22,16 +22,16 @@ public class ImageScreen extends Screen {
 	int yOffset = 0;
 	boolean autoResize = false;
 
-	public ImageScreen(String name, ResourceLocation backgroundPath) {
+	public ImageScreen(String name, Identifier backgroundPath) {
 		this(name, 300, 300, backgroundPath);
 	}
 
-	public ImageScreen(String name, int width, int height, ResourceLocation backgroundPath) {
+	public ImageScreen(String name, int width, int height, Identifier backgroundPath) {
 		this(name, width, height, width, height, backgroundPath);
 		autoResize = true;
 	}
 
-	public ImageScreen(String name, int width, int height, int screenWidth, int screenHeight, ResourceLocation backgroundPath) {
+	public ImageScreen(String name, int width, int height, int screenWidth, int screenHeight, Identifier backgroundPath) {
 		super(Component.translatable(name));
 
 		background = backgroundPath;

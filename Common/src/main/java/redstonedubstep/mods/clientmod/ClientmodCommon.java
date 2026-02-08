@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import redstonedubstep.mods.clientmod.command.CommandLibrary;
 import redstonedubstep.mods.clientmod.misc.FieldHolder;
 
@@ -16,7 +16,7 @@ import redstonedubstep.mods.clientmod.misc.FieldHolder;
 public class ClientmodCommon {
     public static final String MOD_ID = "clientmod";
     public static final Logger LOGGER = LogManager.getLogger();
-    public static KeyMapping openTextbox = new KeyMapping("key.clientmod:openTextbox.name", GLFW.GLFW_KEY_WORLD_2, KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(MOD_ID, MOD_ID)));
+    public static KeyMapping openTextbox = new KeyMapping("key.clientmod:openTextbox.name", GLFW.GLFW_KEY_WORLD_2, KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, MOD_ID)));
 
     // The loader specific projects are able to import and use any code from the common project. This allows you to
     // write the majority of your code here and load it from your loader specific projects. This example has some

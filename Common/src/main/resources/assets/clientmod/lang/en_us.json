@@ -2,6 +2,7 @@
 	"key.category.clientmod.clientmod": "Clientmod",
 	"key.clientmod:openTextbox.name": "Open Textbox",
 
+	"messages.clientmod:betterFishingRod.openWater": "Your fishing bobber has landed in open water.",
 	"messages.clientmod:log.lastDeathPosition": "You died at this position: %s",
 	"messages.clientmod:log.noLastDeathPosition": "You didn't die since you started Minecraft, you dummie!",
 	"messages.clientmod:radar.noEntitiesInRange": "There are no entities in %s blocks range",

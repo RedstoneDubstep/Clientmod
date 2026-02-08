@@ -13,7 +13,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.FormattedCharSequence;
 
-public class SettingButton extends Button {
+public class SettingButton extends Button.Plain {
 	private final Supplier<Boolean> isOn;
 	private final int baseHeight;
 

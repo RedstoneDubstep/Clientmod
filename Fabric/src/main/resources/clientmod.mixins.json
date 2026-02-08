@@ -19,7 +19,7 @@
 		"rendering.CameraMixin",
 		"rendering.EntityRenderDispatcherMixin",
 		"rendering.EntityRendererMixin",
-		"rendering.FishingHookRendererMixin",
+		"rendering.FishingHookMixin",
 		"rendering.GuiGraphicsMixin",
 		"rendering.GuiMixin",
 		"rendering.LevelRendererMixin",

@@ -28,7 +28,7 @@ public class NeoForgeAccessHelper extends AccessHelper {
 		Camera camera = mc.gameRenderer.getMainCamera();
 		Matrix4f frustumMatrix = new Matrix4f().rotation(camera.rotation().conjugate(new Quaternionf()));
 		Frustum cullingFrustum = new Frustum(frustumMatrix, mc.gameRenderer.getProjectionMatrix(mc.options.fov().get()));
-		Vec3 camPos = camera.getPosition();
+		Vec3 camPos = camera.position();
 
 		cullingFrustum.prepare(camPos.x, camPos.y, camPos.z);
 

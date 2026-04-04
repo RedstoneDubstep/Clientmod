@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
@@ -18,7 +18,7 @@ import redstonedubstep.mods.clientmod.command.CommandLibrary;
 
 public class MainScreen extends Screen {
 	EditBox inputField;
-	MutableComponent helpMessage = Component.translatable("");
+	MutableComponent helpMessage = Component.literal("");
 	List<MutableComponent> helpDescription = new ArrayList<>();
 
 	public MainScreen() {
@@ -29,7 +29,7 @@ public class MainScreen extends Screen {
 	public void init() {
 		super.init();
 
-		inputField = new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, CommonComponents.EMPTY);
+		inputField = addRenderableWidget(new EditBox(font, width / 2 - 70, height / 2 - 10, 140, 20, CommonComponents.EMPTY));
 		inputField.setMaxLength(2048);
 		inputField.setTextColor(-1);
 		inputField.setTextColorUneditable(-1);
@@ -38,13 +38,12 @@ public class MainScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		super.render(graphics, mouseX, mouseY, partialTicks);
-		inputField.render(graphics, mouseX, mouseY, partialTicks);
-		graphics.drawString(font, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 0xFFFF0000);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+		graphics.text(font, helpMessage, (width - font.width(helpMessage.getString())) / 2, (height + 30) / 2, 0xFFFF0000);
 
 		for (int i = 0; i < helpDescription.size(); i++) {
-			graphics.drawString(font, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 0xFFFF0000);
+			graphics.text(font, helpDescription.get(i), (width - font.width(helpDescription.get(i).getString())) / 2, (height + 50 + 20 * i) / 2, 0xFFFF0000);
 		}
 	}
 

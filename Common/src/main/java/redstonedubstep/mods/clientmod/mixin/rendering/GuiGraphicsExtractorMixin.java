@@ -2,7 +2,6 @@ package redstonedubstep.mods.clientmod.mixin.rendering;
 
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
@@ -29,16 +28,16 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
-@Mixin(GuiGraphics.class)
-public abstract class GuiGraphicsMixin {
+@Mixin(GuiGraphicsExtractor.class)
+public abstract class GuiGraphicsExtractorMixin {
     @Shadow @Final private Matrix3x2fStack pose;
 
-    @Shadow public abstract void drawString(Font $$0, @Nullable String $$1, int $$2, int $$3, int $$4);
+    @Shadow public abstract void text(Font font, String str, int x, int y, int color);
 
-    @Shadow public abstract void fill(int $$1, int $$2, int $$3, int $$4, int $$5);
+    @Shadow public abstract void fill(int x0, int y0, int x1, int y1, int col);
 
-    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;popMatrix()Lorg/joml/Matrix3x2fStack;", shift = At.Shift.AFTER))
-    public void clientmod$onRenderGuiItemDecorations(Font font, ItemStack stack, int x, int y, String subText, CallbackInfo callbackInfo) {
+    @Inject(method = "itemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;popMatrix()Lorg/joml/Matrix3x2fStack;", shift = At.Shift.AFTER))
+    public void clientmod$onRenderGuiItemDecorations(Font font, ItemStack stack, int x, int y, String countText, CallbackInfo callbackInfo) {
         pose.pushMatrix();
 
         if (ClientSettings.INSTANCE.enhancedItemInfo()) {
@@ -66,7 +65,7 @@ public abstract class GuiGraphicsMixin {
                 List<BeehiveBlockEntity.Occupant> bees = beesComponent != null ? beesComponent.bees() : null;
 
                 if (bees != null)
-                    drawString(font, String.valueOf(bees.size()), x + 8 - 2 - font.width(String.valueOf(bees.size())), y + 6 + 3, 0xFFFFD700);
+                    text(font, String.valueOf(bees.size()), x + 8 - 2 - font.width(String.valueOf(bees.size())), y + 6 + 3, 0xFFFFD700);
             }
             else if (stack.has(DataComponents.EQUIPPABLE) || stack.has(DataComponents.WEAPON) || stack.has(DataComponents.TOOL)) {
                 try {

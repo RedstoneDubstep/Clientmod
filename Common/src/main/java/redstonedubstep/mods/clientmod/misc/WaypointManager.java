@@ -23,7 +23,7 @@ public class WaypointManager {
 
 	public void setWaypoint(BlockPos waypoint) {
 		this.waypoint = waypoint;
-		player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)), false);
+		player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.waypointSet", ClientUtility.formatBlockPos(waypoint)));
 	}
 
 	public BlockPos getWaypoint() {
@@ -32,11 +32,11 @@ public class WaypointManager {
 
 	public void resetWaypoint() {
 		if (waypoint != null) {
-			player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)), false);
+			player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.waypointRemoved", ClientUtility.formatBlockPos(waypoint)));
 			waypoint = null;
 		}
 		else
-			player.displayClientMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"), false);
+			player.sendSystemMessage(Component.translatable("messages.clientmod:waypoint.noWaypoint"));
 	}
 
 	public boolean hasWaypoint() {

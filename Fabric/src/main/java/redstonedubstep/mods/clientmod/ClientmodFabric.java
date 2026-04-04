@@ -3,12 +3,14 @@ package redstonedubstep.mods.clientmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 import redstonedubstep.mods.clientmod.platform.FabricClientSettings;
 
@@ -24,8 +26,8 @@ public class ClientmodFabric implements ClientModInitializer {
             return InteractionResult.PASS;
         });
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> ClientEventHandler.onInitScreenPost(screen));
-        KeyBindingHelper.registerKeyBinding(ClientmodCommon.openTextbox);
-        HudRenderCallback.EVENT.register((graphics, tickDelta) -> ClientEventHandler.onRenderGameOverlay(graphics));
+        KeyMappingHelper.registerKeyMapping(ClientmodCommon.openTextbox);
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, Identifier.fromNamespaceAndPath(ClientmodCommon.MOD_ID, "waypoint"), ClientEventHandler::afterCrosshairRendering);
         ((FabricClientSettings) FabricClientSettings.INSTANCE).loadConfig();
     }
 }

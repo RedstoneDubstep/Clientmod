@@ -38,7 +38,7 @@ public class ChatScreenMixin {
 				MutableComponent errorMessage = Component.translatable("command.failed");
 
 				errorMessage.withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(result.getFullDescription()))).withStyle(ChatFormatting.RED);
-				Minecraft.getInstance().player.displayClientMessage(errorMessage, false);
+				Minecraft.getInstance().player.sendSystemMessage(errorMessage);
 			}
 
 			callbackInfo.cancel();

@@ -3,9 +3,6 @@ package redstonedubstep.mods.clientmod.platform;
 import java.nio.file.Path;
 import java.util.Map;
 
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -26,8 +23,7 @@ public class NeoForgeAccessHelper extends AccessHelper {
     @Override
     public void populateBECountMap(Map<BlockEntityType<?>, Integer> map, Minecraft mc) {
 		Camera camera = mc.gameRenderer.getMainCamera();
-		Matrix4f frustumMatrix = new Matrix4f().rotation(camera.rotation().conjugate(new Quaternionf()));
-		Frustum cullingFrustum = new Frustum(frustumMatrix, mc.gameRenderer.getProjectionMatrix(mc.options.fov().get()));
+		Frustum cullingFrustum = mc.gameRenderer.getMainCamera().getCullFrustum();
 		Vec3 camPos = camera.position();
 
 		cullingFrustum.prepare(camPos.x, camPos.y, camPos.z);

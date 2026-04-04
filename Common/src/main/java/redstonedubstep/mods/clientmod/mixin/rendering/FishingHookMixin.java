@@ -28,6 +28,6 @@ public abstract class FishingHookMixin extends Projectile {
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;"))
 	public void clientmod$onFishingBobberLandInWater(CallbackInfo callbackInfo) {
 		if (ClientSettings.INSTANCE.betterFishingHook() && calculateOpenWater(blockPosition()) && getOwner() instanceof Player player)
-			player.displayClientMessage(Component.translatable("messages.clientmod:betterFishingRod.openWater"), true);
+			player.sendOverlayMessage(Component.translatable("messages.clientmod:betterFishingRod.openWater"));
 	}
 }

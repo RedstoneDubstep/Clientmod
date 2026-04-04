@@ -6,16 +6,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import redstonedubstep.mods.clientmod.platform.ClientSettings;
 
 @Mixin(PlayerTabOverlay.class)
 public class PlayerTabOverlayMixin {
-	@Inject(method = "renderPingIcon", at = @At(value = "TAIL"))
-	private void clientmod$onRenderPingIcon(GuiGraphics guiGraphics, int width, int x, int y, PlayerInfo info, CallbackInfo callbackInfo) {
+	@Inject(method = "extractPingIcon", at = @At(value = "TAIL"))
+	private void clientmod$onRenderPingIcon(GuiGraphicsExtractor guiGraphics, int width, int x, int y, PlayerInfo info, CallbackInfo callbackInfo) {
 		if (ClientSettings.INSTANCE.showPingData())
-			guiGraphics.drawString(Minecraft.getInstance().font, String.valueOf(info.getLatency()), x + width - 11, y, 0xFFD0D0D0, false);
+			guiGraphics.text(Minecraft.getInstance().font, String.valueOf(info.getLatency()), x + width - 11, y, 0xFFD0D0D0, false);
 	}
 }

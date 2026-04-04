@@ -37,7 +37,7 @@ public class MinecraftMixin {
 					long totalDuration = System.currentTimeMillis() - FieldHolder.reloadingStartTime;
 
 					if (reloadDuration >= 0 && totalDuration >= 0)
-						Minecraft.getInstance().player.displayClientMessage(Component.translatable("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")), false);
+						Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.time", DurationFormatUtils.formatDuration(reloadDuration, "mm:ss.SSS"), DurationFormatUtils.formatDuration(totalDuration, "mm:ss.SSS")));
 				}
 
 				FieldHolder.reloadingStartTime = -1;
@@ -50,7 +50,7 @@ public class MinecraftMixin {
 	@Inject(method = "delayTextureReload", at = @At(value = "HEAD"), cancellable = true)
 	private void clientmod$onServerTextureReload(CallbackInfoReturnable<CompletableFuture<Void>> callback) {
 		if (!ClientSettings.INSTANCE.reloadServerResources() && player != null) {
-			player.displayClientMessage(Component.translatable("messages.clientmod:reloading.server_resources"), false);
+			player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.server_resources"));
 			callback.setReturnValue(new CompletableFuture<>());
 		}
 	}

@@ -1,7 +1,8 @@
 package redstonedubstep.mods.clientmod;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -90,7 +91,7 @@ public class ClientEventHandler {
 					validSlotsBuilder.add(slot, hotbarItem.getCount());
 			}
 
-			validSlotsBuilder.build().getRandom(player.level().random).ifPresent(slot -> FieldHolder.nextHotbarSlot = slot);
+			validSlotsBuilder.build().getRandom(player.level().getRandom()).ifPresent(slot -> FieldHolder.nextHotbarSlot = slot);
 		}
     }
 
@@ -116,7 +117,7 @@ public class ClientEventHandler {
         ((ScreenAccessor) screen).getNarratables().add(widget);
     }
 
-    public static void onRenderGameOverlay(GuiGraphics graphics) {
+    public static void afterCrosshairRendering(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Player player = Minecraft.getInstance().player;
         Vec3 lookVec = player.getLookAngle().multiply(1, 0, 1).normalize();
 
@@ -144,7 +145,7 @@ public class ClientEventHandler {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-            graphics.drawString(Minecraft.getInstance().font, String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFFFF);
+            graphics.text(Minecraft.getInstance().font, String.format("%.2f b/s", velocity), (width + 182) / 2 + 10, height - 16, 0xFFFFFFFF);
         }
     }
 }

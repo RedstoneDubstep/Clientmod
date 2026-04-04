@@ -15,7 +15,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.network.chat.Component;
@@ -36,8 +36,8 @@ public abstract class LoadingOverlayMixin extends Overlay {
 	private boolean fadeIn;
 
 	//Adds a text to the resourceLoadProgressGui displaying the current task that's being done
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
-	private void clientmod$injectRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo callbackInfo) {
+	@Inject(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
+	private void clientmod$injectRender(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo callbackInfo) {
 		if (!FieldHolder.isMinecraftStarting && ClientSettings.INSTANCE.enhancedReloadingInfo() && Minecraft.getInstance().player != null) {
 			if (fadeIn && reload instanceof SimpleReloadInstance && !reload.isDone()) {
 				List<PreparableReloadListener> taskSet = new ArrayList<>(((SimpleReloadInstanceAccessor) reload).getPreparingListeners());
@@ -61,14 +61,14 @@ public abstract class LoadingOverlayMixin extends Overlay {
 				}
 
 				if (FieldHolder.currentTask != null)
-					graphics.drawString(Minecraft.getInstance().font, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0xFFFFFFFF);
+					graphics.text(Minecraft.getInstance().font, Component.literal("Current task: " + FieldHolder.currentTask.getName() + " (" + (FieldHolder.maxTaskAmount - taskSet.size()) + "/" + FieldHolder.maxTaskAmount + ")"), 10, 20, 0xFFFFFFFF);
 			}
 		}
 	}
 
 	//Toggle the Gui's background
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
-	public void clientmod$redirectFill(GuiGraphics instance, int minX, int minY, int maxX, int maxY, int color) {
+	@Redirect(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
+	public void clientmod$redirectFill(GuiGraphicsExtractor instance, int minX, int minY, int maxX, int maxY, int color) {
 		instance.fill(minX, minY, maxX, maxY, fadeIn && !ClientSettings.INSTANCE.drawReloadingBackground() ? 16777215 : color);
 	}
 

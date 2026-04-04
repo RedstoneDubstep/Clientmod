@@ -43,6 +43,6 @@ public class NeoForgeClientEventHandler {
 	@SubscribeEvent
 	public static void onRenderGameOverlay(RenderGuiLayerEvent.Post event) {
 		if (event.getName().equals(VanillaGuiLayers.CROSSHAIR))
-			ClientEventHandler.onRenderGameOverlay(event.getGuiGraphics());
+			ClientEventHandler.afterCrosshairRendering(event.getGuiGraphics(), event.getPartialTick());
 	}
 }

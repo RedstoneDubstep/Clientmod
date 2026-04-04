@@ -20,7 +20,7 @@
 		"rendering.EntityRenderDispatcherMixin",
 		"rendering.EntityRendererMixin",
 		"rendering.FishingHookMixin",
-		"rendering.GuiGraphicsMixin",
+		"rendering.GuiGraphicsExtractorMixin",
 		"rendering.GuiMixin",
 		"rendering.LevelRendererMixin",
 		"rendering.PlayerTabOverlayMixin"

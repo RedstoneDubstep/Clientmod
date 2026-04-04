@@ -3,7 +3,7 @@ package redstonedubstep.mods.clientmod.screen;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -54,8 +54,8 @@ public class ImageScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		super.render(graphics, mouseX, mouseY, partialTicks);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 		graphics.blit(RenderPipelines.GUI_TEXTURED, background, (width - screenWidth) / 2, (height - screenHeight) / 2, xOffset, yOffset, screenWidth, screenHeight, imageWidth, imageHeight);
 	}
 

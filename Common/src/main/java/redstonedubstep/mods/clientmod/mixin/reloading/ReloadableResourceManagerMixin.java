@@ -43,7 +43,7 @@ public class ReloadableResourceManagerMixin {
 				FieldHolder.maxTaskAmount = listeners.size();
 				FieldHolder.oldTaskSet = new ArrayList<>(listeners);
 				FieldHolder.reloadingStartTime = System.currentTimeMillis();
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(ComponentUtils.formatList(readOnlyListeners.stream().map(PreparableReloadListener::getName).toList())))), false);
+				Minecraft.getInstance().player.sendSystemMessage(Component.translatable("messages.clientmod:reloading.started", listeners.size()).withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(ComponentUtils.formatList(readOnlyListeners.stream().map(PreparableReloadListener::getName).toList())))));
 			}
 		}
 

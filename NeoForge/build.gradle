@@ -23,8 +23,10 @@ neoForge {
         client {
             client()
         }
-        data {
-            clientData()
+        client2 {
+            client()
+            gameDirectory = project.file('run/client')
+            programArguments.addAll('--username', 'Dev2')
         }
         server {
             server()

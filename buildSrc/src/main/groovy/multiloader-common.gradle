@@ -9,8 +9,6 @@ base {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
-    withSourcesJar()
-    //withJavadocJar() REDSTONE we don't do that here
 }
 
 repositories {
@@ -23,7 +21,20 @@ repositories {
                 url = 'https://repo.spongepowered.org/repository/maven-public'
             }
         }
-        filter { includeGroupAndSubgroups("org.spongepowered") }
+        filter { includeGroupAndSubgroups('org.spongepowered') }
+    }
+    exclusiveContent {
+        forRepositories(
+                maven {
+                    name = 'ParchmentMC'
+                    url = 'https://maven.parchmentmc.org/'
+                },
+                maven {
+                    name = "NeoForge"
+                    url = 'https://maven.neoforged.net/releases'
+                }
+        )
+        filter { includeGroup('org.parchmentmc.data') }
     }
     maven {
         name = 'BlameJared'
@@ -31,25 +42,16 @@ repositories {
     }
 }
 
-dependencies {
-    implementation 'org.jetbrains:annotations:24.1.0'
-}
-
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-['apiElements', 'runtimeElements', 'sourcesElements'/*, 'javadocElements'*/].each { variant ->
+['apiElements', 'runtimeElements'].each { variant ->
     configurations."$variant".outgoing {
+        capability("$group:${base.archivesName.get()}:$version")
         capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
         capability("$group:$mod_id:$version")
     }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
-    }
-}
-
-sourcesJar {
-    from(rootProject.file("LICENSE")) {
-        rename { "${it}_${mod_name}" }
     }
 }
 
@@ -82,7 +84,7 @@ processResources {
             "mod_name": mod_name,
             "mod_author": mod_author,
             "mod_id": mod_id,
-            "license": license,
+            "description": description,
             "neoforge_version": neoforge_version,
             "java_version": java_version
     ]

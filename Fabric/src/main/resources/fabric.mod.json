@@ -1,11 +1,11 @@
 {
     "schemaVersion": 1,
-    "id": "clientmod",
+    "id": "${mod_id}",
     "version": "${version}",
-    "name": "ClientmodFabricModName",
-    "description": "A mod created by Redstone_Dubstep that adds some neat features to the game.",
+    "name": "${mod_name}",
+    "description": "${description}",
     "authors": [
-      "Redstone_Dubstep"
+        "${mod_author}"
     ],
 
     "license": "None",
@@ -17,9 +17,8 @@
       ]
     },
     "mixins": [
-      "clientmod.mixins.json"
+        "${mod_id}.mixins.json"
     ],
-    "accessWidener" : "clientmod.accesswidener",
 
     "depends": {
       "fabricloader": ">=0.14",
